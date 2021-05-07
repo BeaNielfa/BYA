@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fondo_margaritas"
+        tools:context=".LoginActivity">
+
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                tools:layout_editor_absoluteX="47dp"
+                tools:layout_editor_absoluteY="44dp">
+
+                <TextView
+                        android:id="@+id/tvLoginLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="20dp"
+                        android:padding="20dp"
+                        android:text="BYA"
+                        android:textColor="@color/black"
+                        android:textSize="100dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/email"
+                        android:paddingLeft="42dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="42dp"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/black"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="clear_text"
+                        app:endIconTint="@color/black"
+                        app:startIconDrawable="@drawable/ic_email"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etLoginEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="textEmailAddress">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/password"
+                        android:paddingLeft="42dp"
+                        android:paddingTop="5dp"
+                        android:paddingRight="42dp"
+                        android:textColorHint="@color/black"
+                        app:boxStrokeColor="@color/black"
+                        app:boxStrokeWidthFocused="2dp"
+                        app:endIconMode="password_toggle"
+                        app:endIconTint="@color/black"
+                        app:startIconDrawable="@drawable/ic_padlock"
+                        app:startIconTint="@color/black">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etLoginPass"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:inputType="textPassword">
+
+                        </com.google.android.material.textfield.TextInputEditText>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <Button android:layout_width="match_parent"
+                        android:layout_height="65dp"
+                        style="@style/Animation.Design.BottomSheetDialog"
+                        android:gravity="center"
+                        android:layout_marginRight="42dp"
+                        android:layout_marginLeft="42dp"
+                        android:layout_marginTop="50dp"
+                        android:text="@string/login"
+                        android:backgroundTint="@color/black"
+                        android:textSize="25dp"
+
+
+                />
+                <ImageView
+                        android:id="@+id/imgGoogle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="80dp"
+                        android:src="@drawable/signin_button"
+                        android:gravity="center"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginTop="20dp"
+                />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                                android:id="@+id/tvLoginSocio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="¿Eres nuevo en BYA?"
+                                android:textColor="@color/black"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                                android:layout_marginRight="60dp" android:layout_marginTop="16dp"/>
+                        <TextView
+                                android:id="@+id/tvLoginRegistro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:text="@string/registrate"
+                                android:textColor="@color/black"
+
+                                android:textStyle="bold"
+                                app:layout_constraintStart_toEndOf="@+id/tvLoginSocio"
+                                app:layout_constraintTop_toTopOf="@+id/tvLoginSocio"
+                                app:layout_constraintBottom_toBottomOf="@+id/tvLoginSocio"
+                                android:layout_marginStart="5dp"/>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
