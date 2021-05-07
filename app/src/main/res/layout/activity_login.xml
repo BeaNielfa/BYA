@@ -17,7 +17,7 @@
                 tools:layout_editor_absoluteY="44dp">
 
                 <TextView
-                        android:id="@+id/tvLoginLogin"
+                        android:id="@+id/tvBya"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -80,7 +80,9 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
 
-                <Button android:layout_width="match_parent"
+                <Button
+                        android:id="@+id/btnLogin"
+                        android:layout_width="match_parent"
                         android:layout_height="65dp"
                         style="@style/Animation.Design.BottomSheetDialog"
                         android:gravity="center"
@@ -108,7 +110,7 @@
                         android:layout_height="wrap_content">
 
                         <TextView
-                                android:id="@+id/tvLoginSocio"
+                                android:id="@+id/tvLoginNuevo"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
@@ -118,17 +120,16 @@
                                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
                                 android:layout_marginRight="60dp" android:layout_marginTop="16dp"/>
                         <TextView
-                                android:id="@+id/tvLoginRegistro"
+                                android:id="@+id/tvLoginRegistrate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
                                 android:text="@string/registrate"
                                 android:textColor="@color/black"
-
                                 android:textStyle="bold"
-                                app:layout_constraintStart_toEndOf="@+id/tvLoginSocio"
-                                app:layout_constraintTop_toTopOf="@+id/tvLoginSocio"
-                                app:layout_constraintBottom_toBottomOf="@+id/tvLoginSocio"
+                                app:layout_constraintStart_toEndOf="@+id/tvLoginNuevo"
+                                app:layout_constraintTop_toTopOf="@+id/tvLoginNuevo"
+                                app:layout_constraintBottom_toBottomOf="@+id/tvLoginNuevo"
                                 android:layout_marginStart="5dp"/>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,6 +10,7 @@
 
 
     <LinearLayout
+            android:id="@+id/linearRegistro"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -17,11 +18,14 @@
             tools:layout_editor_absoluteY="44dp">
 
 
-        <ImageView android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
+        <ImageView
+                   android:id="@+id/imgRegistro"
+                   android:layout_width="178dp"
+                   android:layout_height="178dp"
                    android:src="@drawable/ic_profile_user"
                    android:layout_marginTop="20dp"
                    android:layout_marginBottom="20dp"
+                   android:layout_gravity="center"
                    />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -67,7 +71,7 @@
                 app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etLoginEmail"
+                    android:id="@+id/etRegistroEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textEmailAddress">
@@ -93,7 +97,7 @@
                 app:startIconTint="@color/black">
 
             <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etLoginPass"
+                    android:id="@+id/etRegistroPass"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="textPassword">
@@ -103,7 +107,9 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <Button android:layout_width="match_parent"
+        <Button
+                android:id="@+id/btnRegistroRegistrarse"
+                android:layout_width="match_parent"
                 android:layout_height="65dp"
                 style="@style/Animation.Design.BottomSheetDialog"
                 android:gravity="center"
@@ -115,7 +121,9 @@
                 android:textSize="25dp"
         />
 
-        <Button android:layout_width="match_parent"
+        <Button
+                android:id="@+id/btnRegistroCancelar"
+                android:layout_width="match_parent"
                 android:layout_height="65dp"
                 style="@style/Animation.Design.BottomSheetDialog"
                 android:gravity="center"
