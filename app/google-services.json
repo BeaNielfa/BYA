@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "742754456623",
+    "project_id": "byabea-e5b76",
+    "storage_bucket": "byabea-e5b76.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742754456623:android:084a15e083dc6c6a50a2da",
+        "android_client_info": {
+          "package_name": "com.example.bya"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742754456623-v2o3uvvt3pa648gl4eipvusheq3bl2fr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsDFpzjegF5dSSX_iB3s8f29RWAalGGNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742754456623-v2o3uvvt3pa648gl4eipvusheq3bl2fr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
