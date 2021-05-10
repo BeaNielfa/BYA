@@ -3,23 +3,37 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@+id/nav_home">
+            app:startDestination="@+id/nav_catalogo">
+
+
 
     <fragment
-            android:id="@+id/nav_home"
-            android:name="com.example.bya.ui.favoritos.FavoritosFragment"
-            android:label="@string/menu_home"
+            android:id="@+id/nav_catalogo"
+            android:name="com.example.bya.ui.catalogo.CatalogoFragment"
+            android:label="@string/menu_catalogo"
             tools:layout="@layout/fragment_home"/>
 
     <fragment
-            android:id="@+id/nav_gallery"
-            android:name="com.example.bya.ui.historial.HistorialFragment"
-            android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_gallery"/>
+            android:id="@+id/nav_devolver"
+            android:name="com.example.bya.ui.devolver.DevolverFragment"
+            android:label="@string/menu_devolver"
+            tools:layout="@layout/fragment_devolver"/>
 
     <fragment
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_contacto"
             android:name="com.example.bya.ui.contacto.ContactoFragment"
-            android:label="@string/menu_slideshow"
+            android:label="@string/menu_contacto"
             tools:layout="@layout/fragment_slideshow"/>
+
+    <fragment
+            android:id="@+id/nav_pedidos"
+            android:name="com.example.bya.ui.pedidos.PedidosFragment"
+            android:label="@string/menu_pedidos"
+            tools:layout="@layout/fragment_pedidos"/>
+
+    <fragment
+            android:id="@+id/nav_perfil"
+            android:name="com.example.bya.ui.perfil.PerfilFragment"
+            android:label="@string/menu_perfil"
+            tools:layout="@layout/fragment_perfil"/>
 </navigation>
