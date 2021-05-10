@@ -71,9 +71,9 @@ class MainActivity : AppCompatActivity() {
 
         var getData = object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                name = snapshot.child("nombre").getValue().toString()
-                email = snapshot.child("email").getValue().toString()
-                photoUrl = snapshot.child("foto").getValue().toString()
+                name = snapshot.child("nombre").value.toString()
+                email = snapshot.child("email").value.toString()
+                photoUrl = snapshot.child("foto").value.toString()
 
 
                 tvEmailUser.text = email

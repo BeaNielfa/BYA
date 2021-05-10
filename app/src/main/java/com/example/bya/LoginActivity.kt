@@ -22,6 +22,7 @@ import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_registro.*
 
 class LoginActivity : AppCompatActivity() {
     //VARIABLES
@@ -52,35 +53,56 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
+        //BOTON PARA ENTRAR EN BYA
         btnLogin.setOnClickListener {
             email = etLoginEmail.text.toString()
             pass = etLoginPass.text.toString()
 
-            Auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener{
-
-                if(it.isSuccessful){
-                    idUsuario = Auth.currentUser.uid
-                    val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
-                    pref.putString("idUsuario",idUsuario)
-                    pref.apply()
-
-                    entrarMain()
-                }else{
-
+            //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
+            if(email.isEmpty() || pass.isEmpty()){
+                if(email.isEmpty()){
+                    etLoginEmail.setError("El email es obligatorio")
                 }
 
+                if(pass.isEmpty()){
+                    etLoginPass.setError("La contraseña es obligatoria")
+                }
+
+            }else if(pass.length < 6){//COMPROBAMOS QUE LA CONTRASEÑA TIENE MÍNIMO 6 CARACTERES
+                etLoginPass.setError("Debe tener mínimo 6 caracteres")
+            }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                etLoginEmail.setError("El formato no es correcto")
+            }else {
+                //COMPROBAMOS SI ESTA AUTENTICADO EN BYA
+                Auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
+
+                    if (it.isSuccessful) {//SI LO ESTA
+                        idUsuario = Auth.currentUser.uid
+                        val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
+                        pref.putString("idUsuario", idUsuario)
+                        pref.apply()
+
+                        entrarMain()//ENTRAMOS EN LA APP
+                    } else {
+                        Toast.makeText(this, "El email o la contraseña son incorrectos", Toast.LENGTH_SHORT).show()
+                    }
 
 
+                }
             }
 
 
         }
 
+        //BOTON PARA ACCEDER A BYA DESDE GOOGLE
         imgGoogle.setOnClickListener {
             loginToGoogle()
         }
     }
 
+    /**
+     * BOTON QUE NOS PERMITE ACCEDER A BYA SI TENEMOS UNA CUENTA DE GOOGLE CREADA
+     */
     private fun loginToGoogle(){
         val googleConf = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
@@ -138,6 +160,10 @@ class LoginActivity : AppCompatActivity() {
             }
         }
     }
+
+    /**
+     * Metodo que nos lleva a la actividad Main
+     */
     private fun entrarMain(){
         val main = Intent(this, MainActivity::class.java)
         startActivity(main)

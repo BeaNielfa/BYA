@@ -12,6 +12,7 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.example.bya.clases.Usuario
+import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
@@ -53,68 +54,115 @@ class RegistroActivity : AppCompatActivity() {
         Storage = FirebaseStorage.getInstance()
 
 
-
+        //BOTON QUE NOS PERMITE REGISTRARNOS EN BYA
         btnRegistroRegistrarse.setOnClickListener {
-           /* if(email.isEmpty() || nombre.isEmpty() || pass.isEmpty()){
 
-            }else{*/
                 registrar()
-           // }
-        }
-        btnRegistroCancelar.setOnClickListener {
 
         }
+        //BOTON QUE NOS PERMITE CANCELAR EL REGISTRO Y VOLVER A LA VENTANA DE LOGIN
+        btnRegistroCancelar.setOnClickListener {
+            entrarLogin()
+        }
+        //BOTON QUE NOS ABRE UN DIALOGO PARA ELEGIR SI QUEREMOS UNA FOTO DE LA GALERIA O LA CAMARA
         imgRegistro.setOnClickListener {
             mostrarDialogo()
         }
     }
 
+    /**
+     * Metodo que registra un nuevo usuario en la bbdd para acceder a BYA
+     */
     private fun registrar(){
+        Log.e("REGISTRO", "Entrada al metodo de registrar")
+
         email = etRegistroEmail.text.toString()
         nombre = etRegistroNombre.text.toString()
         pass = etRegistroPass.text.toString()
 
         Log.e("REGISTRO",email+ "EMAIL")
-        Log.e("REGISTRO",nombre+ "nombre")
-        Log.e("REGISTRO",pass+ "pass")
+        Log.e("REGISTRO",nombre+ " NOMBRE")
+        Log.e("REGISTRO",pass+ " PASSWORD"+ " LONGITUD "+pass.length)
 
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pass).
-        addOnCompleteListener{
-            if(it.isSuccessful){
-                id = Auth.currentUser.uid
-                val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
-                pref.putString("idUsuario",id)
-                pref.apply()
+        //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
+        if(email.isEmpty() || nombre.isEmpty() || pass.isEmpty()){
+            if(email.isEmpty()){
+                etRegistroEmail.setError("El email es obligatorio")
+            }
 
-                val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
-                val ref = Storage.getReference("/fotosUsuarios/$img")
-                if(fotoUri == null){//cuando no hay foto, ponemos una por defecto
-                    var fotoDefecto = Uri.parse("android.resource://com.example.bya/"+R.drawable.profile_user)
-                    ref.putFile(fotoDefecto).addOnSuccessListener { //Subimos la foto
-                        ref.downloadUrl.addOnSuccessListener { //descargamos su url
-                            foto = it.toString()  //lo asignamos a la variable
+            if(pass.isEmpty()){
+                etRegistroPass.setError("La contraseña es obligatoria")
+            }
 
-                            val u = Usuario (id,nombre,email, pass,foto)
-                            databaseReference.child(id).setValue(u)
+            if(nombre.isEmpty()){
+                etRegistroNombre.setError("El nombre es obligatorio")
+            }
+
+        }else if(pass.length < 6){//COMPROBAMOS QUE LA CONTRASEÑA TIENE MÍNIMO 6 CARACTERES
+            etRegistroPass.setError("Debe tener mínimo 6 caracteres")
+        }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+           etRegistroEmail.setError("El formato no es correcto")
+        }else{
+            //PRIMERO NOS AUTENTICAMOS EN FIREBASE
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pass).
+            addOnCompleteListener{
+                if(it.isSuccessful){//SI HA IDO BIEN
+                    id = Auth.currentUser.uid
+                    val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
+                    pref.putString("idUsuario",id)
+                    pref.apply()
+
+                    val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
+                    val ref = Storage.getReference("/fotosUsuarios/$img")
+                    if(fotoUri == null){//cuando no hay foto, ponemos una por defecto
+                        var fotoDefecto = Uri.parse("android.resource://com.example.bya/"+R.drawable.profile_user)
+                        ref.putFile(fotoDefecto).addOnSuccessListener { //Subimos la foto
+                            ref.downloadUrl.addOnSuccessListener { //descargamos su url
+                                foto = it.toString()  //lo asignamos a la variable
+
+                                val u = Usuario (id,nombre,email, pass,foto)
+                                databaseReference.child(id).setValue(u)//AÑADIMOS EL USUARIO A LA TABLA
+                            }
                         }
-                    }
 
-                }else{//cuando la hay la subimos
+                    }else{//cuando la hay la subimos
 
-                    ref.putFile(fotoUri!!).addOnSuccessListener { //Subimos la foto
-                        ref.downloadUrl.addOnSuccessListener { //descargamos su url
-                            foto = it.toString()  //lo asignamos a la variable
+                        ref.putFile(fotoUri!!).addOnSuccessListener { //Subimos la foto
+                            ref.downloadUrl.addOnSuccessListener { //descargamos su url
+                                foto = it.toString()  //lo asignamos a la variable
 
-                            val u = Usuario (id,nombre,email, pass,foto)
-                            databaseReference.child(id).setValue(u)
+                                val u = Usuario (id,nombre,email, pass,foto)//AÑADIMOS EL USUARIO A LA TABLA
+                                databaseReference.child(id).setValue(u)
+                            }
                         }
+
+
                     }
-
-
+                        //UNA VEZ REGISTRADOS NOS LLEVA A LA ACTIVIDAD MAIN
+                        entrarMain()
+                }else{//SI NO HA IDO BIEN, EL CORREO YA EXISTE
+                    etRegistroEmail.setError("Este email ya está registrado")
                 }
-
             }
         }
+
+
+    }
+    /**
+     * Metodo que nos lleva a la actividad Login
+     */
+    private fun entrarLogin(){
+        val login = Intent(this, LoginActivity::class.java)
+        startActivity(login)
+
+    }
+
+    /**
+     * Metodo que nos lleva a la actividad Main
+     */
+    private fun entrarMain(){
+        val main = Intent(this, MainActivity::class.java)
+        startActivity(main)
 
     }
 

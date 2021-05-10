@@ -29,6 +29,7 @@
                    />
 
         <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilNombre"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,13 +49,14 @@
                     android:id="@+id/etRegistroNombre"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:inputType="text">
+                    android:inputType="textEmailAddress">
 
             </com.google.android.material.textfield.TextInputEditText>
 
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -81,6 +83,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilPass"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
