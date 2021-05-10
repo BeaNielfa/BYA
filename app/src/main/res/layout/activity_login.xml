@@ -23,7 +23,7 @@
                         android:layout_gravity="center"
                         android:layout_marginTop="20dp"
                         android:padding="20dp"
-                        android:text="BYA"
+                        android:text="@string/bya"
                         android:textColor="@color/black"
                         android:textSize="100dp"/>
 
@@ -114,7 +114,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
-                                android:text="¿Eres nuevo en BYA?"
+                                android:text="@string/nuevoBya"
                                 android:textColor="@color/black"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent"
