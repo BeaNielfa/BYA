@@ -87,22 +87,29 @@ class RegistroActivity : AppCompatActivity() {
         //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
         if(email.isEmpty() || nombre.isEmpty() || pass.isEmpty()){
             if(email.isEmpty()){
-                etRegistroEmail.setError("El email es obligatorio")
+                tilRegistroEmail.setError("El email es obligatorio")
             }
 
             if(pass.isEmpty()){
-                etRegistroPass.setError("La contraseña es obligatoria")
+                tilRegisroPass.setError("La contraseña es obligatoria")
             }
 
             if(nombre.isEmpty()){
-                etRegistroNombre.setError("El nombre es obligatorio")
+                tilRegistroNombre.setError("El nombre es obligatorio")
             }
 
         }else if(pass.length < 6){//COMPROBAMOS QUE LA CONTRASEÑA TIENE MÍNIMO 6 CARACTERES
-            etRegistroPass.setError("Debe tener mínimo 6 caracteres")
+            tilRegistroEmail.setError(null)
+            tilRegistroNombre.setError(null)
+            tilRegisroPass.setError("Debe tener mínimo 6 caracteres")
         }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-           etRegistroEmail.setError("El formato no es correcto")
+            tilRegistroNombre.setError(null)
+            tilRegisroPass.setError(null)
+           tilRegistroEmail.setError("El formato no es correcto")
         }else{
+            tilRegistroEmail.setError(null)
+            tilRegistroNombre.setError(null)
+            tilRegisroPass.setError(null)
             //PRIMERO NOS AUTENTICAMOS EN FIREBASE
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pass).
             addOnCompleteListener{
@@ -141,7 +148,7 @@ class RegistroActivity : AppCompatActivity() {
                         //UNA VEZ REGISTRADOS NOS LLEVA A LA ACTIVIDAD MAIN
                         entrarMain()
                 }else{//SI NO HA IDO BIEN, EL CORREO YA EXISTE
-                    etRegistroEmail.setError("Este email ya está registrado")
+                    tilRegistroEmail.setError("Este email ya está registrado")
                 }
             }
         }

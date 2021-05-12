@@ -11,6 +11,7 @@ import com.example.bya.clases.Usuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
@@ -61,18 +62,17 @@ class LoginActivity : AppCompatActivity() {
             //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
             if(email.isEmpty() || pass.isEmpty()){
                 if(email.isEmpty()){
-                    etLoginEmail.setError("El email es obligatorio")
+                    tilLoginEmail.setError("El email es obligatorio")
+
                 }
 
                 if(pass.isEmpty()){
-                    etLoginPass.setError("La contraseña es obligatoria")
+                    tilLoginPass.setError("La contraseña es obligatoria")
                 }
-
-            }else if(pass.length < 6){//COMPROBAMOS QUE LA CONTRASEÑA TIENE MÍNIMO 6 CARACTERES
-                etLoginPass.setError("Debe tener mínimo 6 caracteres")
-            }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
-                etLoginEmail.setError("El formato no es correcto")
+                
             }else {
+                tilLoginPass.setError(null)
+                tilLoginEmail.setError(null)
                 //COMPROBAMOS SI ESTA AUTENTICADO EN BYA
                 Auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
 
@@ -84,7 +84,9 @@ class LoginActivity : AppCompatActivity() {
 
                         entrarMain()//ENTRAMOS EN LA APP
                     } else {
-                        Toast.makeText(this, "El email o la contraseña son incorrectos", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
+                       // Snackbar.make()
+                        Snackbar.make(this, login,"El email o la contraseña son incorrectos", Snackbar.LENGTH_LONG).show()
                     }
 
 

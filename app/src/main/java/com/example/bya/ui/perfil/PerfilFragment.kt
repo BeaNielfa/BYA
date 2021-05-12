@@ -120,33 +120,51 @@ class PerfilFragment : Fragment() {
 
        val user = Auth.currentUser
 
-        user!!.updateEmail(etPerfilEmail.text.toString())
-        user!!.updatePassword(etPerfilPass.text.toString())
+        val nombre = etPerfilNombre.text.toString()
+        val pass = etPerfilPass.text.toString()
+        val email = etPerfilEmail.text.toString()
 
-        if (fotoUri == null){
+        if(nombre.isEmpty() || pass.isEmpty()){
+            if(nombre.isEmpty()) {
+                tilPerfilNombre.setError("El nombre es obligatorio")
+            }
+            if(pass.isEmpty()){
+                tilPerfilPass.setError("La contraseña es obligatoria")
+            }
+        }else if(pass.length < 6){
+            tilPerfilNombre.setError(null)
+            tilPerfilPass.setError("Debe tener mínimo 6 caracteres")
+        }else {
 
-            val u = Usuario(idUsuario, etPerfilNombre.text.toString(), etPerfilEmail.text.toString(),
-                etPerfilPass.text.toString(), photoUrl.toString())
+            //ACTUALIZAMOS LA CONTRASEÑA EN LA TABLA DE AUTENTICACION (SI LA CAMBIA)
+            user!!.updatePassword(pass)
 
-            databaseReference.setValue(u)
+            if (fotoUri == null) {
 
+                val u = Usuario(idUsuario, nombre, email, pass, photoUrl.toString())
 
-        } else {
-
-            val filename = UUID.randomUUID().toString()
-            val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
-
-            ref.putFile(fotoUri!!).addOnSuccessListener {
-                ref.downloadUrl.addOnSuccessListener {
-
-                    photoUrl = it.toString()
-
-                    val u = Usuario(idUsuario, etPerfilNombre.text.toString(),
-                        etPerfilEmail.text.toString(),etPerfilPass.text.toString(), photoUrl.toString() )
-
-                    databaseReference.setValue(u)
+                databaseReference.setValue(u)
 
 
+            } else {
+
+                val filename = UUID.randomUUID().toString()
+                val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
+
+                ref.putFile(fotoUri!!).addOnSuccessListener {
+                    ref.downloadUrl.addOnSuccessListener {
+
+                        photoUrl = it.toString()
+
+                        val u = Usuario(
+                            idUsuario, etPerfilNombre.text.toString(),
+                            etPerfilEmail.text.toString(), etPerfilPass.text.toString(), photoUrl.toString()
+                        )
+
+                        databaseReference.setValue(u)
+
+
+                    }
                 }
             }
         }
