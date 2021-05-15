@@ -50,7 +50,7 @@ class PerfilFragment : Fragment() {
     private lateinit var etNombre: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPass: EditText
-
+    private lateinit var imgPerfil: ImageView
 
 
     override fun onCreateView(
@@ -62,7 +62,7 @@ class PerfilFragment : Fragment() {
         etNombre = root.findViewById(R.id.etPerfilNombre)
         etEmail =  root.findViewById(R.id.etPerfilEmail)
         etPass =   root.findViewById(R.id.etPerfilPass)
-
+        imgPerfil = root.findViewById(R.id.imgPerfil)
 
         Auth = Firebase.auth
         db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -99,9 +99,9 @@ class PerfilFragment : Fragment() {
                     photoUrl = snapshot.child("foto").getValue().toString()
                     pass = snapshot.child("pass").getValue().toString()
 
-                    etPerfilNombre.setText(name)
-                    etPerfilEmail.setText(email)
-                    etPerfilPass.setText(pass)
+                    etNombre.setText(name)
+                    etEmail.setText(email)
+                    etPass.setText(pass)
 
                     Picasso.get()
                         .load(Uri.parse(photoUrl))
@@ -109,8 +109,8 @@ class PerfilFragment : Fragment() {
                         .resize(178, 178)
                         .into(imgPerfil)
 
-                    etPerfilEmail.isEnabled = false
-                    etPerfilEmail.setBackgroundColor(resources.getColor(R.color.dark))
+                    etEmail.isEnabled = false
+                    etEmail.setBackgroundColor(resources.getColor(R.color.dark))
                 }
             }
 
