@@ -7,7 +7,24 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_catalogo">Catálogo</string>
+    <string name="menu_contacto">Conversaciones</string>
+    <string name="menu_devolver">Devolver prenda</string>
+    <string name="menu_perfil">Perfil</string>
+    <string name="menu_pedidos">Gestionar pedidos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bya">BYA</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="nuevoBya">¿Eres nuevo en BYA?</string>
+    <string name="registrate">Registrate</string>
+    <string name="nombre">Nombre</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="cambios">Guardar cambios</string>
+    <string name="sesion">Cerrar sesión</string>
+
+
 </resources>

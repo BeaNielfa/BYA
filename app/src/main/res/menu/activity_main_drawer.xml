@@ -1,20 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:showIn="navigation_view">
+      tools:showIn="navigation_view"
+>
 
     <group android:checkableBehavior="single">
         <item
-                android:id="@+id/nav_home"
-                android:icon="@drawable/ic_menu_camera"
-                android:title="@string/menu_home"/>
+                android:id="@+id/nav_catalogo"
+                android:icon="@drawable/ic_contorno_de_camisa_con_percha"
+                android:title="@string/menu_catalogo"/>
+
         <item
-                android:id="@+id/nav_gallery"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="@string/menu_gallery"/>
+                android:id="@+id/nav_devolver"
+                android:icon="@drawable/ic_codigo_qr"
+                android:title="@string/menu_devolver"/>
+
         <item
-                android:id="@+id/nav_slideshow"
-                android:icon="@drawable/ic_menu_slideshow"
-                android:title="@string/menu_slideshow"/>
+                android:id="@+id/nav_contacto"
+                android:icon="@drawable/ic_mensajero"
+                android:title="@string/menu_contacto"/>
+
+        <item
+                android:id="@+id/nav_pedidos"
+                android:icon="@drawable/ic_portapapeles"
+                android:title="@string/menu_pedidos"/>
+
+        <item
+                android:id="@+id/nav_perfil"
+                android:icon="@drawable/ic_user__1_"
+                android:title="@string/menu_perfil"/>
+
+
     </group>
+
+
+
+
+
+
 </menu>
