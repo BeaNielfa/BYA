@@ -4,6 +4,7 @@ import android.Manifest
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -22,8 +23,10 @@ import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.*
+import kotlinx.android.synthetic.main.fragment_perfil.*
 
 class LoginActivity : AppCompatActivity() {
     //VARIABLES
@@ -34,6 +37,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var db: FirebaseDatabase
     private lateinit var databaseReference: DatabaseReference
     private  val GOOGLE_SIGN_IN = 100
+    private var google = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -138,6 +142,7 @@ class LoginActivity : AppCompatActivity() {
                                     if(!snapshot.hasChild(idUsuario)){
                                         val u = Usuario (idUsuario,account.displayName.toString(),account.email.toString(),"",account.photoUrl.toString())
                                         databaseReference.child(idUsuario).setValue(u)
+
                                     }
                                 }
 
@@ -147,8 +152,7 @@ class LoginActivity : AppCompatActivity() {
 
                             })
 
-
-
+                            google = true//PARA QUE NO PUEDA EDITAR SU PERFIL
                             entrarMain()
                         }else{
 
@@ -165,8 +169,35 @@ class LoginActivity : AppCompatActivity() {
      * Metodo que nos lleva a la actividad Main
      */
     private fun entrarMain(){
-        val main = Intent(this, MainActivity::class.java)
-        startActivity(main)
+        databaseReference = db.reference.child("usuarios").child(idUsuario)
+
+        databaseReference.addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val tipo = snapshot.child("tipo").getValue().toString()
+
+                main(tipo)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+        })
+
+
+
+
+    }
+
+    private fun main(tipo : String){
+
+        if(tipo.equals("1")){
+            val main = Intent(this, MainActivity::class.java)
+            main.putExtra("Google", google)
+            startActivity(main)
+        }else{
+            val main = Intent(this, AdministradorActivity::class.java)
+            startActivity(main)
+        }
 
     }
     /**
