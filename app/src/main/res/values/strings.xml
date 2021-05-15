@@ -24,6 +24,7 @@
     <string name="cancelar">Cancelar</string>
     <string name="registrarse">Registrarse</string>
     <string name="cambios">Guardar cambios</string>
+    <string name="sesion">Cerrar sesión</string>
 
 
 </resources>

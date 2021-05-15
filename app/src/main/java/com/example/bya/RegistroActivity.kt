@@ -142,8 +142,6 @@ class RegistroActivity : AppCompatActivity() {
                                 databaseReference.child(id).setValue(u)
                             }
                         }
-
-
                     }
                         //UNA VEZ REGISTRADOS NOS LLEVA A LA ACTIVIDAD MAIN
                         entrarMain()
@@ -248,7 +246,10 @@ class RegistroActivity : AppCompatActivity() {
 
         } else if (requestCode == CAMARA) {
 
-            Picasso.get().load(fotoUri).transform(CirculoTransformacion()).into(imgRegistro)
+            Picasso.get().
+                    load(fotoUri).
+                    transform(CirculoTransformacion()).
+                    into(imgRegistro)
 
         }
     }

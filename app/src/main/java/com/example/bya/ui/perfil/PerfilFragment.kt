@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.navigation.ui.AppBarConfiguration
@@ -46,6 +47,10 @@ class PerfilFragment : Fragment() {
     private val CAMARA = 2
     private var fotoUri: Uri? = null
     private lateinit var Auth: FirebaseAuth
+    private lateinit var etNombre: EditText
+    private lateinit var etEmail: EditText
+    private lateinit var etPass: EditText
+
 
 
     override fun onCreateView(
@@ -53,6 +58,11 @@ class PerfilFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val root = inflater.inflate(R.layout.fragment_perfil, container, false)
+
+        etNombre = root.findViewById(R.id.etPerfilNombre)
+        etEmail =  root.findViewById(R.id.etPerfilEmail)
+        etPass =   root.findViewById(R.id.etPerfilPass)
+
 
         Auth = Firebase.auth
         db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -94,7 +104,6 @@ class PerfilFragment : Fragment() {
                     etPerfilPass.setText(pass)
 
                     Picasso.get()
-                        // .load(R.drawable.user_avatar)
                         .load(Uri.parse(photoUrl))
                         .transform(CirculoTransformacion())
                         .resize(178, 178)
@@ -103,8 +112,6 @@ class PerfilFragment : Fragment() {
                     etPerfilEmail.isEnabled = false
                     etPerfilEmail.setBackgroundColor(resources.getColor(R.color.dark))
                 }
-
-
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -120,9 +127,9 @@ class PerfilFragment : Fragment() {
 
        val user = Auth.currentUser
 
-        val nombre = etPerfilNombre.text.toString()
-        val pass = etPerfilPass.text.toString()
-        val email = etPerfilEmail.text.toString()
+        val nombre = etNombre.text.toString()
+        val pass = etPass.text.toString()
+        val email = etEmail.text.toString()
 
         if(nombre.isEmpty() || pass.isEmpty()){
             if(nombre.isEmpty()) {
@@ -139,18 +146,12 @@ class PerfilFragment : Fragment() {
             //ACTUALIZAMOS LA CONTRASEÑA EN LA TABLA DE AUTENTICACION (SI LA CAMBIA)
             user!!.updatePassword(pass)
 
-            if (fotoUri == null) {
-
+            if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO
                 val u = Usuario(idUsuario, nombre, email, pass, photoUrl.toString())
-
                 databaseReference.setValue(u)
-
-
             } else {
-
                 val filename = UUID.randomUUID().toString()
                 val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
-
                 ref.putFile(fotoUri!!).addOnSuccessListener {
                     ref.downloadUrl.addOnSuccessListener {
 
@@ -228,13 +229,13 @@ class PerfilFragment : Fragment() {
      * y gracias a Picasso lo metemos en la imagen
      */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        Log.d("FOTO", "Opción::--->$requestCode")
+
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_CANCELED) {
             return
         }
         if (requestCode == GALERIA) {
-            Log.d("FOTO", "Entramos en Galería")
+
             if (data != null) {
                 // Obtenemos su URI con su dirección temporal
                 fotoUri = data.data

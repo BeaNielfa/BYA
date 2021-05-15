@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                 if(pass.isEmpty()){
                     tilLoginPass.setError("La contraseña es obligatoria")
                 }
-                
+
             }else {
                 tilLoginPass.setError(null)
                 tilLoginEmail.setError(null)
@@ -84,8 +84,6 @@ class LoginActivity : AppCompatActivity() {
 
                         entrarMain()//ENTRAMOS EN LA APP
                     } else {
-                        //Toast.makeText(this, "", Toast.LENGTH_SHORT).show()
-                       // Snackbar.make()
                         Snackbar.make(this, login,"El email o la contraseña son incorrectos", Snackbar.LENGTH_LONG).show()
                     }
 
@@ -134,7 +132,7 @@ class LoginActivity : AppCompatActivity() {
                             pref.putString("idUsuario",idUsuario)
                             pref.apply()
 
-                            var getData = object: ValueEventListener{
+                            databaseReference.addValueEventListener(object: ValueEventListener{
                                 override fun onDataChange(snapshot: DataSnapshot) {
 
                                     if(!snapshot.hasChild(idUsuario)){
@@ -146,10 +144,10 @@ class LoginActivity : AppCompatActivity() {
                                 override fun onCancelled(error: DatabaseError) {
 
                                 }
-                            }
 
-                            databaseReference.addValueEventListener(getData)
-                            databaseReference.addListenerForSingleValueEvent(getData)
+                            })
+
+
 
                             entrarMain()
                         }else{
