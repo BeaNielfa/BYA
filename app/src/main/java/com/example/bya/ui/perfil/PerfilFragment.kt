@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.bya.CirculoTransformacion
 import com.example.bya.R
@@ -71,6 +72,7 @@ class PerfilFragment : Fragment() {
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
         Log.e("PERFIL ",idUsuario)
+
         cargarDatos()
 
         val btnPerfil: Button = root.findViewById(R.id.btnPerfilCambios)
@@ -82,6 +84,7 @@ class PerfilFragment : Fragment() {
         img.setOnClickListener {
             mostrarDialogo()
         }
+
         // Inflate the layout for this fragment
         return  root
     }
@@ -98,6 +101,7 @@ class PerfilFragment : Fragment() {
                     email = snapshot.child("email").getValue().toString()
                     photoUrl = snapshot.child("foto").getValue().toString()
                     pass = snapshot.child("pass").getValue().toString()
+
 
                     etNombre.setText(name)
                     etEmail.setText(email)
@@ -116,6 +120,7 @@ class PerfilFragment : Fragment() {
 
             override fun onCancelled(error: DatabaseError) {
                 TODO("Not yet implemented")
+                Log.e("Perfil","Algo no ha ido bien")
             }
         })
 
@@ -125,6 +130,7 @@ class PerfilFragment : Fragment() {
 
     private fun editarDatos() {
 
+       Toast.makeText(requireContext(), "VA A EDITAR DATOS",Toast.LENGTH_SHORT)
        val user = Auth.currentUser
 
         val nombre = etNombre.text.toString()
@@ -147,8 +153,15 @@ class PerfilFragment : Fragment() {
             user!!.updatePassword(pass)
 
             if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO
-                val u = Usuario(idUsuario, nombre, email, pass, photoUrl.toString())
-                databaseReference.setValue(u)
+
+                databaseReference.child("nombre").setValue(nombre)
+                databaseReference.child("email").setValue(email)
+                databaseReference.child("pass").setValue(pass)
+
+                Toast.makeText(requireContext(), "Usuario actualizado",Toast.LENGTH_SHORT).show()
+                Log.e("Perfil", "ADMINISTRADOR actualizado")
+
+
             } else {
                 val filename = UUID.randomUUID().toString()
                 val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
@@ -157,12 +170,13 @@ class PerfilFragment : Fragment() {
 
                         photoUrl = it.toString()
 
-                        val u = Usuario(
-                            idUsuario, etPerfilNombre.text.toString(),
-                            etPerfilEmail.text.toString(), etPerfilPass.text.toString(), photoUrl.toString()
-                        )
+                        databaseReference.child("nombre").setValue(nombre)
+                        databaseReference.child("email").setValue(email)
+                        databaseReference.child("pass").setValue(pass)
+                        databaseReference.child("foto").setValue(photoUrl)
 
-                        databaseReference.setValue(u)
+                        Log.e("Perfil", "USUARIO actualizado")
+
 
 
                     }
@@ -171,8 +185,6 @@ class PerfilFragment : Fragment() {
         }
 
     }
-
-
 
     /**
      * Metodo que abre un dialogo para elegir camara o galeria

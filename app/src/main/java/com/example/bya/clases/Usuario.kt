@@ -25,7 +25,8 @@ class Usuario : Serializable {
             this.pass = pass
             this.foto = foto
             this.tipo = 1 //1 USUARIO    0 ADMINISTRADOR
-        }
+    }
+
 
 
 
