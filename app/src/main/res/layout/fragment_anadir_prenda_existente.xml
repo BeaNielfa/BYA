@@ -21,7 +21,7 @@
                       android:orientation="vertical" app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent">
             <ImageView
-                    android:id="@+id/imgAnadirPrendaFoto"
+                    android:id="@+id/imgAnadirPrendaExistenteFoto"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:src="@drawable/ic_menu_camera"
@@ -31,7 +31,7 @@
             />
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAnadirPrendaNombre"
+                    android:id="@+id/tilAnadirPrendaExistenteNombre"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -47,7 +47,7 @@
             >
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAnadirPrendaNombre"
+                        android:id="@+id/etAnadirPrendaExistenteNombre"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                 >
@@ -58,7 +58,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAnadirPrendaPrecio"
+                    android:id="@+id/tilAnadirPrendaExistentePrecio"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
             >
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAnadirPrendaPrecio"
+                        android:id="@+id/etAnadirPrendaExistentePrecio"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="numberDecimal"
@@ -87,17 +87,17 @@
 
             <TextView android:layout_width="wrap_content"
                       android:layout_height="wrap_content"
-                      android:text="@string/tipoPrenda"
+                      android:text="@string/numeroReferencia"
                       android:layout_marginLeft="42dp"
                       android:layout_marginTop="16dp"
                       android:textColor="@color/black"
             />
             <Spinner
-                    android:id="@+id/spiAnadirPrendaTipo"
+                    android:id="@+id/spiAnadirPrendaExistenteReferencia"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:spinnerMode="dropdown" android:entries="@array/spiPrendas"
+                    android:spinnerMode="dropdown"
                     android:background="@color/white"
                     android:layout_marginTop="5dp"
                     android:layout_marginLeft="42dp"
