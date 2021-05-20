@@ -114,8 +114,9 @@ class AnadirPrendaFragment : Fragment() {
             precio = etPrecio.text.toString()
             referencia = etReferencia.text.toString()
 
+
             //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
-            if (nombre.isEmpty() || precio.isEmpty() || referencia.isEmpty()) {
+            if (nombre.isEmpty() || precio.isEmpty() || referencia.isEmpty() || fotoUri == null) {
                 if (nombre.isEmpty()) {
                     tilAnadirPrendaNombre.setError("El email es obligatorio")
                 }
@@ -128,29 +129,13 @@ class AnadirPrendaFragment : Fragment() {
                     tilAnadirPrendaReferencia.setError("El nombre es obligatorio")
                 }
 
+                if(fotoUri == null){
+                    Toast.makeText(requireContext(), "La foto es obligatoria", Toast.LENGTH_SHORT).show()
+                }
             } else {
                 tilAnadirPrendaNombre.setError(null)
                 tilAnadirPrendaPrecio.setError(null)
                 tilAnadirPrendaReferencia.setError(null)
-
-
-                var listReferencias = mutableListOf<Int>()
-
-                db.collection("prendas")
-                    .get()
-                    .addOnSuccessListener { result ->
-                        for (prenda in result) {
-
-                            listReferencias.add(prenda.get("referencia").toString().toInt())
-
-
-                        }
-
-
-                    }
-
-                Log.e("LISTA", listReferencias.size.toString()+" EHHHHHHHHHHHHHHHHHHH")
-
 
 
                 db.collection("prendas")
@@ -160,16 +145,19 @@ class AnadirPrendaFragment : Fragment() {
 
                             if (prenda.get("referencia").toString().equals(referencia)) {
 
-                                var idPrendaActual = prenda.get("idPrenda").toString()
+                                tilAnadirPrendaReferencia.setError("La referencia ya existe")
+
+                                /* var idPrendaActual = prenda.get("idPrenda").toString()
                                 var stock = prenda.get("stock").toString().toInt()
 
-                                db.collection("prendas").document(idPrendaActual).update("stock", stock + 1)
+                                db.collection("prendas").document(idPrendaActual).update("stock", stock + 1)*/
                                 insertar = true
                             }
 
                         }
 
                         if (!insertar) {
+                            tilAnadirPrendaReferencia.setError(null)
                             Log.e("PROBLEMAS", "SE METE")
 
                             val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
@@ -185,11 +173,27 @@ class AnadirPrendaFragment : Fragment() {
                                 }
                             }
 
+
+                            Toast.makeText(requireContext(), "Prenda insertada correctamente",Toast.LENGTH_SHORT).show()
+
+                            etNombre.setText("")
+                            etPrecio.setText("")
+                            etReferencia.setText("")
+                            fotoUri = null
+
+                            //imgPrenda.setImageResource(android.R.color.transparent)
+                            //imgPrenda.setBackgroundResource(R.drawable.ic_menu_camera)
+                            Picasso.get().
+                            load(R.drawable.ic_menu_camera).
+                            into(imgPrenda)
+
+
+
                         }
 
-
+                    }
                 }
-        }
+
 
         }
 
@@ -264,6 +268,9 @@ class AnadirPrendaFragment : Fragment() {
             if (data != null) {
                 // Obtenemos su URI con su dirección temporal
                 fotoUri = data.data
+
+
+                //imgPrenda.setImageResource(android.R.color.transparent)
                 try {
                     Picasso.get().load(fotoUri).into(imgPrenda)
                 } catch (e: IOException) {
@@ -274,6 +281,7 @@ class AnadirPrendaFragment : Fragment() {
 
         } else if (requestCode == CAMARA) {
 
+            //imgPrenda.setImageResource(android.R.color.transparent)
             Picasso.get().
             load(fotoUri).
             into(imgPrenda)
