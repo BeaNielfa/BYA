@@ -7,8 +7,8 @@ class Prenda : Serializable{
      * VARIABLES
      */
     var nombre: String
-    var precio: Float
-    var referencia: Int
+    var precio: String
+    var referencia: String
     var idPrenda: String
     var idTipo: String
     var foto: String
@@ -18,7 +18,7 @@ class Prenda : Serializable{
     /**
      * CONSTRUCTOR
      */
-    constructor(idPrenda: String, idTipo: String, nombre:String, precio: Float, foto: String,referencia: Int, stock : Int){
+    constructor(idPrenda: String, idTipo: String, nombre:String, precio: String, foto: String,referencia: String, stock : Int){
         this.idPrenda = idPrenda
         this.nombre = nombre
         this.idTipo = idTipo

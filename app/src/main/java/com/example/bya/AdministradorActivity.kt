@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
@@ -22,14 +23,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class AdministradorActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var db: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
+    private val db = FirebaseFirestore.getInstance()
     private var idUsuario = ""
     private var name: String? = ""
     private var email: String? = ""
@@ -58,7 +59,6 @@ class AdministradorActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
         Auth = Firebase.auth
-        db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
 
         tvEmailUser = navView.getHeaderView(0).findViewById(R.id.tvEmailUser)
         tvNombreUser  = navView.getHeaderView(0).findViewById(R.id.tvNombreUser)
@@ -115,30 +115,24 @@ class AdministradorActivity : AppCompatActivity() {
         val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
 
-        databaseReference = db.reference.child("usuarios").child(idUsuario)
+        db.collection("usuarios").document(idUsuario).addSnapshotListener{ snapshot, e->
+            name = snapshot?.get("nombre").toString()
+            Log.e("NOMBRE" , "NOMBRE" + name)
+            email = snapshot?.get("email").toString()
+            photoUrl = snapshot?.get("foto").toString()
 
-        databaseReference.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                name = snapshot.child("nombre").value.toString()
-                email = snapshot.child("email").value.toString()
-                photoUrl = snapshot.child("foto").value.toString()
+            tvEmailUser.text = email
+            tvNombreUser.text = name
+            Picasso.get()
+                .load(Uri.parse(photoUrl))
+                .transform(CirculoTransformacion())
+                .resize(130,130)
+                .into(imgUser)
 
-
-                tvEmailUser.text = email
-                tvNombreUser.text = name
-                Picasso.get()
-                    .load(Uri.parse(photoUrl))
-                    .transform(CirculoTransformacion())
-                    .resize(130,130)
-                    .into(imgUser)
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
+        }
 
     }
+
 
 
 

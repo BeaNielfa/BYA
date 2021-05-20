@@ -28,6 +28,8 @@
     <string name="Precio">Precio</string>
     <string name="referencia">Referencia</string>
     <string name="tipoPrenda">Elegir el tipo de prenda</string>
+    <string name="prendaExistente">Añadir prenda existente</string>
+    <string name="prendaNueva">Añadir prenda nueva</string>
 
 
     <string-array name="spiPrendas">

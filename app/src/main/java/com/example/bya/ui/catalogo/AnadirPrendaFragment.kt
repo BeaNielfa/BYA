@@ -12,14 +12,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
+import android.widget.*
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.CirculoTransformacion
 import com.example.bya.R
+import com.example.bya.clases.Prenda
+import com.example.bya.clases.Usuario
+import com.google.android.gms.auth.api.signin.internal.Storage
+import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_registro.*
+import kotlinx.android.synthetic.main.fragment_anadir_prenda.*
 import java.io.IOException
+import java.util.*
 
 
 class AnadirPrendaFragment : Fragment() {
@@ -30,6 +37,24 @@ class AnadirPrendaFragment : Fragment() {
     private var fotoUri: Uri? = null
     //private val imgPrenda
 
+    private var nombre = ""
+    private var precio= ""
+    private var referencia = ""
+    private var idPrenda = ""
+    private var idTipo = ""
+    private var foto = ""
+    private var stock = 0
+
+
+    private lateinit var Storage: FirebaseStorage
+
+    private lateinit var imgPrenda: ImageView
+
+    private val db = FirebaseFirestore.getInstance()
+
+
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +62,15 @@ class AnadirPrendaFragment : Fragment() {
         val root =  inflater.inflate(R.layout.fragment_anadir_prenda, container, false);
 
         val imgX : ImageView = root.findViewById(R.id.imgAnadirCerrar)
+        imgPrenda = root.findViewById(R.id.imgAnadirPrendaFoto)
+        val btnGuardar : Button = root.findViewById(R.id.btnAnadirPrendaGuardarCambios)
+        val etNombre: EditText = root.findViewById(R.id.etAnadirPrendaNombre)
+        val etPrecio: EditText = root.findViewById(R.id.etAnadirPrendaPrecio)
+        val etReferencia: EditText = root.findViewById(R.id.etAnadirPrendaReferencia)
+        val spiTipo : Spinner = root.findViewById(R.id.spiAnadirPrendaTipo)
+
+        Storage = FirebaseStorage.getInstance()
+
 
         imgX.setOnClickListener {
             val transaction = requireActivity().supportFragmentManager.beginTransaction()
@@ -44,6 +78,119 @@ class AnadirPrendaFragment : Fragment() {
             transaction.replace(R.id.anadirPrenda, CatalogoFragment())
             transaction.addToBackStack(null)
             transaction.commit()
+        }
+
+        imgPrenda.setOnClickListener {
+            mostrarDialogo()
+        }
+
+        btnGuardar.setOnClickListener {
+            //TODO COMPROBAR QUE NO INTRODUZCA LA PRENDA VACÍA
+
+            var bandera: Boolean = false
+
+            idPrenda = UUID.randomUUID().toString()//DAMOS UN ID A LA PRENDA
+
+            when (spiTipo.selectedItem.toString()) {
+
+                "Camiseta M" -> idTipo = "0"
+                "Blusa M" -> idTipo = "1"
+                "Vestido M" -> idTipo = "2"
+                "Jeans M" -> idTipo = "3"
+                "Accesorio M" -> idTipo = "4"
+                "Falda M" -> idTipo = "5"
+                "Camiseta H" -> idTipo = "6"
+                "Camisa H" -> idTipo = "7"
+                "Accesorio H" -> idTipo = "8"
+                "Jeans H" -> idTipo = "9"
+
+                else -> idTipo = "No encontrado"
+
+            }
+
+            var insertar: Boolean = false
+
+            nombre = etNombre.text.toString()
+            precio = etPrecio.text.toString()
+            referencia = etReferencia.text.toString()
+
+            //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
+            if (nombre.isEmpty() || precio.isEmpty() || referencia.isEmpty()) {
+                if (nombre.isEmpty()) {
+                    tilAnadirPrendaNombre.setError("El email es obligatorio")
+                }
+
+                if (precio.isEmpty()) {
+                    tilAnadirPrendaPrecio.setError("La contraseña es obligatoria")
+                }
+
+                if (referencia.isEmpty()) {
+                    tilAnadirPrendaReferencia.setError("El nombre es obligatorio")
+                }
+
+            } else {
+                tilAnadirPrendaNombre.setError(null)
+                tilAnadirPrendaPrecio.setError(null)
+                tilAnadirPrendaReferencia.setError(null)
+
+
+                var listReferencias = mutableListOf<Int>()
+
+                db.collection("prendas")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (prenda in result) {
+
+                            listReferencias.add(prenda.get("referencia").toString().toInt())
+
+
+                        }
+
+
+                    }
+
+                Log.e("LISTA", listReferencias.size.toString()+" EHHHHHHHHHHHHHHHHHHH")
+
+
+
+                db.collection("prendas")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (prenda in result) {
+
+                            if (prenda.get("referencia").toString().equals(referencia)) {
+
+                                var idPrendaActual = prenda.get("idPrenda").toString()
+                                var stock = prenda.get("stock").toString().toInt()
+
+                                db.collection("prendas").document(idPrendaActual).update("stock", stock + 1)
+                                insertar = true
+                            }
+
+                        }
+
+                        if (!insertar) {
+                            Log.e("PROBLEMAS", "SE METE")
+
+                            val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
+                            val ref = Storage.getReference("/fotosPrendas/$img")
+
+                            ref.putFile(fotoUri!!).addOnSuccessListener { //Subimos la foto
+                                ref.downloadUrl.addOnSuccessListener { //descargamos su url
+                                    foto = it.toString()  //lo asignamos a la variable
+
+                                    val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, 1)
+                                    db.collection("prendas").document(idPrenda).set(p)
+
+                                }
+                            }
+
+                        }
+
+
+                }
+        }
+
         }
 
 
@@ -118,7 +265,7 @@ class AnadirPrendaFragment : Fragment() {
                 // Obtenemos su URI con su dirección temporal
                 fotoUri = data.data
                 try {
-                    Picasso.get().load(fotoUri).transform(CirculoTransformacion()).into(imgRegistro)
+                    Picasso.get().load(fotoUri).into(imgPrenda)
                 } catch (e: IOException) {
                     e.printStackTrace()
                     Toast.makeText(requireContext(), "¡Fallo Galeria!", Toast.LENGTH_SHORT).show()
@@ -129,8 +276,7 @@ class AnadirPrendaFragment : Fragment() {
 
             Picasso.get().
             load(fotoUri).
-            transform(CirculoTransformacion()).
-            into(imgRegistro)
+            into(imgPrenda)
 
         }
     }
