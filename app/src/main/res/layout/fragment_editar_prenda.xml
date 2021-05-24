@@ -3,8 +3,8 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent"
-                                                   tools:context=".ui.catalogo.AnadirPrendaFragment"
-                                                   android:id="@+id/anadirPrenda"
+                                                   tools:context=".ui.catalogo.EditarPrendaFragment"
+                                                   android:id="@+id/editarPrenda"
                                                    android:background="@color/primary">
 
     <ScrollView
@@ -21,7 +21,7 @@
                       android:orientation="vertical" app:layout_constraintTop_toTopOf="parent"
                       app:layout_constraintStart_toStartOf="parent">
             <ImageView
-                    android:id="@+id/imgAnadirPrendaExistenteFoto"
+                    android:id="@+id/imgEditarPrendaFoto"
                     android:layout_width="200dp"
                     android:layout_height="200dp"
                     android:src="@drawable/ic_menu_camera"
@@ -31,7 +31,7 @@
             />
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAnadirPrendaExistenteNombre"
+                    android:id="@+id/tilEditarPrendaNombre"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -41,10 +41,13 @@
                     android:paddingRight="42dp"
                     android:textColorHint="@color/black"
                     app:boxStrokeColor="@color/black"
-                    app:boxStrokeWidthFocused="2dp">
+                    app:boxStrokeWidthFocused="2dp"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black"
+            >
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAnadirPrendaExistenteNombre"
+                        android:id="@+id/etEditarPrendaNombre"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                 >
@@ -55,7 +58,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilAnadirPrendaExistentePrecio"
+                    android:id="@+id/tilEditarPrendaPrecio"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -65,13 +68,39 @@
                     android:paddingRight="42dp"
                     android:textColorHint="@color/black"
                     app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="2dp"
+                    app:endIconMode="clear_text"
+                    app:endIconTint="@color/black">
+
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEditarPrendaPrecio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="numberDecimal">
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilEditarPrendaReferencia"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/referencia"
+                    android:paddingLeft="42dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="42dp"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black"
                     app:boxStrokeWidthFocused="2dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etAnadirPrendaExistentePrecio"
+                        android:id="@+id/etEditarPrendaReferencia"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:inputType="numberDecimal"
+                        android:inputType="number"
+
                 >
 
                 </com.google.android.material.textfield.TextInputEditText>
@@ -79,26 +108,32 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <TextView android:layout_width="wrap_content"
-                      android:layout_height="wrap_content"
-                      android:text="@string/numeroReferencia"
-                      android:layout_marginLeft="42dp"
-                      android:layout_marginTop="16dp"
-                      android:textColor="@color/black"
-            />
-            <Spinner
-                    android:id="@+id/spiAnadirPrendaExistenteReferencia"
-                    android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilEditarPrendaTipo"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:spinnerMode="dialog"
-                    android:background="@color/white"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="42dp"
-            />
+                    android:hint="@string/tipoPrenda"
+                    android:paddingLeft="42dp"
+                    android:paddingTop="5dp"
+                    android:paddingRight="42dp"
+                    android:textColorHint="@color/black"
+                    app:boxStrokeColor="@color/black"
+                    app:boxStrokeWidthFocused="2dp">
 
+                <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEditarPrendaTipo"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:inputType="number"
+
+                >
+
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
             <Button
-                    android:id="@+id/btnAnadirPrendaExistenteGuardarCambios"
+                    android:id="@+id/btnEditarPrendaGuardarCambios"
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
                     style="@style/Animation.Design.BottomSheetDialog"
@@ -108,12 +143,13 @@
                     android:layout_marginTop="50dp"
                     android:text="@string/cambios"
                     android:backgroundTint="@color/black"
-                    android:textSize="25dp" />
+                    android:textSize="25dp"
+            />
         </LinearLayout>
     </ScrollView>
 
     <ImageView
-            android:id="@+id/imgAnadirExistenteCerrar"
+            android:id="@+id/imgEditarCerrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cerrar"

@@ -17,19 +17,15 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.bya.CirculoTransformacion
 import com.example.bya.R
-import com.example.bya.clases.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_registro.*
 import kotlinx.android.synthetic.main.fragment_perfil.*
 import java.io.IOException
 import java.util.*
@@ -146,7 +142,6 @@ class PerfilFragment : Fragment() {
                 db.collection("usuarios").document(idUsuario).update("pass", pass)
 
                 Toast.makeText(requireContext(), "Usuario actualizado",Toast.LENGTH_SHORT).show()
-                Log.e("Perfil", "ADMINISTRADOR actualizado")
 
 
             } else {
@@ -167,6 +162,8 @@ class PerfilFragment : Fragment() {
 
                     }
                 }
+
+                Toast.makeText(requireContext(), "Usuario actualizado",Toast.LENGTH_SHORT).show()
             }
         }
 

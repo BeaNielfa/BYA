@@ -17,7 +17,7 @@ import com.squareup.picasso.Picasso
 
 class AnadirPrendaExistenteFragment : Fragment() {
 
-    private var listaReferencias = mutableListOf<String>()
+    private var listaReferencias = mutableListOf<Int>()
 
     private val db = FirebaseFirestore.getInstance()
 
@@ -71,6 +71,8 @@ class AnadirPrendaExistenteFragment : Fragment() {
 
                 }
 
+            Toast.makeText(requireContext(), "Prenda insertada correctamente",Toast.LENGTH_SHORT).show()
+
 
         }
 
@@ -114,14 +116,16 @@ class AnadirPrendaExistenteFragment : Fragment() {
             .addOnSuccessListener { result ->
                 for (prenda in result) {
 
-                    var ref = prenda.get("referencia").toString()
+                    var ref = prenda.get("referencia").toString().toInt()
 
                     listaReferencias.add(ref)
 
                 }
+
+                listaReferencias.sort()
                 //las aÃ±adimos en el spinner
                 spiReferencia.setAdapter(
-                    ArrayAdapter<String>(
+                    ArrayAdapter<Int>(
                         requireActivity(),
                         android.R.layout.simple_spinner_dropdown_item,
                         listaReferencias

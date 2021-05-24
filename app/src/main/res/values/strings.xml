@@ -31,7 +31,7 @@
     <string name="numeroReferencia">Elegir referencia</string>
     <string name="prendaExistente">Añadir prenda existente</string>
     <string name="prendaNueva">Añadir prenda nueva</string>
-
+    <string name="prendas">Prendas</string>
 
     <string-array name="spiPrendas">
         <item>Camiseta M</item>
