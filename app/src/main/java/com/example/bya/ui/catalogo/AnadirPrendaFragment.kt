@@ -16,11 +16,9 @@ import android.widget.*
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 import com.example.bya.clases.Prenda
-import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_registro.*
 import kotlinx.android.synthetic.main.fragment_anadir_prenda.*
 import java.io.IOException
 import java.util.*
@@ -42,11 +40,8 @@ class AnadirPrendaFragment : Fragment() {
     private var foto = ""
     private var stock = 0
 
-
     private lateinit var Storage: FirebaseStorage
-
     private lateinit var imgPrenda: ImageView
-
     private val db = FirebaseFirestore.getInstance()
 
 
@@ -144,10 +139,6 @@ class AnadirPrendaFragment : Fragment() {
 
                                 tilAnadirPrendaReferencia.setError("La referencia ya existe")
 
-                                /* var idPrendaActual = prenda.get("idPrenda").toString()
-                                var stock = prenda.get("stock").toString().toInt()
-
-                                db.collection("prendas").document(idPrendaActual).update("stock", stock + 1)*/
                                 insertar = true
                             }
 
@@ -178,8 +169,7 @@ class AnadirPrendaFragment : Fragment() {
                             etReferencia.setText("")
                             fotoUri = null
 
-                            //imgPrenda.setImageResource(android.R.color.transparent)
-                            //imgPrenda.setBackgroundResource(R.drawable.ic_menu_camera)
+
                             Picasso.get().
                             load(R.drawable.ic_menu_camera).
                             into(imgPrenda)

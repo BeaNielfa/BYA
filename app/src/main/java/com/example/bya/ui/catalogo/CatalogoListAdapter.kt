@@ -34,9 +34,9 @@ class CatalogoListAdapter(private val listaPrendas: MutableList<Prenda>,
             holder.tvItemPrendaAdminTipo.text = it.get("descripcion").toString()
 
             holder.tvItemPrendaAdminNombre.text = listaPrendas[position].nombre
-            holder.tvItemPrendaAdminPrecio.text = listaPrendas[position].precio
+            holder.tvItemPrendaAdminPrecio.text = listaPrendas[position].precio + " EUR"
             holder.tvItemPrendaAminRef.text = listaPrendas[position].referencia
-            holder.tvItemPrendaAdminStock.text = listaPrendas[position].stock.toString()
+            holder.tvItemPrendaAdminStock.text = "Stock: "+ listaPrendas[position].stock.toString()
 
             Picasso.get().load(Uri.parse(listaPrendas[position].foto)).into(holder.imgItemPrendaAdmin)
 

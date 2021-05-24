@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
-import android.os.AsyncTask
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -23,11 +21,8 @@ import com.example.bya.R
 import com.example.bya.clases.Prenda
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.database.*
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.fragment_anadir_prenda.*
-import kotlinx.android.synthetic.main.fragment_catalogo.*
+
 
 
 class CatalogoFragment : Fragment() {
@@ -222,13 +217,13 @@ class CatalogoFragment : Fragment() {
     //Cuando deslizamos hacia la izquierda aparece un fondo rojo con el botón de eliminar
     private fun botonIzquierdo(canvas: Canvas, dX: Float, itemView: View, width: Float) {
 
-        paintSweep.setColor(Color.BLUE)
+        paintSweep.setColor(resources.getColor(R.color.dark))
         val background = RectF(
             itemView.left.toFloat(), itemView.top.toFloat(), dX,
             itemView.bottom.toFloat()
         )
         canvas.drawRect(background, paintSweep)
-        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_sweep_editar)
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.edit)
         val iconDest = RectF(
             itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left
                 .toFloat() + 2 * width, itemView.bottom.toFloat() - width
@@ -241,13 +236,13 @@ class CatalogoFragment : Fragment() {
      */
     private fun botonDerecho(canvas: Canvas, dX: Float, itemView: View, width: Float) {
         // Pintamos de rojo y ponemos el icono
-        paintSweep.color = Color.RED
+        paintSweep.color = resources.getColor(R.color.dark)
         val background = RectF(
             itemView.right.toFloat() + dX,
             itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat()
         )
         canvas.drawRect(background, paintSweep)
-        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_seep_eliminar)
+        val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.delete)
         val iconDest = RectF(
             itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right
                 .toFloat() - width, itemView.bottom.toFloat() - width

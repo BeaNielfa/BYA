@@ -27,10 +27,9 @@
             android:text="@string/prendas"
             android:textSize="30dp"
             android:textColor="@color/black"
-            app:layout_constraintEnd_toEndOf="parent"
             android:id="@+id/tvCatalogoTitulo"
-            android:layout_marginStart="50dp"
-            android:textStyle="bold">
+            android:layout_marginStart="32dp"
+            android:textStyle="bold" android:layout_marginTop="24dp">
 
     </TextView>
 
@@ -40,11 +39,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:listitem="@layout/item_prenda_administrador" />
+
+            tools:listitem="@layout/item_prenda_administrador"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tvCatalogoTitulo"
+            android:layout_marginTop="90dp"/>
 
 
 
