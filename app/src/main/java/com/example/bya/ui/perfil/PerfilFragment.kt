@@ -17,6 +17,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.fragment.app.FragmentTransaction
 import androidx.navigation.ui.AppBarConfiguration
 import com.example.bya.CirculoTransformacion
 import com.example.bya.R
@@ -24,6 +25,7 @@ import com.example.bya.clases.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
@@ -36,8 +38,7 @@ import java.util.*
 class PerfilFragment : Fragment() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var db: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
+
     private var idUsuario = ""
     private var name: String? = ""
     private var email: String? = ""
@@ -52,6 +53,8 @@ class PerfilFragment : Fragment() {
     private lateinit var etPass: EditText
     private lateinit var imgPerfil: ImageView
 
+    private val db = FirebaseFirestore.getInstance()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,12 +68,11 @@ class PerfilFragment : Fragment() {
         imgPerfil = root.findViewById(R.id.imgPerfil)
 
         Auth = Firebase.auth
-        db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
-
 
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
         Log.e("PERFIL ",idUsuario)
+
         cargarDatos()
 
         val btnPerfil: Button = root.findViewById(R.id.btnPerfilCambios)
@@ -82,42 +84,33 @@ class PerfilFragment : Fragment() {
         img.setOnClickListener {
             mostrarDialogo()
         }
+
         // Inflate the layout for this fragment
         return  root
     }
     private fun cargarDatos() {
 
+        db.collection("usuarios").document(idUsuario).get().addOnSuccessListener {
+            name = it.get("nombre").toString()
+            email =  it.get("email").toString()
+            photoUrl =  it.get("foto").toString()
+            pass =  it.get("pass").toString()
 
-        databaseReference = db.reference.child("usuarios").child(idUsuario)
+            etNombre.setText(name)
+            etEmail.setText(email)
+            etPass.setText(pass)
 
-        databaseReference.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                snapshot.children.forEach {
+            Picasso.get()
+                .load(Uri.parse(photoUrl))
+                .transform(CirculoTransformacion())
+                .resize(178, 178)
+                .into(imgPerfil)
 
-                    name = snapshot.child("nombre").getValue().toString()
-                    email = snapshot.child("email").getValue().toString()
-                    photoUrl = snapshot.child("foto").getValue().toString()
-                    pass = snapshot.child("pass").getValue().toString()
+            etEmail.isEnabled = false
+            etEmail.setBackgroundColor(resources.getColor(R.color.dark))
 
-                    etNombre.setText(name)
-                    etEmail.setText(email)
-                    etPass.setText(pass)
+        }
 
-                    Picasso.get()
-                        .load(Uri.parse(photoUrl))
-                        .transform(CirculoTransformacion())
-                        .resize(178, 178)
-                        .into(imgPerfil)
-
-                    etEmail.isEnabled = false
-                    etEmail.setBackgroundColor(resources.getColor(R.color.dark))
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
 
 
     }
@@ -125,7 +118,8 @@ class PerfilFragment : Fragment() {
 
     private fun editarDatos() {
 
-       val user = Auth.currentUser
+        Toast.makeText(requireContext(), "VA A EDITAR DATOS",Toast.LENGTH_SHORT)
+        val user = Auth.currentUser
 
         val nombre = etNombre.text.toString()
         val pass = etPass.text.toString()
@@ -147,8 +141,14 @@ class PerfilFragment : Fragment() {
             user!!.updatePassword(pass)
 
             if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO
-                val u = Usuario(idUsuario, nombre, email, pass, photoUrl.toString())
-                databaseReference.setValue(u)
+
+                db.collection("usuarios").document(idUsuario).update("nombre", nombre)
+                db.collection("usuarios").document(idUsuario).update("pass", pass)
+
+                Toast.makeText(requireContext(), "Usuario actualizado",Toast.LENGTH_SHORT).show()
+                Log.e("Perfil", "ADMINISTRADOR actualizado")
+
+
             } else {
                 val filename = UUID.randomUUID().toString()
                 val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
@@ -157,12 +157,12 @@ class PerfilFragment : Fragment() {
 
                         photoUrl = it.toString()
 
-                        val u = Usuario(
-                            idUsuario, etPerfilNombre.text.toString(),
-                            etPerfilEmail.text.toString(), etPerfilPass.text.toString(), photoUrl.toString()
-                        )
+                        db.collection("usuarios").document(idUsuario).update("nombre", nombre)
+                        db.collection("usuarios").document(idUsuario).update("pass", pass)
+                        db.collection("usuarios").document(idUsuario).update("foto", photoUrl)
 
-                        databaseReference.setValue(u)
+                        Log.e("Perfil", "USUARIO actualizado")
+
 
 
                     }
@@ -171,8 +171,6 @@ class PerfilFragment : Fragment() {
         }
 
     }
-
-
 
     /**
      * Metodo que abre un dialogo para elegir camara o galeria

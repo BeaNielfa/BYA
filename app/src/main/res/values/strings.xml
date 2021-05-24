@@ -25,6 +25,26 @@
     <string name="registrarse">Registrarse</string>
     <string name="cambios">Guardar cambios</string>
     <string name="sesion">Cerrar sesión</string>
+    <string name="Precio">Precio</string>
+    <string name="referencia">Referencia</string>
+    <string name="tipoPrenda">Elegir el tipo de prenda</string>
+    <string name="numeroReferencia">Elegir referencia</string>
+    <string name="prendaExistente">Añadir prenda existente</string>
+    <string name="prendaNueva">Añadir prenda nueva</string>
+
+
+    <string-array name="spiPrendas">
+        <item>Camiseta M</item>
+        <item>Blusa M</item>
+        <item>Vestido M</item>
+        <item>Jeans M</item>
+        <item>Accesorio M</item>
+        <item>Falda M</item>
+        <item>Camiseta H</item>
+        <item>Camisa H</item>
+        <item>Accesorio H</item>
+        <item>Jeans H</item>
+    </string-array>
 
 
 </resources>

@@ -6,35 +6,25 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.navigation.ui.*
-import com.example.bya.clases.Usuario
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var db: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
     private var idUsuario = ""
     private var name: String? = ""
     private var email: String? = ""
@@ -43,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tvEmailUser: TextView
     private  lateinit var tvNombreUser: TextView
     private  lateinit var imgUser: ImageView
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,12 +50,11 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-               R.id.nav_perfil), drawerLayout)
+            R.id.nav_perfil,R.id.nav_catalogo), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
         Auth = Firebase.auth
-        db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
 
         tvEmailUser = navView.getHeaderView(0).findViewById(R.id.tvEmailUser)
         tvNombreUser  = navView.getHeaderView(0).findViewById(R.id.tvNombreUser)
@@ -73,12 +63,9 @@ class MainActivity : AppCompatActivity() {
 
         if(google!!){
             hideItem()
-            Log.e("GOOGLE", google.toString()+" EHH")
-        }else{
-            Log.e("GOOGLE", google.toString()+" EHH")
         }
 
-       val imgSesion: ImageView = navView.getHeaderView(0).findViewById(R.id.imgSesion)
+        val imgSesion: ImageView = navView.getHeaderView(0).findViewById(R.id.imgSesion)
 
         imgSesion.setOnClickListener {
             salir()
@@ -90,11 +77,11 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-   private fun hideItem(){
-       var navigationView = findViewById<View>(R.id.nav_view) as NavigationView
-       val nav_Menu: Menu = navigationView.getMenu()
-       nav_Menu.findItem(R.id.nav_perfil).isVisible = false
-   }
+    private fun hideItem(){
+        var navigationView = findViewById<View>(R.id.nav_view) as NavigationView
+        val nav_Menu: Menu = navigationView.getMenu()
+        nav_Menu.findItem(R.id.nav_perfil).isVisible = false
+    }
 
 
     /**
@@ -138,28 +125,24 @@ class MainActivity : AppCompatActivity() {
         val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
 
-        databaseReference = db.reference.child("usuarios").child(idUsuario)
+        db.collection("usuarios").document(idUsuario).addSnapshotListener{ snapshot, e->
+            name = snapshot?.get("nombre").toString()
+            Log.e("NOMBRE" , "NOMBRE" + name)
+            email = snapshot?.get("email").toString()
+            photoUrl = snapshot?.get("foto").toString()
 
-        databaseReference.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                name = snapshot.child("nombre").value.toString()
-                email = snapshot.child("email").value.toString()
-                photoUrl = snapshot.child("foto").value.toString()
+            tvEmailUser.text = email
+            tvNombreUser.text = name
+            Picasso.get()
+                .load(Uri.parse(photoUrl))
+                .transform(CirculoTransformacion())
+                .resize(130,130)
+                .into(imgUser)
+
+        }
 
 
-                tvEmailUser.text = email
-                tvNombreUser.text = name
-                Picasso.get()
-                    .load(Uri.parse(photoUrl))
-                    .transform(CirculoTransformacion())
-                    .resize(130,130)
-                    .into(imgUser)
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-
-            }
-        })
 
     }
 

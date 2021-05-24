@@ -1,12 +1,11 @@
 package com.example.bya
 
 import android.Manifest
-import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.example.bya.clases.Usuario
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -16,17 +15,14 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_registro.*
-import kotlinx.android.synthetic.main.fragment_perfil.*
 
 class LoginActivity : AppCompatActivity() {
     //VARIABLES
@@ -34,8 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private var pass = ""
     private var idUsuario = ""
     private lateinit var Auth: FirebaseAuth
-    private lateinit var db: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
+    private val db = FirebaseFirestore.getInstance()
+
     private  val GOOGLE_SIGN_IN = 100
     private var google = false
 
@@ -48,8 +44,6 @@ class LoginActivity : AppCompatActivity() {
 
         //Variables para acceder a Firebase
         Auth = Firebase.auth
-        db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
-
 
         //ENTRAMOS EN LA ACTIVIDAD DE REGISTRO
         tvLoginRegistrate.setOnClickListener{
@@ -129,31 +123,36 @@ class LoginActivity : AppCompatActivity() {
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener{
                         if(it.isSuccessful){
-                            databaseReference = db.reference.child("usuarios")
 
                             idUsuario = Auth.currentUser.uid
                             val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
                             pref.putString("idUsuario",idUsuario)
                             pref.apply()
 
-                            databaseReference.addValueEventListener(object: ValueEventListener{
-                                override fun onDataChange(snapshot: DataSnapshot) {
+                            var existe = false
 
-                                    if(!snapshot.hasChild(idUsuario)){
-                                        val u = Usuario (idUsuario,account.displayName.toString(),account.email.toString(),"",account.photoUrl.toString())
-                                        databaseReference.child(idUsuario).setValue(u)
+                            db.collection("usuarios")
+                                .get()
+                                .addOnSuccessListener { result ->
+                                    for(usuario in result){
+
+                                        if(usuario.get("idUsuario").toString().equals(idUsuario))  {
+                                            existe = true
+                                        }
 
                                     }
+
+                                    if(!existe){
+                                        val u = Usuario (idUsuario,account.displayName.toString(),account.email.toString(),"",account.photoUrl.toString())
+                                        db.collection("usuarios").document(idUsuario).set(u)
+                                    }
+
+                                    google = true//PARA QUE NO PUEDA EDITAR SU PERFIL
+                                    entrarMain()
                                 }
 
-                                override fun onCancelled(error: DatabaseError) {
 
-                                }
 
-                            })
-
-                            google = true//PARA QUE NO PUEDA EDITAR SU PERFIL
-                            entrarMain()
                         }else{
 
                         }
@@ -169,20 +168,19 @@ class LoginActivity : AppCompatActivity() {
      * Metodo que nos lleva a la actividad Main
      */
     private fun entrarMain(){
-        databaseReference = db.reference.child("usuarios").child(idUsuario)
+        var tipo = ""
+        //var nombre = ""
 
-        databaseReference.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val tipo = snapshot.child("tipo").getValue().toString()
+        val pillarTipo = db.collection("usuarios").document(idUsuario)
 
-                main(tipo)
-            }
+        pillarTipo.get().addOnSuccessListener {
+            tipo = it.get("tipo").toString()
+            //nombre = it.get("nombre").toString()
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-        })
-
+            Log.e("TIPO ", "TIPO: " + tipo)
+            //Log.e("TIPO ", "NOMBRE: " + nombre)
+            main(tipo)
+        }
 
 
 

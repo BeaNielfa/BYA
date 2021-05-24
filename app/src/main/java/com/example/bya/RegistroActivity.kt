@@ -1,5 +1,4 @@
 package com.example.bya
-
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -12,16 +11,12 @@ import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
 import com.example.bya.clases.Usuario
-import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_registro.*
 import java.io.IOException
 import java.util.*
@@ -39,8 +34,7 @@ class RegistroActivity : AppCompatActivity() {
     private var id = ""
 
     private lateinit var Auth: FirebaseAuth
-    private lateinit var db: FirebaseDatabase
-    private lateinit var databaseReference: DatabaseReference
+    private val db = FirebaseFirestore.getInstance()
     private lateinit var Storage: FirebaseStorage
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,15 +43,13 @@ class RegistroActivity : AppCompatActivity() {
 
         //Variables para acceder a Firebase
         Auth = Firebase.auth
-        db = FirebaseDatabase.getInstance("https://byabea-e5b76-default-rtdb.europe-west1.firebasedatabase.app/")
-        databaseReference = db.reference.child("usuarios")
         Storage = FirebaseStorage.getInstance()
 
 
         //BOTON QUE NOS PERMITE REGISTRARNOS EN BYA
         btnRegistroRegistrarse.setOnClickListener {
 
-                registrar()
+            registrar()
 
         }
         //BOTON QUE NOS PERMITE CANCELAR EL REGISTRO Y VOLVER A LA VENTANA DE LOGIN
@@ -105,7 +97,7 @@ class RegistroActivity : AppCompatActivity() {
         }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
             tilRegistroNombre.setError(null)
             tilRegisroPass.setError(null)
-           tilRegistroEmail.setError("El formato no es correcto")
+            tilRegistroEmail.setError("El formato no es correcto")
         }else{
             tilRegistroEmail.setError(null)
             tilRegistroNombre.setError(null)
@@ -128,7 +120,7 @@ class RegistroActivity : AppCompatActivity() {
                                 foto = it.toString()  //lo asignamos a la variable
 
                                 val u = Usuario (id,nombre,email, pass,foto)
-                                databaseReference.child(id).setValue(u)//AÑADIMOS EL USUARIO A LA TABLA
+                                db.collection("usuarios").document(id).set(u)//AÑADIMOS EL USUARIO A LA TABLA
                             }
                         }
 
@@ -139,12 +131,12 @@ class RegistroActivity : AppCompatActivity() {
                                 foto = it.toString()  //lo asignamos a la variable
 
                                 val u = Usuario (id,nombre,email, pass,foto)//AÑADIMOS EL USUARIO A LA TABLA
-                                databaseReference.child(id).setValue(u)
+                                db.collection("usuarios").document(id).set(u)
                             }
                         }
                     }
-                        //UNA VEZ REGISTRADOS NOS LLEVA A LA ACTIVIDAD MAIN
-                        entrarMain()
+                    //UNA VEZ REGISTRADOS NOS LLEVA A LA ACTIVIDAD MAIN
+                    entrarMain()
                 }else{//SI NO HA IDO BIEN, EL CORREO YA EXISTE
                     tilRegistroEmail.setError("Este email ya está registrado")
                 }
@@ -167,6 +159,7 @@ class RegistroActivity : AppCompatActivity() {
      */
     private fun entrarMain(){
         val main = Intent(this, MainActivity::class.java)
+        main.putExtra("Google", false)
         startActivity(main)
 
     }
@@ -247,9 +240,9 @@ class RegistroActivity : AppCompatActivity() {
         } else if (requestCode == CAMARA) {
 
             Picasso.get().
-                    load(fotoUri).
-                    transform(CirculoTransformacion()).
-                    into(imgRegistro)
+            load(fotoUri).
+            transform(CirculoTransformacion()).
+            into(imgRegistro)
 
         }
     }

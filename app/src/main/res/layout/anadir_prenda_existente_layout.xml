@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_gravity="bottom"
+                                                   android:layout_height="225dp">
+    <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:strokeColor="@color/black"
+            app:strokeWidth="2dp"
+            app:cardCornerRadius="0dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintDimensionRatio="1:1">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/secundary">
+
+
+            <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="1000dp"
+                    android:layout_height="1dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+            <ImageView
+                    android:id="@+id/imgPrendaExistente"
+                    android:layout_width="76dp"
+                    android:layout_height="50dp"
+                    app:layout_constraintEnd_toStartOf="@+id/tvPrendaExistente"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_verificar" android:layout_marginTop="50dp"
+                    android:layout_marginStart="40dp"/>
+
+            <TextView
+                    android:id="@+id/tvPrendaExistente"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prendaExistente"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/imgPrendaExistente"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/imgPrendaExistente"
+                    app:layout_constraintTop_toTopOf="@+id/imgPrendaExistente"
+                    app:layout_constraintVertical_bias="0.406"/>
+
+            <ImageView
+                    android:id="@+id/imgPrendaNueva"
+                    android:layout_width="76dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imgPrendaExistente"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/imgPrendaExistente"
+                    app:layout_constraintTop_toBottomOf="@+id/imgPrendaExistente"
+                    app:layout_constraintVertical_bias="0.057"
+                    app:srcCompat="@drawable/ic_editar"/>
+
+            <TextView
+                    android:id="@+id/tvPrendaNueva"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prendaNueva"
+                    android:textColor="@color/black"
+                    android:textSize="15dp"
+                    android:maxLines="2"
+                    app:layout_constraintBottom_toBottomOf="@+id/imgPrendaNueva"
+                    app:layout_constraintEnd_toEndOf="@+id/tvPrendaExistente"
+                    app:layout_constraintStart_toStartOf="@+id/tvPrendaExistente"
+                    app:layout_constraintTop_toTopOf="@+id/imgPrendaNueva"
+                    app:layout_constraintVertical_bias="0.466" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
