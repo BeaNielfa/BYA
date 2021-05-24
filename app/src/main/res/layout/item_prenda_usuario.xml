@@ -20,7 +20,7 @@
 
     <TextView
             android:text="TextView"
-            android:layout_width="wrap_content"
+            android:layout_width="130sp"
             android:layout_height="wrap_content"
             android:id="@+id/tvItemPrendaUsuarioNombre"
             android:maxLines="2"

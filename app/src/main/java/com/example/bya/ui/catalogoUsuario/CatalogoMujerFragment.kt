@@ -5,56 +5,97 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [CatalogoMujerFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CatalogoMujerFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_catalogo_mujer, container, false)
+        val root = inflater.inflate(R.layout.fragment_catalogo_mujer, container, false)
+
+        val imgCamiseta : ImageView = root.findViewById(R.id.imgCatalogoMujerCamiseta)
+        val tvCamiseta : TextView = root.findViewById(R.id.tvCatalogoMujerCamiseta)
+        val imgBlusa : ImageView = root.findViewById(R.id.imgCatalogoMujerBlusa)
+        val tvBlusa : TextView = root.findViewById(R.id.tvCatalogoMujerBlusa)
+        val imgAccesorio : ImageView = root.findViewById(R.id.imgCatalogoMujerAccesorio)
+        val tvAccesorio : TextView = root.findViewById(R.id.tvCatalogoMujerAccesorio)
+        val imgJeans : ImageView = root.findViewById(R.id.imgCatalogoMujerJeans)
+        val tvJeans : TextView = root.findViewById(R.id.tvCatalogoMujerJeans)
+        val imgVestido : ImageView = root.findViewById(R.id.imgCatalogoMujerVestido)
+        val tvVestido : TextView = root.findViewById(R.id.tvCatalogoMujerVestido)
+        val imgFalda : ImageView = root.findViewById(R.id.imgCatalogoMujerFalda)
+        val tvFalda : TextView = root.findViewById(R.id.tvCatalogoMujerFalda)
+
+        imgCamiseta.setOnClickListener {
+            entrarListaPrendas("0")
+        }
+
+        tvCamiseta.setOnClickListener {
+            entrarListaPrendas("0")
+        }
+
+        imgBlusa.setOnClickListener {
+            entrarListaPrendas("1")
+        }
+
+        tvBlusa.setOnClickListener {
+            entrarListaPrendas("1")
+        }
+
+        imgAccesorio.setOnClickListener {
+            entrarListaPrendas("4")
+        }
+
+        tvAccesorio.setOnClickListener {
+            entrarListaPrendas("4")
+        }
+
+        imgJeans.setOnClickListener {
+            entrarListaPrendas("3")
+        }
+
+        tvJeans.setOnClickListener {
+            entrarListaPrendas("3")
+        }
+
+        imgVestido.setOnClickListener {
+            entrarListaPrendas("2")
+        }
+
+        tvVestido.setOnClickListener {
+            entrarListaPrendas("2")
+        }
+
+        imgFalda.setOnClickListener {
+            entrarListaPrendas("5")
+        }
+
+        tvFalda.setOnClickListener {
+            entrarListaPrendas("5")
+        }
+
+
+
+        return root
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment CatalogoMujerFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CatalogoMujerFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
+    private fun entrarListaPrendas(tipo : String){
+
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.replace(R.id.mujerLayout, CatalogoUsuarioPrendasFragment(tipo))
+        transaction.addToBackStack(null)
+        transaction.commit()
+
     }
+
 }
