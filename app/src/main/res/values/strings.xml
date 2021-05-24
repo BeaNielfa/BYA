@@ -32,6 +32,21 @@
     <string name="prendaExistente">Añadir prenda existente</string>
     <string name="prendaNueva">Añadir prenda nueva</string>
     <string name="prendas">Prendas</string>
+    <string name="hombre">Hombre</string>
+    <string name="mujer">Mujer</string>
+    <string name="camiseta">Camisetas</string>
+    <string name="blusa">Blusas</string>
+    <string name="vestido">Vestidos</string>
+    <string name="jeans">Jeans</string>
+    <string name="accesorio">Accesorios</string>
+    <string name="falda">Faldas</string>
+    <string name="camisa">Camisas</string>
+
+
+    <string-array name="spiFiltro">
+        <item>Precio: Mayor</item>
+        <item>Precio: Menor</item>
+    </string-array>
 
     <string-array name="spiPrendas">
         <item>Camiseta M</item>

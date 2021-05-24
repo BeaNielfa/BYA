@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.bya.R
 import com.example.bya.clases.Prenda
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -27,16 +26,14 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class CatalogoFragment : Fragment() {
 
+    /**
+     * Variables
+     */
     private lateinit var anadirPrenda : FloatingActionButton
-
-    private lateinit var swipe : SwipeRefreshLayout
     private lateinit var recy : RecyclerView
-
-    private var listaPrendas = mutableListOf<Prenda>() //Lista de ubicaciones
-    private lateinit var prendasAdapter: CatalogoListAdapter //Adaptador de ubicaciones
-    //private lateinit var tareaPrendas: TareaCargarPrendas // Tarea hilo para cargar ubicaciones
+    private var listaPrendas = mutableListOf<Prenda>() //Lista de prendas
+    private lateinit var prendasAdapter: CatalogoListAdapter //Adaptador de prendas
     private var paintSweep = Paint()
-
     private val db = FirebaseFirestore.getInstance()
 
 
@@ -60,25 +57,40 @@ class CatalogoFragment : Fragment() {
             dialog.setContentView(R.layout.anadir_prenda_existente_layout)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-            //Se rescatan las imágenes del layout de la cámara (si no se rescatan no funciona)
+            //Se rescatan los datos del layout
             var imgExistente: ImageView = dialog.findViewById(R.id.imgPrendaExistente)
             var imgNueva: ImageView = dialog.findViewById(R.id.imgPrendaNueva)
             var tvExistente: TextView = dialog.findViewById(R.id.tvPrendaExistente)
             var tvNueva: TextView = dialog.findViewById(R.id.tvPrendaNueva)
 
 
+            /**
+             * boton para anadir una prenda ya existente en la bbdd
+             */
             imgExistente.setOnClickListener(){
                 entrarAnadirPrendaExistente()
                 dialog.dismiss()
             }
+
+            /**
+             * boton para añadir una nueva prenda en la bbdd
+             */
             imgNueva.setOnClickListener(){
                 entrarAnadirPrenda()
                 dialog.dismiss()
             }
+
+            /**
+             * boton para anadir una prenda ya existente en la bbdd
+             */
             tvExistente.setOnClickListener(){
                 entrarAnadirPrendaExistente()
                 dialog.dismiss()
             }
+
+            /**
+             * boton para añadir una nueva prenda en la bbdd
+             */
             tvNueva.setOnClickListener(){
                 entrarAnadirPrenda()
                 dialog.dismiss()
@@ -88,7 +100,7 @@ class CatalogoFragment : Fragment() {
         }
 
 
-        //iniciarSwipeRecarga()
+
         iniciarSwipeHorizontal()
         rellenarArrayPrendas()
 
@@ -214,7 +226,10 @@ class CatalogoFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(recy)
     }
 
-    //Cuando deslizamos hacia la izquierda aparece un fondo rojo con el botón de eliminar
+
+    /**
+     * Metodo que al deslizar hacia la izquierda nos abrira un layout
+     */
     private fun botonIzquierdo(canvas: Canvas, dX: Float, itemView: View, width: Float) {
 
         paintSweep.setColor(resources.getColor(R.color.dark))
@@ -251,10 +266,14 @@ class CatalogoFragment : Fragment() {
     }
 
 
+    /**
+     * Metodo que borra una prenda de la bbdd
+     */
     private fun borrarPrenda(p: Prenda){
 
         db.collection("prendas").document(p.idPrenda).delete()
     }
+
 
     private fun editarPrenda(position: Int) {
 

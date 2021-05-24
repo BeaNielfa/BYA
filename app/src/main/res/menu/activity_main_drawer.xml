@@ -7,7 +7,7 @@
     <group android:checkableBehavior="single">
 
         <item
-                android:id="@+id/nav_catalogo"
+                android:id="@+id/nav_catalogoUsuario"
                 android:icon="@drawable/ic_contorno_de_camisa_con_percha"
                 android:title="@string/menu_catalogo"/>
         <item
