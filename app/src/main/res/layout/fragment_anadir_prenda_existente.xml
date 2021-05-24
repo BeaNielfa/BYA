@@ -41,10 +41,7 @@
                     android:paddingRight="42dp"
                     android:textColorHint="@color/black"
                     app:boxStrokeColor="@color/black"
-                    app:boxStrokeWidthFocused="2dp"
-                    app:endIconMode="clear_text"
-                    app:endIconTint="@color/black"
-            >
+                    app:boxStrokeWidthFocused="2dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAnadirPrendaExistenteNombre"
@@ -68,10 +65,7 @@
                     android:paddingRight="42dp"
                     android:textColorHint="@color/black"
                     app:boxStrokeColor="@color/black"
-                    app:boxStrokeWidthFocused="2dp"
-                    app:endIconMode="clear_text"
-                    app:endIconTint="@color/black"
-            >
+                    app:boxStrokeWidthFocused="2dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAnadirPrendaExistentePrecio"
@@ -104,7 +98,7 @@
             />
 
             <Button
-                    android:id="@+id/btnAnadirPrendaGuardarCambios"
+                    android:id="@+id/btnAnadirPrendaExistenteGuardarCambios"
                     android:layout_width="match_parent"
                     android:layout_height="65dp"
                     style="@style/Animation.Design.BottomSheetDialog"
@@ -114,13 +108,12 @@
                     android:layout_marginTop="50dp"
                     android:text="@string/cambios"
                     android:backgroundTint="@color/black"
-                    android:textSize="25dp"
-            />
+                    android:textSize="25dp" />
         </LinearLayout>
     </ScrollView>
 
     <ImageView
-            android:id="@+id/imgAnadirCerrar"
+            android:id="@+id/imgAnadirExistenteCerrar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_cerrar"

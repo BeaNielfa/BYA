@@ -14,11 +14,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.FragmentTransaction
-import com.example.bya.CirculoTransformacion
 import com.example.bya.R
 import com.example.bya.clases.Prenda
-import com.example.bya.clases.Usuario
-import com.google.android.gms.auth.api.signin.internal.Storage
 import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
