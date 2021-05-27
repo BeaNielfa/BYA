@@ -13,4 +13,6 @@
     <color name="secundary">#F2C1BC</color>
     <color name="secundaryLight">#FFF4EE</color>
     <color name="secundaryDark">#BF918C</color>
+    <color name="rojo">#F44336</color>
+    <color name="verde">#4CAF50</color>
 </resources>

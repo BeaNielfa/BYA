@@ -41,6 +41,12 @@
     <string name="accesorio">Accesorios</string>
     <string name="falda">Faldas</string>
     <string name="camisa">Camisas</string>
+    <string name="talla">Elige tu talla</string>
+    <string name="s">S</string>
+    <string name="m">M</string>
+    <string name="l">L</string>
+    <string name="cesta">Añadir a la cesta</string>
+    <string name="favorito">Favoritos</string>
 
 
     <string-array name="spiFiltro">

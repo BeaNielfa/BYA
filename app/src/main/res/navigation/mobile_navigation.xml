@@ -16,6 +16,11 @@
             android:name="com.example.bya.ui.perfil.PerfilFragment"
             android:label="@string/menu_perfil"
             tools:layout="@layout/fragment_perfil"/>
+    <fragment
+            android:id="@+id/nav_favorito"
+            android:name="com.example.bya.ui.favoritos.FavoritosFragment"
+            android:label="@string/favorito"
+            tools:layout="@layout/fragment_favorito"/>
 
 
 </navigation>

@@ -1,6 +1,6 @@
 package com.example.bya.ui.catalogoUsuario
 
-import android.net.Uri
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.SearchView
 import android.widget.Spinner
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
 import com.example.bya.clases.Prenda
@@ -27,6 +27,8 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
     private var listaPrendas2 = mutableListOf<Prenda>() //Lista de ubicaciones
     private lateinit var prendasAdapter: CatalogoUsuarioListAdapter //Adaptador de ubicaciones
 
+    private var idUsuario = ""
+
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
@@ -39,8 +41,12 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
         val searchField : SearchView = root.findViewById(R.id.searchField)
         val spiFiltro : Spinner = root.findViewById(R.id.spiFiltro)
 
+        val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
+        idUsuario = pref?.getString("idUsuario", "null").toString()
+        Log.e("PERFIL ",idUsuario)
+
         //detecta cuando pulsamos en un item
-        prendasAdapter = CatalogoUsuarioListAdapter(listaPrendas) {
+        prendasAdapter = CatalogoUsuarioListAdapter(listaPrendas, idUsuario) {
             eventoClicFila(it)
         }
 
@@ -135,9 +141,18 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
      * Se llama cuando hacemos clic en un item
      */
     private fun eventoClicFila(prenda: Prenda) {
-        //abrirPrenda(prenda)
+        abrirPrenda(prenda)
     }
 
+    private fun abrirPrenda(prenda: Prenda) {
+
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.add(R.id.catalogoUsuarioListaLayout, CatalogoUsuarioDetalleFragment(prenda))
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+    }
 
 
 }

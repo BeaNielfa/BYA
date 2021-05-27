@@ -1,19 +1,26 @@
 package com.example.bya.ui.catalogoUsuario
 
+
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
+import com.example.bya.clases.Favorito
 import com.example.bya.clases.Prenda
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_prenda_usuario.view.*
 
+
 class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
+                                 private var idUsuario : String,
                                  private val accionPrincipal: (Prenda) -> Unit
 
 ) : RecyclerView.Adapter<CatalogoUsuarioListAdapter.PrendaViewHolder>() {
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrendaViewHolder {
         return PrendaViewHolder(
@@ -30,10 +37,49 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
 
         Picasso.get().load(Uri.parse(listaPrendas[position].foto)).into(holder.imgItemPrendaUsuario)
 
+        comprobarColor(position, holder)
+        holder.imgPrendaUsuarioCorazon.setOnClickListener {
+            var id = holder.imgPrendaUsuarioCorazon.tag
+            var idFavorito = idUsuario + listaPrendas[position].idPrenda
+
+            if(id == R.drawable.ic_heart_rojo){
+                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart)
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart)
+                db.collection("favoritos").document(idFavorito).delete()
+                //pulsado = false
+                //Log.e("PULSAR", "IF" + pulsado.toString())
+            } else {
+                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart_rojo)
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart_rojo)
+                val f = Favorito (idFavorito,idUsuario,listaPrendas[position].idPrenda)//AÑADIMOS EL USUARIO A LA TABLA
+                db.collection("favoritos").document(idFavorito).set(f)
+                //pulsado = true
+                //Log.e("PULSAR", "ELSE" + pulsado.toString())
+            }
+        }
+
         holder.itemPrenda.setOnClickListener(){
             accionPrincipal(listaPrendas[position])
         }
 
+    }
+
+    fun comprobarColor(position: Int, holder: PrendaViewHolder) {
+
+        db.collection("favoritos")
+            .whereEqualTo("idUsuario",  idUsuario)
+            .whereEqualTo("idPrenda", listaPrendas[position].idPrenda )
+            .get()
+            .addOnSuccessListener { result ->
+                for (fav in result) {
+
+                    holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart_rojo)
+                    holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart_rojo)
+                    //idFavorito = fav.get("idFavorito").toString()
+                    //pulsado = true
+
+                }
+            }
     }
 
     fun orderByPrecioDes(){
@@ -82,6 +128,7 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
         var tvItemPrendaUsuarioNombre = itemView.tvItemPrendaUsuarioNombre
         var tvItemPrendaUsuarioPrecio = itemView.tvItemPrendaUsuarioPrecio
         var imgItemPrendaUsuario = itemView.imgItemPrendaUsuario
+        var imgPrendaUsuarioCorazon = itemView.imgPrendaUsuarioCorazon
 
         var itemPrenda = itemView.itemPrendaUsuario
         var context = itemView.context
