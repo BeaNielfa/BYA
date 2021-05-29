@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -142,10 +143,12 @@ class CestaPagoFragment(
             Toast.makeText(requireActivity(), "¡Compra realizada con éxito!", Toast.LENGTH_SHORT).show()
 
             val fechaCompra = LocalDateTime.now()
+            var fechaBBDD = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(fechaCompra)
+
             for (i in 0..listaCesta.size -1){
                 val idPedido = UUID.randomUUID().toString()
 
-                val p = Pedido(idPedido, listaCesta[i].idPrenda, idUsuario, fechaCompra.toString(), latitud.toString(),
+                val p = Pedido(idPedido, listaCesta[i].idPrenda, idUsuario, fechaBBDD.toString(), latitud.toString(),
                     longitud.toString(), false)
                 db.collection("pedidos").document(idPedido).set(p)
             }
@@ -159,8 +162,39 @@ class CestaPagoFragment(
     }
 
     private fun borrarCesta(){
-        for(i in 0..listaCesta.size - 1) {
-            db.collection("cesta").document(listaCesta[i].idCesta).delete()
+        Log.e("STOCK", listaCesta.size.toString()+"jejeje" )
+
+
+            db.collection("prendas")
+                .get()
+                .addOnSuccessListener { result ->
+
+
+                    for (prenda in result) {
+
+                        for(i in 0..listaCesta.size - 1) {
+
+                            Log.e("STOCK", listaCesta[i].idCesta + " EHHH" + listaCesta[i].idPrenda)
+
+                            if (prenda.get("idPrenda").toString().equals(listaCesta[i].idPrenda)) {
+
+
+                                var stock = prenda.get("stock").toString().toInt()
+
+                                db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - 1)
+
+                            }
+
+                            db.collection("cesta").document(listaCesta[i].idCesta).delete()
+                        }
+
+
+
+                    }
+
+
+
+
         }
     }
 

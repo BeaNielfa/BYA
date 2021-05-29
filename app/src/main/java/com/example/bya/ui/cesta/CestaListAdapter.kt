@@ -30,30 +30,38 @@ class CestaListAdapter(private val listaCesta: MutableList<Cesta>,
     //Rescatamos los datos de una ubicacion y los ponemos en sus componentes
     override fun onBindViewHolder(holder: CestaViewHolder, position: Int) {
 
-        Log.e("METIU", listaCesta[position].idPrenda)
-        db.collection("prendas")
-            .whereEqualTo("idPrenda",  listaCesta[position].idPrenda)
-            .get()
-            .addOnSuccessListener { result ->
-                for (prenda in result) {
-                    Log.e("METIU", "METIU")
-                    val foto = prenda.get("foto").toString()
-                    val precio = prenda.get("precio").toString()
-                    val nombre = prenda.get("nombre").toString()
+        try {
 
-                    holder.tvItemCestaNombre.text = nombre
-                    holder.tvItemCestaPrecio.text = precio
-                    holder.tvItemCestaTalla.text = listaCesta[position].talla
-                    Picasso.get().load(Uri.parse(foto)).into(holder.imgItemCesta)
+            Log.e("METIU", listaCesta[position].idPrenda)
+            db.collection("prendas")
+                .whereEqualTo("idPrenda",  listaCesta[position].idPrenda)
+                .get()
+                .addOnSuccessListener { result ->
+                    for (prenda in result) {
+                        Log.e("METIU", "METIU")
+                        val foto = prenda.get("foto").toString()
+                        val precio = prenda.get("precio").toString()
+                        val nombre = prenda.get("nombre").toString()
+
+                        holder.tvItemCestaNombre.text = nombre
+                        holder.tvItemCestaPrecio.text = precio
+                        holder.tvItemCestaTalla.text = listaCesta[position].talla
+                        Picasso.get().load(Uri.parse(foto)).into(holder.imgItemCesta)
+
+                    }
 
                 }
 
+            holder.imgItemCestaEliminar.setOnClickListener {
+                accionBorrar(listaCesta[position])
             }
 
 
-        holder.imgItemCestaEliminar.setOnClickListener {
-            accionBorrar(listaCesta[position])
+
+        } catch (e : java.lang.IndexOutOfBoundsException){
+
         }
+
 
     }
 

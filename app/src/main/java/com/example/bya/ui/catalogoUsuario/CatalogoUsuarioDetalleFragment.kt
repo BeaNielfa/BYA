@@ -72,7 +72,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
                 Toast.makeText(requireContext(), "Â¡Introduzca la talla!", Toast.LENGTH_SHORT).show()
             } else {
 
-                //talla = resources.getResourceEntryName(idRadio)
+
 
                 if (radioS.isChecked){
                     talla = "S"
@@ -87,6 +87,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
                 val c = Cesta (idCesta, idUsuario, p.idPrenda, talla)
 
                 db.collection("cesta").document(idCesta).set(c)
+                Toast.makeText(requireContext(), "Se ha añadido a la cesta", Toast.LENGTH_SHORT).show()
 
             }
 
@@ -128,6 +129,8 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
             tvStock.setTextColor(resources.getColor(R.color.rojo))
             tvStock.setText("Sin stock.")
             btnCesta.isEnabled = false
+            btnCesta.setBackgroundColor(resources.getColor(R.color.browser_actions_bg_grey))
+            Toast.makeText(requireContext(), "No hay stock", Toast.LENGTH_SHORT).show()
         }
 
     }
