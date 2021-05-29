@@ -8,16 +8,6 @@
                                                    android:background="@color/white"
                                                    tools:context=".ui.cesta.CestaPagoFragment">
 
-    <ImageView
-            android:id="@+id/imgCestaPagoCerrar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_cerrar"
-            app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp" />
-
     <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -103,18 +93,37 @@
                     android:layout_marginRight="40dp"
                     android:id="@+id/etCestaPagoTarjeta" />
 
-            <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="date"
-                    android:ems="10"
-                    android:textColor="@color/black"
-                    android:hint="@string/fechaCaducidad"
-                    android:textColorHint="@color/black"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginRight="40dp"
-                    android:id="@+id/etCestaPagoFecha" />
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="match_parent"
+                          android:orientation="horizontal"
+                          android:layout_marginTop="20dp"
+                          app:layout_constraintTop_toTopOf="parent"
+                          app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:ems="10"
+                        android:textColor="@color/black"
+                        android:hint="@string/fechaCaducidad"
+                        android:textColorHint="@color/black"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="40dp"
+                        android:id="@+id/etCestaPagoFecha" />
+
+                <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="date"
+                        android:ems="10"
+                        android:textColor="@color/black"
+                        android:textColorHint="@color/black"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="40dp"
+                        android:id="@+id/etCestaPagoFechaElegir" />
+            </LinearLayout>
 
             <EditText
                     android:layout_width="match_parent"
@@ -157,6 +166,15 @@
 
     </ScrollView>
 
+    <ImageView
+            android:id="@+id/imgCestaPagoCerrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cerrar"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="16dp" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

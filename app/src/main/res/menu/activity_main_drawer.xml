@@ -20,6 +20,10 @@
                 android:icon="@drawable/ic_heart"
                 android:title="@string/favorito"/>
 
+        <item
+                android:id="@+id/nav_cesta"
+                android:icon="@drawable/ic_cesta"
+                android:title="@string/cestaInfo"/>
     </group>
 
 
