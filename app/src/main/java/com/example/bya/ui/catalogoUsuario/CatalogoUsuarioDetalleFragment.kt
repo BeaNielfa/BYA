@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 import com.example.bya.clases.Cesta
+import com.example.bya.clases.Favorito
 import com.example.bya.clases.Prenda
 import com.example.bya.ui.favoritos.FavoritosFragment
 import com.google.firebase.firestore.FirebaseFirestore
@@ -26,6 +27,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
     private lateinit var tvStock: TextView
     private lateinit var imgCamiseta: ImageView
     private lateinit var btnCesta : Button
+    private lateinit var imgFav : ImageView
 
     private var idUsuario = ""
     private var idRadio = -1
@@ -50,6 +52,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
         val radioM : RadioButton = root.findViewById(R.id.radioDetalleM)
         val radioL : RadioButton = root.findViewById(R.id.radioDetalleL)
         val radioGroup : RadioGroup = root.findViewById(R.id.radioGroup)
+        imgFav = root.findViewById(R.id.imgDetalleFav)
 
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
@@ -93,6 +96,25 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
 
         }
 
+        imgFav.setOnClickListener {
+
+            var idFoto = imgFav.tag
+            var idFavorito = idUsuario + p.idPrenda
+
+            if(idFoto == R.drawable.ic_heart_rojo){
+                imgFav.setImageResource(R.drawable.ic_heart)
+                imgFav.setTag(R.drawable.ic_heart)
+                db.collection("favoritos").document(idFavorito).delete()
+
+            } else {
+                imgFav.setImageResource(R.drawable.ic_heart_rojo)
+                imgFav.setTag(R.drawable.ic_heart_rojo)
+
+                val f = Favorito (idFavorito,idUsuario,p.idPrenda)
+                db.collection("favoritos").document(idFavorito).set(f)
+
+            }
+        }
 
         rellenarCampos()
 
@@ -117,6 +139,19 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
     }
 
     private fun rellenarCampos() {
+
+        db.collection("favoritos")
+            .whereEqualTo("idUsuario",  idUsuario)
+            .whereEqualTo("idPrenda", p.idPrenda )
+            .get()
+            .addOnSuccessListener { result ->
+                for (fav in result) {
+
+                    imgFav.setImageResource(R.drawable.ic_heart_rojo)
+                    imgFav.setTag(R.drawable.ic_heart_rojo)
+
+                }
+            }
 
         Picasso.get().load(Uri.parse(p.foto)).into(imgCamiseta)
         tvNombre.setText(p.nombre)

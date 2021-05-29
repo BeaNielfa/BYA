@@ -17,7 +17,7 @@
             android:textSize="100sp"
             android:textColor="@color/black"
             android:id="@+id/tvCestaTitulo"
-            android:textStyle="bold"
+
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"/>
 
@@ -42,9 +42,9 @@
             tools:listitem="@layout/item_cesta"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvCestaTitulo"
-            android:layout_marginTop="170dp"
+            android:layout_marginTop="180dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="160dp" />
+            android:layout_marginBottom="160dp"/>
 
     <Button
             android:id="@+id/btnCestaContinuar"
