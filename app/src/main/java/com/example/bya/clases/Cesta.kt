@@ -2,22 +2,25 @@ package com.example.bya.clases
 
 import java.io.Serializable
 
-class Favorito : Serializable {
+class Cesta : Serializable {
+
 
     /**
      * VARIABLES
      */
-    var idFavorito: String
+    var idCesta: String
     var idUsuario: String
     var idPrenda: String
+    var talla: String
 
 
     /**
      * CONSTRUCTOR
      */
-    constructor(idFavorito: String, idUsuario: String, idPrenda: String){
-        this.idFavorito = idFavorito
+    constructor(idCesta: String, idUsuario: String, idPrenda: String, talla: String){
+        this.idCesta = idCesta
         this.idUsuario = idUsuario
         this.idPrenda = idPrenda
+        this.talla = talla
     }
 }

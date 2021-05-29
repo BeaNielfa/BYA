@@ -150,7 +150,10 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.catalogoUsuarioListaLayout, CatalogoUsuarioDetalleFragment(prenda,0, tipo))
+        transaction.add(R.id.catalogoUsuarioListaLayout,
+            CatalogoUsuarioDetalleFragment(prenda, 0, tipo)
+
+        )
         transaction.addToBackStack(null)
         transaction.commit()
 

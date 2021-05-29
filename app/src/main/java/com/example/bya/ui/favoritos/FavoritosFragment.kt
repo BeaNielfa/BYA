@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
+import com.example.bya.clases.Cesta
 import com.example.bya.clases.Prenda
 import com.example.bya.ui.catalogoUsuario.CatalogoUsuarioDetalleFragment
 import com.google.firebase.firestore.FirebaseFirestore
@@ -58,18 +59,16 @@ class FavoritosFragment : Fragment() {
 
         db.collection("favoritos")
             .whereEqualTo("idUsuario", idUsuario)
-            .get()
-            .addOnSuccessListener { result ->
-                for (fav in result) {
+            .addSnapshotListener{ snapshot, e->
+                listaFavoritos.clear()
+                for (fav in snapshot!!) {
 
                     val idPrenda = fav.get("idPrenda").toString()
 
                     db.collection("prendas")
                         .whereEqualTo("idPrenda", idPrenda)
-                        .get()
-                        .addOnSuccessListener { result2 ->
-
-                            for (prenda in result2){
+                        .addSnapshotListener { snap, a->
+                            for (prenda in snap!!){
                                 val foto = prenda.get("foto").toString()
                                 val idTipo = prenda.get("idTipo").toString()
                                 val nombre = prenda.get("nombre").toString()
@@ -86,17 +85,57 @@ class FavoritosFragment : Fragment() {
                             }
 
                             recy.adapter = favoritosAdapter
+
                         }
+
 
                 }
 
-                recy.adapter = favoritosAdapter
-
-                Log.e("LISTA", "LISTA: " +  listaFavoritos.size.toString())
+                //recy.adapter = favoritosAdapter
 
             }
+        /**
+        db.collection("favoritos")
+        .whereEqualTo("idUsuario", idUsuario)
+        .get()
+        .addOnSuccessListener { result ->
+        for (fav in result) {
+
+        val idPrenda = fav.get("idPrenda").toString()
+
+        db.collection("prendas")
+        .whereEqualTo("idPrenda", idPrenda)
+        .get()
+        .addOnSuccessListener { result2 ->
+
+        for (prenda in result2){
+        val foto = prenda.get("foto").toString()
+        val idTipo = prenda.get("idTipo").toString()
+        val nombre = prenda.get("nombre").toString()
+        val precio = prenda.get("precio").toString()
+        val referencia = prenda.get("referencia").toString()
+        val stock = prenda.get("stock").toString().toInt()
+
+        val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, stock)
+
+        Log.e("LISTA", "AÑADO")
+
+        listaFavoritos.add(p)
+
+        }
+
+        recy.adapter = favoritosAdapter
+        }
+
+        }
+
+        recy.adapter = favoritosAdapter
 
         Log.e("LISTA", "LISTA: " +  listaFavoritos.size.toString())
+
+        }
+
+        Log.e("LISTA", "LISTA: " +  listaFavoritos.size.toString())*/
     }
 
     /**
@@ -115,8 +154,5 @@ class FavoritosFragment : Fragment() {
         transaction.commit()
 
     }
-
-
-
 
 }

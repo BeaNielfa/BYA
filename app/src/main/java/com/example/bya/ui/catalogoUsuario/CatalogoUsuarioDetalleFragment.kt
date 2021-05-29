@@ -1,5 +1,6 @@
 package com.example.bya.ui.catalogoUsuario
 
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -7,21 +8,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.RadioButton
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
+import com.example.bya.clases.Cesta
 import com.example.bya.clases.Prenda
 import com.example.bya.ui.favoritos.FavoritosFragment
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import java.util.*
 
 
 class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: Int, private val tipoPrenda: String) : Fragment() {
-
-
-
 
     private lateinit var tvNombre: TextView
     private lateinit var tvPrecio: TextView
@@ -29,8 +27,11 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
     private lateinit var imgCamiseta: ImageView
     private lateinit var btnCesta : Button
 
-
+    private var idUsuario = ""
+    private var idRadio = -1
     private var talla = ""
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +49,11 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
         val radioS : RadioButton = root.findViewById(R.id.radioDetalleS)
         val radioM : RadioButton = root.findViewById(R.id.radioDetalleM)
         val radioL : RadioButton = root.findViewById(R.id.radioDetalleL)
+        val radioGroup : RadioGroup = root.findViewById(R.id.radioGroup)
+
+        val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
+        idUsuario = pref?.getString("idUsuario", "null").toString()
+        Log.e("PERFIL ",idUsuario)
 
         imgX.setOnClickListener {
             if(tipo == 0){
@@ -57,6 +63,33 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
                 Log.e("CERRAR", tipo.toString() +" TIPOO")
                 favoritos()
             }
+        }
+
+        btnCesta.setOnClickListener {
+
+            idRadio = radioGroup.checkedRadioButtonId
+            if (idRadio == -1){
+                Toast.makeText(requireContext(), "Â¡Introduzca la talla!", Toast.LENGTH_SHORT).show()
+            } else {
+
+                //talla = resources.getResourceEntryName(idRadio)
+
+                if (radioS.isChecked){
+                    talla = "S"
+                } else if(radioM.isChecked){
+                    talla = "M"
+                } else {
+                    talla = "L"
+                }
+
+                val idCesta = UUID.randomUUID().toString()
+
+                val c = Cesta (idCesta, idUsuario, p.idPrenda, talla)
+
+                db.collection("cesta").document(idCesta).set(c)
+
+            }
+
         }
 
 

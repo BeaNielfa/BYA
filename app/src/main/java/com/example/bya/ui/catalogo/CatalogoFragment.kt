@@ -2,6 +2,7 @@ package com.example.bya.ui.catalogo
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -36,6 +37,8 @@ class CatalogoFragment : Fragment() {
     private var paintSweep = Paint()
     private val db = FirebaseFirestore.getInstance()
 
+    private var idUsuario = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,6 +46,9 @@ class CatalogoFragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_catalogo, container, false)
+
+        val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
+        idUsuario = pref?.getString("idUsuario", "null").toString()
 
         recy = root.findViewById(R.id.catalogoRecycler)
 
@@ -137,7 +143,7 @@ class CatalogoFragment : Fragment() {
     private fun eliminarPrendaConfirmada(position: Int) {
 
         //SitiosController.delete(SITIOS[position])
-        borrarPrenda(listaPrendas[position])
+        borrarFavoritosPrendaCesta(listaPrendas[position])
         val snackbar = Snackbar.make(
             requireView(),
             "Prenda eliminada con éxito",
@@ -269,7 +275,34 @@ class CatalogoFragment : Fragment() {
     /**
      * Metodo que borra una prenda de la bbdd
      */
-    private fun borrarPrenda(p: Prenda){
+    private fun borrarFavoritosPrendaCesta(p: Prenda){
+
+        db.collection("favoritos")
+            .whereEqualTo("idPrenda", p.idPrenda)
+            .get()
+            .addOnSuccessListener { result ->
+                for (fav in result) {
+
+                    val idFavorito = fav.get("idFavorito").toString()
+
+                    db.collection("favoritos").document(idFavorito).delete()
+
+                }
+            }
+
+        db.collection("cesta")
+            .whereEqualTo("idPrenda", p.idPrenda)
+            .get()
+            .addOnSuccessListener { result ->
+                for (cesta in result) {
+
+                    val idCesta = cesta.get("idCesta").toString()
+
+                    db.collection("cesta").document(idCesta).delete()
+
+                }
+            }
+
 
         db.collection("prendas").document(p.idPrenda).delete()
     }

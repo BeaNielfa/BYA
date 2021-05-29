@@ -47,6 +47,19 @@
     <string name="l">L</string>
     <string name="cesta">Añadir a la cesta</string>
     <string name="favorito">Favoritos</string>
+    <string name="miCesta">Mi cesta</string>
+    <string name="continuar">Continuar</string>
+    <string name="cestaInfo">Cesta</string>
+    <string name="google_maps_key">AIzaSyCzGvQZXcJxUKXr67Ta16LyRiFYByl7JPI</string>
+    <string name="seleccionaUbi">Seleccione su ubicación</string>
+    <string name="seleccionaPago">Seleccione un método de pago</string>
+    <string name="nTarjeta">NÚMERO DE TARJETA</string>
+    <string name="fechaCaducidad">FECHA DE CADUCIDAD</string>
+    <string name="csv2">CSV2</string>
+    <string name="pagar">Pagar</string>
+    <string name="gracias">!Gracias por su compra!</string>
+    <string name="agradecimientos">Si tienes alguna pregunta, no dudes en contactar con nosotros.</string>
+    <string name="volver">Volver</string>
 
 
     <string-array name="spiFiltro">
