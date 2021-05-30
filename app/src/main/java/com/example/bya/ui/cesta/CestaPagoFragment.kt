@@ -89,6 +89,7 @@ class CestaPagoFragment(
                     tvFecha.text = (mDay.toString() + "/" + (mMonth + 1) + "/" + mYear)
                 }, date.year, date.monthValue - 1, date.dayOfMonth
             )
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
             datePickerDialog.show()
         }
 
@@ -115,21 +116,34 @@ class CestaPagoFragment(
         visa = false
     }
 
+    @Synchronized
     @RequiresApi(Build.VERSION_CODES.O)
     private fun comprobarPago() {
 
         var pedido = true
 
-        if (etTarjeta.text.isEmpty()) {
+        if (etTarjeta.text.isEmpty() || etTarjeta.text.toString().length < 16 || etTarjeta.text.toString().length > 16) {
             pedido = false
-            etTarjeta.setError("La tarjeta no puede estar vacía")
+            if(etTarjeta.text.isEmpty()) {
+                etTarjeta.setError("La tarjeta no puede estar vacía")
+            }else {
+                if (etTarjeta.text.toString().length < 16 || etTarjeta.text.toString().length > 16) {
+                    etTarjeta.setError("La tarjeta debe contener 16 dígitos")
+                }
+            }
         } else {
             etTarjeta.setError(null)
         }
 
-        if (etCsv.text.isEmpty()) {
+        if (etCsv.text.isEmpty()|| etCsv.text.toString().length < 3 || etCsv.text.toString().length > 3) {
             pedido = false
-            etCsv.setError("El CSV no puede estar vacío")
+            if(etCsv.text.isEmpty()) {
+                etCsv.setError("El CSV no puede estar vacío")
+            }else {
+                if (etCsv.text.toString().length < 3 || etCsv.text.toString().length > 3) {
+                    etCsv.setError("El CSV debe contener 3 dígitos")
+                }
+            }
         } else {
             etCsv.setError(null)
         }
@@ -140,6 +154,9 @@ class CestaPagoFragment(
         }
 
         if(pedido){
+            etTarjeta.setError(null)
+            etCsv.setError(null)
+
             Toast.makeText(requireActivity(), "¡Compra realizada con éxito!", Toast.LENGTH_SHORT).show()
 
             val fechaCompra = LocalDateTime.now()

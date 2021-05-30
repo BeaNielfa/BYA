@@ -72,7 +72,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
 
             idRadio = radioGroup.checkedRadioButtonId
             if (idRadio == -1){
-                Toast.makeText(requireContext(), "Â¡Introduzca la talla!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "¡Introduzca la talla!", Toast.LENGTH_SHORT).show()
             } else {
 
 

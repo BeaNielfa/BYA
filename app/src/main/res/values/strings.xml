@@ -60,6 +60,8 @@
     <string name="gracias">!Gracias por su compra!</string>
     <string name="agradecimientos">Si tienes alguna pregunta, no dudes en contactar con nosotros.</string>
     <string name="volver">Volver</string>
+    <string name="miCompra">Mis compras</string>
+    <string name="historial">Historial</string>
 
 
     <string-array name="spiFiltro">
