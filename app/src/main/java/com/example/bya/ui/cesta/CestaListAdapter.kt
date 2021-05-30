@@ -45,10 +45,12 @@ class CestaListAdapter(private val listaCesta: MutableList<Cesta>,
 
                         holder.tvItemCestaNombre.text = nombre
                         holder.tvItemCestaPrecio.text = precio
-                        holder.tvItemCestaTalla.text = listaCesta[position].talla
+
                         Picasso.get().load(Uri.parse(foto)).into(holder.imgItemCesta)
 
                     }
+
+                    holder.tvItemCestaTalla.text = listaCesta[position].talla
 
                 }
 
