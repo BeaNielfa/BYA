@@ -17,7 +17,7 @@ class HistorialFragment : Fragment() {
             savedInstanceState: Bundle?
     ): View? {
 
-        val root = inflater.inflate(R.layout.fragment_gallery, container, false)
+        val root = inflater.inflate(R.layout.fragment_historial, container, false)
 
         return root
     }
