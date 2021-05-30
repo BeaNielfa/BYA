@@ -24,6 +24,11 @@
                 android:id="@+id/nav_cesta"
                 android:icon="@drawable/ic_cesta"
                 android:title="@string/cestaInfo"/>
+
+        <item
+                android:id="@+id/nav_historial"
+                android:icon="@drawable/ic_codigo_qr"
+                android:title="@string/historial"/>
     </group>
 
 

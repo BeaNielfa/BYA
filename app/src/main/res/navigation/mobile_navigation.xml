@@ -28,4 +28,10 @@
             android:label="@string/cestaInfo"
             tools:layout="@layout/fragment_cesta"/>
 
+    <fragment
+            android:id="@+id/nav_historial"
+            android:name="com.example.bya.ui.historial.HistorialFragment"
+            android:label="@string/historial"
+            tools:layout="@layout/fragment_historial"/>
+
 </navigation>
