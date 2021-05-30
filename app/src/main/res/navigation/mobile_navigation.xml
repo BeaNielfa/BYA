@@ -22,5 +22,10 @@
             android:label="@string/favorito"
             tools:layout="@layout/fragment_favorito"/>
 
+    <fragment
+            android:id="@+id/nav_cesta"
+            android:name="com.example.bya.ui.cesta.CestaFragment"
+            android:label="@string/cestaInfo"
+            tools:layout="@layout/fragment_cesta"/>
 
 </navigation>

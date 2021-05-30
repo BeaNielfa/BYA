@@ -3,7 +3,7 @@
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:layout_width="match_parent"
                                                    android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   tools:context=".ui.catalogo.CatalogoFragment"
+                                                   tools:context=".ui.favoritos.FavoritosFragment"
                                                    android:id="@+id/fragmentFavorito"
                                                    android:background="@color/white">
 
@@ -17,8 +17,7 @@
             android:textSize="100sp"
             android:textColor="@color/black"
             android:id="@+id/tvFavoritoTitulo"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent">
 
     </TextView>

@@ -21,6 +21,8 @@ import java.util.*
 
 class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
 
+
+
     private lateinit var recy : RecyclerView
 
     private var listaPrendas = mutableListOf<Prenda>() //Lista de ubicaciones
@@ -148,9 +150,13 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.catalogoUsuarioListaLayout, CatalogoUsuarioDetalleFragment(prenda))
+        transaction.add(R.id.catalogoUsuarioListaLayout,
+            CatalogoUsuarioDetalleFragment(prenda, 0, tipo)
+
+        )
         transaction.addToBackStack(null)
         transaction.commit()
+
 
     }
 

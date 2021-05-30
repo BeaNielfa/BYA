@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@color/white"
+                                                   android:id="@+id/cestaUbicacionLayout"
+                                                   tools:context=".ui.cesta.CestaUbicacionFragment">
+
+    <ImageView
+            android:id="@+id/imgCestaUbicacionCerrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cerrar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp" />
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seleccionaUbi"
+            android:textSize="25sp"
+            android:id="@+id/tvCestaUbicacionDetalle"
+            android:textColor="@color/black"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="16dp" />
+
+    <fragment
+            android:id="@+id/mapaCestaUbicacionMapa"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            tools:context="com.example.bya.ui.cesta.CestaUbicacionFragment"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvCestaUbicacionDetalle"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp" />
+
+    <Button
+            android:id="@+id/btnCestaUbicacionContinuar"
+            android:layout_width="250dp"
+            android:layout_height="65dp"
+            style="@style/Animation.Design.BottomSheetDialog"
+            android:text="@string/continuar"
+            android:backgroundTint="@color/primary"
+            android:textColor="@color/black"
+            android:textSize="25dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mapaCestaUbicacionMapa"
+            android:layout_marginTop="16dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
