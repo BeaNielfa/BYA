@@ -116,7 +116,7 @@ class CestaPagoFragment(
         visa = false
     }
 
-    @Synchronized
+
     @RequiresApi(Build.VERSION_CODES.O)
     private fun comprobarPago() {
 
