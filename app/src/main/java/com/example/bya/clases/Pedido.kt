@@ -13,19 +13,21 @@ class Pedido : Serializable {
     var fechaCompra: String
     var latitud: String
     var longitud: String
-    var estado: Boolean
+    var talla : String
+    var estado: Int
 
 
     /**
      * CONSTRUCTOR
      */
-    constructor(idPedido: String, idPrenda: String, idUsuario:String, fechaCompra: String, latitud: String, longitud: String, estado : Boolean){
+    constructor(idPedido: String, idPrenda: String, idUsuario:String, fechaCompra: String, latitud: String, longitud: String, talla: String, estado : Int){
         this.idPedido = idPedido
         this.idPrenda = idPrenda
         this.idUsuario = idUsuario
         this.fechaCompra = fechaCompra
         this.latitud = latitud
         this.longitud = longitud
+        this.talla = talla
         this.estado = estado
     }
 

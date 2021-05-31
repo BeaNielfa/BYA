@@ -75,9 +75,10 @@ class HistorialFragment : Fragment() {
                     val fechaCompra = historial.get("fechaCompra").toString()
                     val latitud = historial.get("latitud").toString()
                     val longitud = historial.get("longitud").toString()
-                    val estado = historial.get("estado").toString().toBoolean()
+                    val talla = historial.get("talla").toString()
+                  //  val estado = historial.get("estado").toString().toInt()
 
-                    val p = Pedido(idPedido, idPrenda, idUsuario, fechaCompra, latitud, longitud, estado)
+                    val p = Pedido(idPedido, idPrenda, idUsuario, fechaCompra, latitud, longitud, talla, 0)
 
                     listaHistorial.add(p)
                 }

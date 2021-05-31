@@ -116,7 +116,6 @@ class CestaPagoFragment(
         visa = false
     }
 
-    @Synchronized
     @RequiresApi(Build.VERSION_CODES.O)
     private fun comprobarPago() {
 
@@ -166,7 +165,7 @@ class CestaPagoFragment(
                 val idPedido = UUID.randomUUID().toString()
 
                 val p = Pedido(idPedido, listaCesta[i].idPrenda, idUsuario, fechaBBDD.toString(), latitud.toString(),
-                    longitud.toString(), false)
+                    longitud.toString(), listaCesta[i].talla,0)
                 db.collection("pedidos").document(idPedido).set(p)
             }
 
@@ -182,37 +181,37 @@ class CestaPagoFragment(
         Log.e("STOCK", listaCesta.size.toString()+"jejeje" )
 
 
-            db.collection("prendas")
-                .get()
-                .addOnSuccessListener { result ->
+        db.collection("prendas")
+            .get()
+            .addOnSuccessListener { result ->
 
 
-                    for (prenda in result) {
+                for (prenda in result) {
 
-                        for(i in 0..listaCesta.size - 1) {
+                    for(i in 0..listaCesta.size - 1) {
 
-                            Log.e("STOCK", listaCesta[i].idCesta + " EHHH" + listaCesta[i].idPrenda)
+                        Log.e("STOCK", listaCesta[i].idCesta + " EHHH" + listaCesta[i].idPrenda)
 
-                            if (prenda.get("idPrenda").toString().equals(listaCesta[i].idPrenda)) {
+                        if (prenda.get("idPrenda").toString().equals(listaCesta[i].idPrenda)) {
 
 
-                                var stock = prenda.get("stock").toString().toInt()
+                            var stock = prenda.get("stock").toString().toInt()
 
-                                db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - 1)
+                            db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - 1)
 
-                            }
-
-                            db.collection("cesta").document(listaCesta[i].idCesta).delete()
                         }
 
-
-
+                        db.collection("cesta").document(listaCesta[i].idCesta).delete()
                     }
 
 
 
+                }
 
-        }
+
+
+
+            }
     }
 
     private fun agradecimientos(){

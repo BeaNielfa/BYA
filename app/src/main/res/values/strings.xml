@@ -62,6 +62,8 @@
     <string name="volver">Volver</string>
     <string name="miCompra">Mis compras</string>
     <string name="historial">Historial</string>
+    <string name="pedidos">Pedidos</string>
+    <string name="enviarPedido">Enviar pedido</string>
 
 
     <string-array name="spiFiltro">
