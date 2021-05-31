@@ -38,6 +38,8 @@
 
         </activity>
 
+        <activity android:name=".CaptureActivity"></activity>
+
         <!-- Mapas -->
         <meta-data
                 android:name="com.google.android.geo.API_KEY"

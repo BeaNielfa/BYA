@@ -96,9 +96,7 @@ class HistorialFragment : Fragment() {
 
         val imgQr: ImageView = dialog.findViewById(R.id.imgCodigoQrImagen)
 
-        var texto = "idPedido: " + pedido.idPedido + "\nidPrenda: " + pedido.idPrenda +
-                "\nidUsuario: " + pedido.idUsuario + "\nfechaCompra: " + pedido.fechaCompra +
-                "\nlatitud: " + pedido.latitud + "\nlongitud: " + pedido.longitud + "\nestado:" + pedido.estado
+        var texto = pedido.idPedido
 
         val bitmap = generateQRCode(texto)
         imgQr.setImageBitmap(bitmap)
