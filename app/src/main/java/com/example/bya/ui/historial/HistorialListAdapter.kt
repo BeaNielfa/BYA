@@ -44,9 +44,10 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
                     holder.tvItemHistorialPrecio.text = precio
                     Picasso.get().load(Uri.parse(foto)).into(holder.imgItemHistorial)
                 }
-                holder.tvItemHistorialFecha.text = listaHistorial[position].fechaCompra
+
             }
 
+        holder.tvItemHistorialFecha.text = listaHistorial[position].fechaCompra
         holder.imgItemHistorialQr.setOnClickListener {
             accionQr(listaHistorial[position])
         }
