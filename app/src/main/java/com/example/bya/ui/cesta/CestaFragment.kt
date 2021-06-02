@@ -3,19 +3,20 @@ package com.example.bya.ui.cesta
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
 import com.example.bya.clases.Cesta
 import com.google.firebase.firestore.FirebaseFirestore
+import java.text.DecimalFormat
 
 
 class CestaFragment : Fragment() {
@@ -27,7 +28,9 @@ class CestaFragment : Fragment() {
 
     private var idUsuario = ""
     private var precioMostrar : Double = 0.0
+    private var pre =""
     private val db = FirebaseFirestore.getInstance()
+    private var precio = 0f
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -73,7 +76,7 @@ class CestaFragment : Fragment() {
 
         db.collection("prendas")
             .addSnapshotListener{ snapshot, e->
-                var precio = 0f
+                precio = 0f
                 for (prenda in snapshot!!) {
                     //AQUI TENEMOS TODAS LAS PRENDAS DE LA BASE DE DATOS
                     for (p in 0..listaCesta.size - 1){
@@ -85,14 +88,25 @@ class CestaFragment : Fragment() {
                         }
 
                     }
-                    precioMostrar = Math. round(precio * 10.0) / 10.0
-                    tvPrecio.text = precioMostrar.toString() + " EUR"
+                    //PASAMOS EL NÚMERO A DOS DECIMALES
+                    decimal()
+                    tvPrecio.text = pre + " EUR"//LO ASIGNAMOS
+                    pre = pre.replace(',', '.');//REEMPLAZAMOS LA COMA POR EL PUNTO
+                    precioMostrar = pre.toDouble()
 
                 }
 
             }
 
 
+    }
+
+    private fun decimal (){
+        val format = DecimalFormat()
+        format.setMaximumFractionDigits(2) //Define 2 decimales.
+
+         pre = format.format(precio).toString()
+        Log.e("PRECIO", pre+" PRECIO DECIMAL")
     }
 
     private fun rellenarArrayCesta() {

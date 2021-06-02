@@ -60,15 +60,23 @@ class PedidosListAdapter(private val context : Context,
                 }
                 var estado = listaPedidos[position].estado.toString().toInt()
                 Log.e("PEDIDO", estado.toString()+" ehhhhh")
+
+                /**
+                 *
+                 */
                 if(estado == 1){
                     holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.verde))
                     holder.tvItemPedidosEstado.text = "Enviado"
                     Log.e("PEDIDO", estado.toString()+" Enviado")
 
-                } else {
+                } else if(estado == 0){
                     holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.rojo))
                     holder.tvItemPedidosEstado.text = "Sin enviar"
                     Log.e("PEDIDO", estado.toString()+" Sin enviar")
+                }else{
+                    holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.rojo))
+                    holder.tvItemPedidosEstado.text = "Pedido devuelto"
+                    Log.e("PEDIDO", estado.toString()+" Pedido devuelto")
                 }
 
             }

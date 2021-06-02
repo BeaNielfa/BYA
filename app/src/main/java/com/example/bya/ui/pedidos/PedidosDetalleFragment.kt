@@ -83,7 +83,7 @@ class PedidosDetalleFragment(private val p : Pedido) : Fragment(), OnMapReadyCal
 
     private fun cargarCampos() {
 
-        if (p.estado == 1){
+        if (p.estado == 1|| p.estado == 2){
             btnEnviar.isEnabled = false
             btnEnviar.setBackgroundColor(resources.getColor(R.color.browser_actions_bg_grey))
         }

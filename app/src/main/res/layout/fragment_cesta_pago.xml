@@ -91,7 +91,10 @@
                     android:layout_marginTop="30dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:id="@+id/etCestaPagoTarjeta" />
+                    android:id="@+id/etCestaPagoTarjeta"
+                    android:maxLength="19"
+
+            />
 
             <LinearLayout android:layout_width="match_parent"
                           android:layout_height="match_parent"
@@ -136,7 +139,10 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginLeft="40dp"
                     android:layout_marginRight="40dp"
-                    android:id="@+id/etCestaPagoCsv" />
+                    android:id="@+id/etCestaPagoCsv"
+                    android:maxLength="3"
+
+            />
 
             <TextView
                     android:text="TextView"
