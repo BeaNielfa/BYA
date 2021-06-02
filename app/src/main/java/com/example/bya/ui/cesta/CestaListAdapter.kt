@@ -32,27 +32,30 @@ class CestaListAdapter(private val listaCesta: MutableList<Cesta>,
 
         try {
 
-            Log.e("METIU", listaCesta[position].idPrenda)
-            db.collection("prendas")
-                .whereEqualTo("idPrenda",  listaCesta[position].idPrenda)
-                .get()
-                .addOnSuccessListener { result ->
-                    for (prenda in result) {
-                        Log.e("METIU", "METIU")
-                        val foto = prenda.get("foto").toString()
-                        val precio = prenda.get("precio").toString()
-                        val nombre = prenda.get("nombre").toString()
+            if (listaCesta.size != 0){
+                Log.e("METIU", listaCesta[position].idPrenda)
+                db.collection("prendas")
+                    .whereEqualTo("idPrenda",  listaCesta[position].idPrenda)
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (prenda in result) {
+                            Log.e("METIU", "METIU")
+                            val foto = prenda.get("foto").toString()
+                            val precio = prenda.get("precio").toString()
+                            val nombre = prenda.get("nombre").toString()
 
-                        holder.tvItemCestaNombre.text = nombre
-                        holder.tvItemCestaPrecio.text = precio
+                            holder.tvItemCestaNombre.text = nombre
+                            holder.tvItemCestaPrecio.text = precio
 
-                        Picasso.get().load(Uri.parse(foto)).into(holder.imgItemCesta)
+                            Picasso.get().load(Uri.parse(foto)).into(holder.imgItemCesta)
+
+                        }
+
+                        holder.tvItemCestaTalla.text = listaCesta[position].talla
 
                     }
 
-                    holder.tvItemCestaTalla.text = listaCesta[position].talla
-
-                }
+            }
 
             holder.imgItemCestaEliminar.setOnClickListener {
                 accionBorrar(listaCesta[position])
