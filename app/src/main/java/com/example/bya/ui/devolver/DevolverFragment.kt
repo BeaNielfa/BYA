@@ -13,6 +13,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.airbnb.lottie.LottieAnimationView
 import com.example.bya.CaptureActivity
 import com.example.bya.R
 import com.google.firebase.firestore.FirebaseFirestore
@@ -70,7 +71,7 @@ class DevolverFragment : Fragment() {
                 dialog.setContentView(R.layout.resultado_devolver_layout)
                 dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
-                val imgQr: ImageView = dialog.findViewById(R.id.imgResultadoDevolver)
+                val imgQr: LottieAnimationView = dialog.findViewById(R.id.imgResultadoDevolver)
                 val tvQr : TextView = dialog.findViewById(R.id.tvResultadoDevolver)
 
                 var estado = 0
@@ -103,18 +104,28 @@ class DevolverFragment : Fragment() {
 
                         if(estado == 1){
                             if (fechaHoy.toString() <= fechaCompradoMeter.toString()){
-                                imgQr.setImageResource(R.drawable.ic_eliminar)
-                                tvQr.text = "La prenda no se puede devolver, no han pasado 15 días desde su compra"
-                            } else  {
-                                imgQr.setImageResource(R.drawable.ic_check)
+                                imgQr.setAnimation(R.raw.tick)
+                                imgQr.playAnimation()
+
                                 tvQr.text = "La prenda devuelta correctamente"
                                 db.collection("pedidos").document(idPedido).update("estado", 2)
+
+                            } else  {
+                                imgQr.setAnimation(R.raw.cross)
+                                imgQr.playAnimation()
+
+
+                                tvQr.text = "La prenda no se puede devolver, no han pasado 15 días desde su compra"
                             }
                         } else if (estado == 2){
-                            imgQr.setImageResource(R.drawable.ic_eliminar)
+                            imgQr.setAnimation(R.raw.cross)
+                            imgQr.playAnimation()
+                            //imgQr.setImageResource(R.drawable.ic_eliminar)
                             tvQr.text = "La prenda no se puede devolver, la prenda ya ha sido devuelta"
                         } else {
-                            imgQr.setImageResource(R.drawable.ic_eliminar)
+                            imgQr.setAnimation(R.raw.cross)
+                            imgQr.playAnimation()
+                            //imgQr.setImageResource(R.drawable.ic_eliminar)
                             tvQr.text = "La prenda no se puede devolver, todavía no se ha realizado su entrega"
                         }
 
