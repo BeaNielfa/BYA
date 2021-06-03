@@ -1,25 +1,21 @@
-package com.example.bya.ui.contacto
+package com.example.bya.ui.contactoUsuario
 
-import android.app.Dialog
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
-import com.example.bya.clases.Pedido
 import com.example.bya.clases.Usuario
-import com.example.bya.ui.historial.HistorialListAdapter
+import com.example.bya.ui.contacto.ChatFragment
+import com.example.bya.ui.contacto.ContactoListAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ContactoFragment : Fragment() {
+class ContactoUsuarioFragment : Fragment() {
 
     private lateinit var recy : RecyclerView
     private var listaContactos = mutableListOf<Usuario>() //Lista de favoritos
@@ -27,20 +23,20 @@ class ContactoFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
 
+
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
+        inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
-        val root = inflater.inflate(R.layout.fragment_contacto, container, false)
+        // Inflate the layout for this fragment
+        val root = inflater.inflate(R.layout.fragment_contacto_usuario, container, false)
 
         //detecta cuando pulsamos en un item
         contactoAdapter = ContactoListAdapter(listaContactos) {
             eventoClicFila(it)
         }
 
-        recy = root.findViewById(R.id.contactoRecycler)
+        recy = root.findViewById(R.id.contactoUsuarioRecycler)
 
         recy.layoutManager = LinearLayoutManager(context)
 
@@ -49,11 +45,11 @@ class ContactoFragment : Fragment() {
         return root
     }
 
+
     private fun rellenarArrayContacto() {
 
         db.collection("usuarios")
-            .whereEqualTo("tipo", 1)
-            .whereEqualTo("chat",1)
+            .whereEqualTo("tipo", 0)
             .addSnapshotListener{ snapshot, e->
                 listaContactos.clear()
 
@@ -86,7 +82,7 @@ class ContactoFragment : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.contactoLayout, ChatFragment(usuario))
+        transaction.add(R.id.contactoUsuarioLayout, ChatFragment(usuario))
         transaction.addToBackStack(null)
         transaction.commit()
 
