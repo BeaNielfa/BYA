@@ -1,22 +1,17 @@
 package com.example.bya.ui.contacto
 
-import android.app.Dialog
+
 import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
-import com.example.bya.clases.Pedido
 import com.example.bya.clases.Usuario
-import com.example.bya.ui.historial.HistorialListAdapter
 import com.google.firebase.firestore.FirebaseFirestore
 
 class ContactoFragment : Fragment() {
@@ -27,6 +22,8 @@ class ContactoFragment : Fragment() {
 
     private val db = FirebaseFirestore.getInstance()
 
+    private var idUsuario = ""
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,8 +32,11 @@ class ContactoFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_contacto, container, false)
 
+        val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
+        idUsuario = pref?.getString("idUsuario", "null").toString()
+
         //detecta cuando pulsamos en un item
-        contactoAdapter = ContactoListAdapter(listaContactos) {
+        contactoAdapter = ContactoListAdapter(idUsuario, listaContactos) {
             eventoClicFila(it)
         }
 
