@@ -45,7 +45,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:layout_marginBottom="32dp"
                     android:maxLines="3"
-                    android:text="hola buenos dias que tal amigos y amiguitos que tal estais, yo bien estudiando jejejejjejejejjeje"
+                    android:text=""
                     app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
                     android:layout_marginStart="24dp" android:layout_marginEnd="24dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>

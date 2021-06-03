@@ -129,7 +129,7 @@ class DevolverFragment : Fragment() {
                 dialog.show()
 
                 Log.e("ESCANEADO", result.contents)
-               
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)
