@@ -18,8 +18,7 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="30dp"
-            android:id="@+id/linearLayout2">
+            android:id="@+id/linearLayout2" app:layout_constraintBottom_toBottomOf="parent">
 
 
         <ImageView
@@ -28,7 +27,7 @@
                 android:layout_height="150dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="30dp"
-                android:id="@+id/imgCestaAgradecimientosCarro" />
+                android:id="@+id/imgCestaAgradecimientosCarro"/>
 
         <TextView
                 android:text="@string/gracias"
@@ -39,7 +38,7 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:layout_gravity="center"
-                android:id="@+id/tvCestaAgradecimiento1" />
+                android:id="@+id/tvCestaAgradecimiento1"/>
 
         <TextView
                 android:text="@string/agradecimientos"
@@ -51,7 +50,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:layout_marginBottom="30dp"
-                android:id="@+id/tvCestaAgradecimiento2" />
+                android:id="@+id/tvCestaAgradecimiento2"/>
 
     </LinearLayout>
 

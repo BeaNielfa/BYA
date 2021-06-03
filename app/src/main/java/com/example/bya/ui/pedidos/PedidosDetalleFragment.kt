@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 import com.example.bya.clases.Pedido
@@ -70,11 +71,11 @@ class PedidosDetalleFragment(private val p : Pedido) : Fragment(), OnMapReadyCal
             btnEnviar.isEnabled = false
             btnEnviar.setBackgroundColor(resources.getColor(R.color.browser_actions_bg_grey))
             Toast.makeText(requireContext(), "Pedido enviado", Toast.LENGTH_SHORT).show()
-
         }
 
         imgX.setOnClickListener {
-            pedidos()
+            requireActivity().supportFragmentManager.popBackStack("pedidos", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            //pedidos()
         }
 
         return root
@@ -82,7 +83,7 @@ class PedidosDetalleFragment(private val p : Pedido) : Fragment(), OnMapReadyCal
 
     private fun cargarCampos() {
 
-        if (p.estado == 1){
+        if (p.estado == 1|| p.estado == 2){
             btnEnviar.isEnabled = false
             btnEnviar.setBackgroundColor(resources.getColor(R.color.browser_actions_bg_grey))
         }
@@ -182,15 +183,7 @@ class PedidosDetalleFragment(private val p : Pedido) : Fragment(), OnMapReadyCal
         return false
     }
 
-    private fun pedidos(){
 
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.detallePedido, PedidosFragment())
-        transaction.addToBackStack(null)
-        transaction.commit()
-
-    }
 
 
 

@@ -154,7 +154,7 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
             CatalogoUsuarioDetalleFragment(prenda, 0, tipo)
 
         )
-        transaction.addToBackStack(null)
+        transaction.addToBackStack("catalogo")
         transaction.commit()
 
 

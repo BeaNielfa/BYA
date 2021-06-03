@@ -45,7 +45,6 @@ class PedidosListAdapter(private val context : Context,
                     val foto = prenda.get("foto").toString()
                     val precio = prenda.get("precio").toString()
                     val nombre = prenda.get("nombre").toString()
-                    //val estado = prenda.get("estado").toString().toInt()
                     tipo = prenda.get("idTipo").toString()
 
                     holder.tvItemPedidosNombre.text = nombre
@@ -59,13 +58,25 @@ class PedidosListAdapter(private val context : Context,
 
                     holder.tvItemPedidosTipo.text = it.get("descripcion").toString()
                 }
-                var estado = listaPedidos[position].estado
+                var estado = listaPedidos[position].estado.toString().toInt()
+                Log.e("PEDIDO", estado.toString()+" ehhhhh")
+
+                /**
+                 *
+                 */
                 if(estado == 1){
                     holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.verde))
                     holder.tvItemPedidosEstado.text = "Enviado"
-                } else {
+                    Log.e("PEDIDO", estado.toString()+" Enviado")
+
+                } else if(estado == 0){
                     holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.rojo))
                     holder.tvItemPedidosEstado.text = "Sin enviar"
+                    Log.e("PEDIDO", estado.toString()+" Sin enviar")
+                }else{
+                    holder.tvItemPedidosEstado.setTextColor(getColor(context, R.color.rojo))
+                    holder.tvItemPedidosEstado.text = "Pedido devuelto"
+                    Log.e("PEDIDO", estado.toString()+" Pedido devuelto")
                 }
 
             }

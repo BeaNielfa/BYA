@@ -9,7 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import com.airbnb.lottie.LottieAnimationView
 import com.example.bya.R
 import com.example.bya.clases.Cesta
 import com.example.bya.clases.Favorito
@@ -27,7 +29,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
     private lateinit var tvStock: TextView
     private lateinit var imgCamiseta: ImageView
     private lateinit var btnCesta : Button
-    private lateinit var imgFav : ImageView
+    private lateinit var imgFav : LottieAnimationView
 
     private var idUsuario = ""
     private var idRadio = -1
@@ -59,13 +61,22 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
         Log.e("PERFIL ",idUsuario)
 
         imgX.setOnClickListener {
+            Log.e("CLICK", "CLICK")
+
+
+
             if(tipo == 0){
                 Log.e("CERRAR", tipo.toString() +" TIPOO")
-                catalogo()
+                requireActivity().supportFragmentManager.popBackStack("catalogo", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                //catalogo()
+                //getFragmentManager().popBackStack()
+
             }else{
                 Log.e("CERRAR", tipo.toString() +" TIPOO")
-                favoritos()
+                requireActivity().supportFragmentManager.popBackStack("favoritos", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                //favoritos()
             }
+
         }
 
         btnCesta.setOnClickListener {
@@ -101,14 +112,17 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
             var idFoto = imgFav.tag
             var idFavorito = idUsuario + p.idPrenda
 
-            if(idFoto == R.drawable.ic_heart_rojo){
-                imgFav.setImageResource(R.drawable.ic_heart)
-                imgFav.setTag(R.drawable.ic_heart)
+            if(idFoto == R.drawable.twitter_like_rojo){
+                //imgFav.setAnimation(R.raw.black_joy)
+                //imgFav.playAnimation()
+                imgFav.setImageResource(R.drawable.twitter_like)
+                imgFav.setTag(R.drawable.twitter_like)
                 db.collection("favoritos").document(idFavorito).delete()
 
             } else {
-                imgFav.setImageResource(R.drawable.ic_heart_rojo)
-                imgFav.setTag(R.drawable.ic_heart_rojo)
+                imgFav.setAnimation(R.raw.black_joy)
+                imgFav.playAnimation()
+                imgFav.setTag(R.drawable.twitter_like_rojo)
 
                 val f = Favorito (idFavorito,idUsuario,p.idPrenda)
                 db.collection("favoritos").document(idFavorito).set(f)
@@ -120,6 +134,14 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
 
 
         return root
+    }
+
+    private fun likeAnimation(imageView: LottieAnimationView, animation : Int, like : Boolean){
+        if (like){
+
+        } else {
+
+        }
     }
 
     private fun favoritos (){
@@ -147,8 +169,10 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
             .addOnSuccessListener { result ->
                 for (fav in result) {
 
-                    imgFav.setImageResource(R.drawable.ic_heart_rojo)
-                    imgFav.setTag(R.drawable.ic_heart_rojo)
+                    //imgFav.setAnimation(R.raw.apple_event)
+                    //imgFav.playAnimation()
+                    imgFav.setImageResource(R.drawable.twitter_like_rojo)
+                    imgFav.setTag(R.drawable.twitter_like_rojo)
 
                 }
             }

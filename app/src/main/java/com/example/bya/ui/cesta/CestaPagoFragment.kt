@@ -4,13 +4,15 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.annotation.RequiresApi
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 import com.example.bya.clases.Cesta
@@ -19,6 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 class CestaPagoFragment(
     var listaCesta: MutableList<Cesta> = mutableListOf<Cesta>(),
@@ -93,6 +96,34 @@ class CestaPagoFragment(
             datePickerDialog.show()
         }
 
+
+        var count = 0
+        etTarjeta.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
+            override fun afterTextChanged(s: Editable) {
+                if (count <= etTarjeta.text.toString().length && (etTarjeta.text.toString()
+                        .length === 4 || etTarjeta.text.toString().length === 9 || etTarjeta.text
+                        .toString().length === 14)
+                ) {
+                    etTarjeta.setText(etTarjeta.text.toString().toString() + " ")
+                    val pos: Int = etTarjeta.text.length
+                    etTarjeta.setSelection(pos)
+                } else if (count >= etTarjeta.text.toString().length && (etTarjeta.text.toString()
+                        .length === 4 || etTarjeta.text.toString().length === 9 || etTarjeta.text
+                        .toString().length === 14)
+                ) {
+                    etTarjeta.setText(
+                        etTarjeta.text.toString().substring(0, etTarjeta.text.toString().length- 1)
+                    )
+                    val pos: Int = etTarjeta.text.length
+                    etTarjeta.setSelection(pos)
+                }
+                count = etTarjeta.text.toString().length
+            }
+        })
+
+
         btnPagar.setOnClickListener {
             comprobarPago()
         }
@@ -120,13 +151,13 @@ class CestaPagoFragment(
     private fun comprobarPago() {
 
         var pedido = true
-
-        if (etTarjeta.text.isEmpty() || etTarjeta.text.toString().length < 16 || etTarjeta.text.toString().length > 16) {
+        Log.e("TARJETA", etTarjeta.text.toString().length.toString() +" TARJETITA "+ etTarjeta.text.toString())
+        if (etTarjeta.text.isEmpty() || etTarjeta.text.toString().length < 19) {
             pedido = false
             if(etTarjeta.text.isEmpty()) {
                 etTarjeta.setError("La tarjeta no puede estar vacía")
             }else {
-                if (etTarjeta.text.toString().length < 16 || etTarjeta.text.toString().length > 16) {
+                if (etTarjeta.text.toString().length < 19) {
                     etTarjeta.setError("La tarjeta debe contener 16 dígitos")
                 }
             }
@@ -134,12 +165,12 @@ class CestaPagoFragment(
             etTarjeta.setError(null)
         }
 
-        if (etCsv.text.isEmpty()|| etCsv.text.toString().length < 3 || etCsv.text.toString().length > 3) {
+        if (etCsv.text.isEmpty()|| etCsv.text.toString().length < 3) {
             pedido = false
             if(etCsv.text.isEmpty()) {
                 etCsv.setError("El CSV no puede estar vacío")
             }else {
-                if (etCsv.text.toString().length < 3 || etCsv.text.toString().length > 3) {
+                if (etCsv.text.toString().length < 3) {
                     etCsv.setError("El CSV debe contener 3 dígitos")
                 }
             }

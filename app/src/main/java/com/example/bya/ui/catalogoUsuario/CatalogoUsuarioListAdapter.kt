@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.airbnb.lottie.LottieAnimationView
 import com.example.bya.R
 import com.example.bya.clases.Favorito
 import com.example.bya.clases.Prenda
@@ -42,15 +43,23 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
             var id = holder.imgPrendaUsuarioCorazon.tag
             var idFavorito = idUsuario + listaPrendas[position].idPrenda
 
-            if(id == R.drawable.ic_heart_rojo){
-                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart)
-                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart)
+            if(id == R.drawable.twitter_like_rojo){
+
+                //holder.imgPrendaUsuarioCorazon.setAnimation(R.raw.black_joy)
+                //holder.imgPrendaUsuarioCorazon.playAnimation()
+
+                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like)
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like)
                 db.collection("favoritos").document(idFavorito).delete()
                 //pulsado = false
                 //Log.e("PULSAR", "IF" + pulsado.toString())
             } else {
-                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart_rojo)
-                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart_rojo)
+
+                holder.imgPrendaUsuarioCorazon.setAnimation(R.raw.black_joy)
+                holder.imgPrendaUsuarioCorazon.playAnimation()
+
+                //holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like_rojo)
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like_rojo)
                 val f = Favorito (idFavorito,idUsuario,listaPrendas[position].idPrenda)//AÑADIMOS EL USUARIO A LA TABLA
                 db.collection("favoritos").document(idFavorito).set(f)
                 //pulsado = true
@@ -73,8 +82,8 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
             .addOnSuccessListener { result ->
                 for (fav in result) {
 
-                    holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.ic_heart_rojo)
-                    holder.imgPrendaUsuarioCorazon.setTag(R.drawable.ic_heart_rojo)
+                    holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like_rojo)
+                    holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like_rojo)
                     //idFavorito = fav.get("idFavorito").toString()
                     //pulsado = true
 
@@ -128,7 +137,7 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
         var tvItemPrendaUsuarioNombre = itemView.tvItemPrendaUsuarioNombre
         var tvItemPrendaUsuarioPrecio = itemView.tvItemPrendaUsuarioPrecio
         var imgItemPrendaUsuario = itemView.imgItemPrendaUsuario
-        var imgPrendaUsuarioCorazon = itemView.imgPrendaUsuarioCorazon
+        var imgPrendaUsuarioCorazon : LottieAnimationView = itemView.imgPrendaUsuarioCorazon
 
         var itemPrenda = itemView.itemPrendaUsuario
         var context = itemView.context

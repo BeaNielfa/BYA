@@ -106,26 +106,21 @@ class DevolverFragment : Fragment() {
                             if (fechaHoy.toString() <= fechaCompradoMeter.toString()){
                                 imgQr.setAnimation(R.raw.tick)
                                 imgQr.playAnimation()
-
-                                tvQr.text = "La prenda devuelta correctamente"
+                                tvQr.text = "La prenda se ha devuelto correctamente"
                                 db.collection("pedidos").document(idPedido).update("estado", 2)
 
                             } else  {
                                 imgQr.setAnimation(R.raw.cross)
                                 imgQr.playAnimation()
-
-
-                                tvQr.text = "La prenda no se puede devolver, no han pasado 15 días desde su compra"
+                                tvQr.text = "La prenda no se puede devolver, han pasado 15 días desde su compra"
                             }
                         } else if (estado == 2){
                             imgQr.setAnimation(R.raw.cross)
                             imgQr.playAnimation()
-                            //imgQr.setImageResource(R.drawable.ic_eliminar)
-                            tvQr.text = "La prenda no se puede devolver, la prenda ya ha sido devuelta"
+                            tvQr.text = "La prenda no se puede devolver, ya ha sido devuelta"
                         } else {
                             imgQr.setAnimation(R.raw.cross)
                             imgQr.playAnimation()
-                            //imgQr.setImageResource(R.drawable.ic_eliminar)
                             tvQr.text = "La prenda no se puede devolver, todavía no se ha realizado su entrega"
                         }
 
@@ -133,7 +128,8 @@ class DevolverFragment : Fragment() {
 
                 dialog.show()
 
-                //Toast.makeText(context, "Escaneado: " + result.contents, Toast.LENGTH_LONG).show()
+                Log.e("ESCANEADO", result.contents)
+
             }
         } else {
             super.onActivityResult(requestCode, resultCode, data)

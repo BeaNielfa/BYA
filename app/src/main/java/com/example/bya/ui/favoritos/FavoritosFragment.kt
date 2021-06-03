@@ -2,12 +2,14 @@ package com.example.bya.ui.favoritos
 
 import android.content.Context
 import android.os.Bundle
+import android.text.TextUtils.replace
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.R
@@ -37,6 +39,9 @@ class FavoritosFragment : Fragment() {
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
         Log.e("PERFIL ",idUsuario)
+
+        //val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        //transaction.addToBackStack(null)
 
         //detecta cuando pulsamos en un item
         favoritosAdapter = FavoritosListAdapter(listaFavoritos) {
@@ -94,48 +99,7 @@ class FavoritosFragment : Fragment() {
                 //recy.adapter = favoritosAdapter
 
             }
-        /**
-        db.collection("favoritos")
-        .whereEqualTo("idUsuario", idUsuario)
-        .get()
-        .addOnSuccessListener { result ->
-        for (fav in result) {
 
-        val idPrenda = fav.get("idPrenda").toString()
-
-        db.collection("prendas")
-        .whereEqualTo("idPrenda", idPrenda)
-        .get()
-        .addOnSuccessListener { result2 ->
-
-        for (prenda in result2){
-        val foto = prenda.get("foto").toString()
-        val idTipo = prenda.get("idTipo").toString()
-        val nombre = prenda.get("nombre").toString()
-        val precio = prenda.get("precio").toString()
-        val referencia = prenda.get("referencia").toString()
-        val stock = prenda.get("stock").toString().toInt()
-
-        val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, stock)
-
-        Log.e("LISTA", "AÑADO")
-
-        listaFavoritos.add(p)
-
-        }
-
-        recy.adapter = favoritosAdapter
-        }
-
-        }
-
-        recy.adapter = favoritosAdapter
-
-        Log.e("LISTA", "LISTA: " +  listaFavoritos.size.toString())
-
-        }
-
-        Log.e("LISTA", "LISTA: " +  listaFavoritos.size.toString())*/
     }
 
     /**
@@ -150,9 +114,11 @@ class FavoritosFragment : Fragment() {
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.add(R.id.fragmentFavorito, CatalogoUsuarioDetalleFragment(prenda,1, ""))
-        transaction.addToBackStack(null)
+        transaction.addToBackStack("favoritos")
         transaction.commit()
 
     }
+
+
 
 }
