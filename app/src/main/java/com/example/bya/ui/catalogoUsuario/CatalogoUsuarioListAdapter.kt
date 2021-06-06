@@ -21,6 +21,7 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
 
 ) : RecyclerView.Adapter<CatalogoUsuarioListAdapter.PrendaViewHolder>() {
 
+    //Instanciamos la bbdd
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrendaViewHolder {
@@ -30,51 +31,51 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
         )
     }
 
-    //Rescatamos los datos de una ubicacion y los ponemos en sus componentes
+    //Rescatamos los datos de una prenda y los ponemos en sus componentes
     override fun onBindViewHolder(holder: PrendaViewHolder, position: Int) {
 
+        //Asignamos los datos en el item
         holder.tvItemPrendaUsuarioNombre.text = listaPrendas[position].nombre
         holder.tvItemPrendaUsuarioPrecio.text = listaPrendas[position].precio + " EUR"
-
         Picasso.get().load(Uri.parse(listaPrendas[position].foto)).into(holder.imgItemPrendaUsuario)
 
-        comprobarColor(position, holder)
+        comprobarColor(position, holder)//Comprobamos los favoritos del usuario activo
+
         holder.imgPrendaUsuarioCorazon.setOnClickListener {
+
+            //Recogemos el tag de la imagen (corazon) de favoritos
             var id = holder.imgPrendaUsuarioCorazon.tag
-            var idFavorito = idUsuario + listaPrendas[position].idPrenda
+            var idFavorito = idUsuario + listaPrendas[position].idPrenda//Creamos un id al favorito
 
-            if(id == R.drawable.twitter_like_rojo){
-
-                //holder.imgPrendaUsuarioCorazon.setAnimation(R.raw.black_joy)
-                //holder.imgPrendaUsuarioCorazon.playAnimation()
-
-                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like)
-                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like)
-                db.collection("favoritos").document(idFavorito).delete()
-                //pulsado = false
-                //Log.e("PULSAR", "IF" + pulsado.toString())
+            if(id == R.drawable.twitter_like_rojo){//si idFoto esta en rojo
+                holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like)//cambiamos el icono
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like)//cambiamos el tag
+                db.collection("favoritos").document(idFavorito).delete()//Eliminamos de la bbdd el favorito
             } else {
 
-                holder.imgPrendaUsuarioCorazon.setAnimation(R.raw.black_joy)
-                holder.imgPrendaUsuarioCorazon.playAnimation()
+                holder.imgPrendaUsuarioCorazon.setAnimation(R.raw.black_joy)//Asignamos la animacion
+                holder.imgPrendaUsuarioCorazon.playAnimation()//La reproducimos
+                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like_rojo)//Cambiamos el tag
 
-                //holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like_rojo)
-                holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like_rojo)
+                //Añadimos el favorito a la bbdd
                 val f = Favorito (idFavorito,idUsuario,listaPrendas[position].idPrenda)//AÑADIMOS EL USUARIO A LA TABLA
                 db.collection("favoritos").document(idFavorito).set(f)
-                //pulsado = true
-                //Log.e("PULSAR", "ELSE" + pulsado.toString())
             }
         }
 
+        //Cuando pulsamos en un item recogemos su posición para mostrar su detalle
         holder.itemPrenda.setOnClickListener(){
             accionPrincipal(listaPrendas[position])
         }
 
     }
 
+    /**
+     * Metodo que comprueba los favoritos de un usuario
+     */
     fun comprobarColor(position: Int, holder: PrendaViewHolder) {
 
+        //Consultamos los favoritos del usuario activo, para marcar los corazones
         db.collection("favoritos")
             .whereEqualTo("idUsuario",  idUsuario)
             .whereEqualTo("idPrenda", listaPrendas[position].idPrenda )
@@ -84,54 +85,44 @@ class CatalogoUsuarioListAdapter(private val listaPrendas: MutableList<Prenda>,
 
                     holder.imgPrendaUsuarioCorazon.setImageResource(R.drawable.twitter_like_rojo)
                     holder.imgPrendaUsuarioCorazon.setTag(R.drawable.twitter_like_rojo)
-                    //idFavorito = fav.get("idFavorito").toString()
-                    //pulsado = true
 
                 }
             }
     }
 
+    /**
+     * Metodo que ordena descendente la lista de las prendas
+     */
     fun orderByPrecioDes(){
         listaPrendas.sortBy{ it.precio.toFloat() }
         notifyDataSetChanged()
     }
 
+    /**
+     * Metodo que ordena ascendente la lista de las prendas
+     */
     fun orderByPrecioAsc(){
         listaPrendas.sortByDescending { it.precio.toFloat() }
         notifyDataSetChanged()
     }
 
 
-
+    /**
+     * Metodo que recibe una lista de prendas y las muestra
+     */
     fun filterByName(prenda : List<Prenda>){
-
         listaPrendas.clear()
         listaPrendas.addAll(prenda)
         notifyDataSetChanged()
     }
 
 
-    //Eliminamos un item de la lista
-    fun removeItem(position: Int) {
-        listaPrendas.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaPrendas.size)
-    }
-
-
-    //Recuperamos un item de la lista
-    fun restoreItem(item: Prenda, position: Int) {
-        listaPrendas.add(position, item)
-        notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaPrendas.size)
-    }
-
     //Devolvemos el numero de elementos que tiene la lista
     override fun getItemCount(): Int {
         return listaPrendas.size
     }
 
-    //Rescatamos los tv
+    //Rescatamos los componentes del item
     class PrendaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var tvItemPrendaUsuarioNombre = itemView.tvItemPrendaUsuarioNombre

@@ -31,34 +31,41 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
     private var marcadorTouch: Marker? = null
     private var localizacion: Location? = null
     private var posicion: LatLng? = null
-    private var PERMISOS: Boolean = true
+
 
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val root =  inflater.inflate(R.layout.fragment_cesta_ubicacion, container, false)
 
+        //Enlazamos los elementos con el diseño
         val imgX : ImageView = root.findViewById(R.id.imgCestaUbicacionCerrar)
         val btnContinuar : Button = root.findViewById(R.id.btnCestaUbicacionContinuar)
 
+        /**
+         * Al pulsar en la X volvemos a la cesta
+         */
         imgX.setOnClickListener {
+            //Ocultamos el botón continuar
             btnContinuar.visibility = View.INVISIBLE
             btnContinuar.isClickable = false
             cesta()
 
         }
 
+        /**
+         * Al pulsar en el botón continuar nos vamos al fragment del Pago
+         */
         btnContinuar.setOnClickListener {
             btnContinuar.visibility = View.INVISIBLE
             btnContinuar.isClickable = false
             pago()
         }
 
-        leerPoscionGPSActual()
-        initMapa()
+        leerPoscionGPSActual()//Recogemos la posicion actual
+        initMapa()//Inicialiazamos el mapa
 
         return root
     }
@@ -70,13 +77,18 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
         mPosicion = LocationServices.getFusedLocationProviderClient(requireActivity())
     }
 
-    //Inicialiazamos el mapa
+    /**
+     * Inicialiazamos el mapa
+     */
     private fun initMapa() {
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.mapaCestaUbicacionMapa) as SupportMapFragment?
         mapFragment!!.getMapAsync(this)
     }
 
+    /**
+     * Cargamos el mapa
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         configurarIUMapa()
@@ -126,9 +138,7 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
      */
     @SuppressLint("MissingPermission")
     private fun cargarMapa() {
-        if (this.PERMISOS) {
-            mMap.isMyLocationEnabled = true
-        }
+        mMap.isMyLocationEnabled = true
         activarEventosMarcadores()
         obtenerPosicion()
     }
@@ -141,23 +151,22 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
     private fun obtenerPosicion() {
         try {
             //Si tenemos permiso cogemos la localización
-            if (this.PERMISOS) {
-                val local: Task<Location> = mPosicion!!.lastLocation
-                local.addOnCompleteListener(
-                    requireActivity()
-                ) { task ->
-                    if (task.isSuccessful) {
-                        localizacion = task.result
-                        posicion = LatLng(
-                            localizacion!!.latitude,
-                            localizacion!!.longitude
-                        )
-                        mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion));
-                    } else {
-                        Log.i("GPS", "No se encuetra la última posición.")
-                    }
+            val local: Task<Location> = mPosicion!!.lastLocation
+            local.addOnCompleteListener(
+                requireActivity()
+            ) { task ->
+                if (task.isSuccessful) {
+                    localizacion = task.result
+                    posicion = LatLng(
+                        localizacion!!.latitude,
+                        localizacion!!.longitude
+                    )
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion));
+                } else {
+                    Log.i("GPS", "No se encuetra la última posición.")
                 }
             }
+
         } catch (e: SecurityException) {
             Snackbar.make(
                 requireView(),
@@ -165,13 +174,26 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
                 Snackbar.LENGTH_LONG
             ).show();
             Log.e("Exception: %s", e.message.toString())
+        }catch (ex: Exception){
+            Snackbar.make(
+                requireView(),
+                "No se ha encontrado su posoción actual o el GPS está desactivado",
+                Snackbar.LENGTH_LONG
+            ).show();
+            Log.e("Exception: %s", ex.message.toString())
         }
     }
 
+    /**
+     * Metodo que se lanza cuando pulsamos en un marcador
+     */
     override fun onMarkerClick(marker: Marker?): Boolean {
         return false
     }
 
+    /**
+     * Metodo que nos lleva al fragment de la cesta
+     */
     private fun cesta (){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -180,6 +202,9 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
         transaction.commit()
     }
 
+    /**
+     * Metodo que nos lleva al fragment del pago
+     */
     private fun pago (){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

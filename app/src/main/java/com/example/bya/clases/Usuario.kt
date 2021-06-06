@@ -13,6 +13,7 @@ class Usuario : Serializable {
     var pass: String
     var foto: String
     var tipo: Int
+    var chat: Int
 
 
     /**
@@ -25,6 +26,7 @@ class Usuario : Serializable {
             this.pass = pass
             this.foto = foto
             this.tipo = 1 //1 USUARIO    0 ADMINISTRADOR
+            this.chat = 0 //0 NO  O 1 SI
     }
 
 

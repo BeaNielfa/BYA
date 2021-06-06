@@ -1,4 +1,5 @@
 package com.example.bya
+
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentValues
@@ -23,7 +24,9 @@ import java.util.*
 
 class RegistroActivity : AppCompatActivity() {
 
-    //VARIABLES
+    /**
+     * VARIABLES
+     */
     private val GALERIA = 1
     private val CAMARA = 2
     private var fotoUri: Uri? = null
@@ -32,7 +35,6 @@ class RegistroActivity : AppCompatActivity() {
     private var pass = ""
     private var nombre =""
     private var id = ""
-
     private lateinit var Auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
     private lateinit var Storage: FirebaseStorage
@@ -46,17 +48,26 @@ class RegistroActivity : AppCompatActivity() {
         Storage = FirebaseStorage.getInstance()
 
 
-        //BOTON QUE NOS PERMITE REGISTRARNOS EN BYA
+
+        /**
+         *BOTON QUE NOS PERMITE REGISTRARNOS EN BYA
+         */
         btnRegistroRegistrarse.setOnClickListener {
 
             registrar()
 
         }
-        //BOTON QUE NOS PERMITE CANCELAR EL REGISTRO Y VOLVER A LA VENTANA DE LOGIN
+
+        /**
+         * BOTON QUE NOS PERMITE CANCELAR EL REGISTRO Y VOLVER A LA VENTANA DE LOGIN
+         */
         btnRegistroCancelar.setOnClickListener {
             entrarLogin()
         }
-        //BOTON QUE NOS ABRE UN DIALOGO PARA ELEGIR SI QUEREMOS UNA FOTO DE LA GALERIA O LA CAMARA
+
+        /**
+         * BOTON QUE NOS ABRE UN DIALOGO PARA ELEGIR SI QUEREMOS UNA FOTO DE LA GALERIA O LA CAMARA
+         */
         imgRegistro.setOnClickListener {
             mostrarDialogo()
         }
@@ -66,15 +77,12 @@ class RegistroActivity : AppCompatActivity() {
      * Metodo que registra un nuevo usuario en la bbdd para acceder a BYA
      */
     private fun registrar(){
-        Log.e("REGISTRO", "Entrada al metodo de registrar")
 
+        //Recogemos los datos que ha introducido el usuario
         email = etRegistroEmail.text.toString()
         nombre = etRegistroNombre.text.toString()
         pass = etRegistroPass.text.toString()
 
-        Log.e("REGISTRO",email+ "EMAIL")
-        Log.e("REGISTRO",nombre+ " NOMBRE")
-        Log.e("REGISTRO",pass+ " PASSWORD"+ " LONGITUD "+pass.length)
 
         //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
         if(email.isEmpty() || nombre.isEmpty() || pass.isEmpty()){
@@ -94,31 +102,36 @@ class RegistroActivity : AppCompatActivity() {
             tilRegistroEmail.setError(null)
             tilRegistroNombre.setError(null)
             tilRegisroPass.setError("Debe tener mínimo 6 caracteres")
-        }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+        }else if(!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){//COMPROBAMOS QUE EL FORMATO DEL EMAIL SEA CORRECTO
             tilRegistroNombre.setError(null)
             tilRegisroPass.setError(null)
             tilRegistroEmail.setError("El formato no es correcto")
         }else{
+            //Quitamos los errores
             tilRegistroEmail.setError(null)
             tilRegistroNombre.setError(null)
             tilRegisroPass.setError(null)
+
             //PRIMERO NOS AUTENTICAMOS EN FIREBASE
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, pass).
             addOnCompleteListener{
                 if(it.isSuccessful){//SI HA IDO BIEN
-                    id = Auth.currentUser.uid
+                    id = Auth.currentUser.uid//recogemos el id del usuario
+                    //Lo metemos en SharedPreferences
                     val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
                     pref.putString("idUsuario",id)
                     pref.apply()
 
                     val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
-                    val ref = Storage.getReference("/fotosUsuarios/$img")
+                    val ref = Storage.getReference("/fotosUsuarios/$img")//DAMOS UNA URL A LA IMAGEN
                     if(fotoUri == null){//cuando no hay foto, ponemos una por defecto
+                        //Cogemos una imagen por defecto
                         var fotoDefecto = Uri.parse("android.resource://com.example.bya/"+R.drawable.profile_user)
                         ref.putFile(fotoDefecto).addOnSuccessListener { //Subimos la foto
                             ref.downloadUrl.addOnSuccessListener { //descargamos su url
                                 foto = it.toString()  //lo asignamos a la variable
 
+                                //Insertamos el usuario en la bbdd
                                 val u = Usuario (id,nombre,email, pass,foto)
                                 db.collection("usuarios").document(id).set(u)//AÑADIMOS EL USUARIO A LA TABLA
                             }

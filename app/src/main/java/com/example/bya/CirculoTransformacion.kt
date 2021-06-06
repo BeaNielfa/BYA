@@ -3,6 +3,9 @@ package com.example.bya
 import android.graphics.*
 import com.squareup.picasso.Transformation
 
+/**
+ * Clase que tranforma una imagen cuadrada a redonda
+ */
 class CirculoTransformacion : Transformation {
     var mCircleSeparator = false
     var color = "#ffffff"

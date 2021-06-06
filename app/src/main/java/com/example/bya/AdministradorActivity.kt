@@ -6,7 +6,6 @@ import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.Menu
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -17,18 +16,18 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 
 class AdministradorActivity : AppCompatActivity() {
 
+    /**
+     * VARIABLES
+     */
     private lateinit var appBarConfiguration: AppBarConfiguration
     private val db = FirebaseFirestore.getInstance()
     private var idUsuario = ""
@@ -58,20 +57,21 @@ class AdministradorActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        //Recogemos el usuario actual
         Auth = Firebase.auth
-
+        //Enlazamos los elementos con el diseño
         tvEmailUser = navView.getHeaderView(0).findViewById(R.id.tvEmailUser)
         tvNombreUser  = navView.getHeaderView(0).findViewById(R.id.tvNombreUser)
         imgUser  = navView.getHeaderView(0).findViewById(R.id.imgUser)
-
         val imgSesion: ImageView = navView.getHeaderView(0).findViewById(R.id.imgSesion)
 
+        /**
+         * Al pulsar en la imagen, nos aparecerá un  dialogo para cerrar sesión
+         */
         imgSesion.setOnClickListener {
             salir()
         }
-
-
-
+        //Cargamos los datos del usuario en el navHeader
         cargarDatos()
     }
     /**
@@ -111,16 +111,18 @@ class AdministradorActivity : AppCompatActivity() {
      * METODO QUE CONSULTA LOS DATOS DEL USUARIO
      */
     private fun cargarDatos(){
-
+        //Recogemos el usuario actual
         val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
 
+        //Consultamos la información del usuario
         db.collection("usuarios").document(idUsuario).addSnapshotListener{ snapshot, e->
+            //Rescatamos la información del usuario
             name = snapshot?.get("nombre").toString()
-            Log.e("NOMBRE" , "NOMBRE" + name)
             email = snapshot?.get("email").toString()
             photoUrl = snapshot?.get("foto").toString()
 
+            //Asignamos la información en el navHeader
             tvEmailUser.text = email
             tvNombreUser.text = name
             Picasso.get()
@@ -132,8 +134,6 @@ class AdministradorActivity : AppCompatActivity() {
         }
 
     }
-
-
 
 
     override fun onSupportNavigateUp(): Boolean {

@@ -29,6 +29,11 @@
                 android:id="@+id/nav_historial"
                 android:icon="@drawable/ic_codigo_qr"
                 android:title="@string/historial"/>
+
+        <item
+                android:id="@+id/nav_contactoUsuario"
+                android:icon="@drawable/ic_mensajero"
+                android:title="@string/contactoAsistente"/>
     </group>
 
 

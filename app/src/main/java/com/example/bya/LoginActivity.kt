@@ -25,13 +25,15 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
-    //VARIABLES
+
+    /**
+     * VARIABLES
+     */
     private var email = ""
     private var pass = ""
     private var idUsuario = ""
     private lateinit var Auth: FirebaseAuth
     private val db = FirebaseFirestore.getInstance()
-
     private  val GOOGLE_SIGN_IN = 100
     private var google = false
 
@@ -45,15 +47,22 @@ class LoginActivity : AppCompatActivity() {
         //Variables para acceder a Firebase
         Auth = Firebase.auth
 
-        //ENTRAMOS EN LA ACTIVIDAD DE REGISTRO
+
+        /**
+         * ENTRAMOS EN LA ACTIVIDAD DE REGISTRO
+         */
         tvLoginRegistrate.setOnClickListener{
             val r = Intent(this, RegistroActivity::class.java)
             startActivity(r)
 
         }
 
-        //BOTON PARA ENTRAR EN BYA
+
+        /**
+         * BOTON PARA ENTRAR EN BYA
+         */
         btnLogin.setOnClickListener {
+            //Recogemos la información del usuario introducida
             email = etLoginEmail.text.toString()
             pass = etLoginPass.text.toString()
 
@@ -69,6 +78,7 @@ class LoginActivity : AppCompatActivity() {
                 }
 
             }else {
+                //Quitamos los errores
                 tilLoginPass.setError(null)
                 tilLoginEmail.setError(null)
                 //COMPROBAMOS SI ESTA AUTENTICADO EN BYA
@@ -92,7 +102,9 @@ class LoginActivity : AppCompatActivity() {
 
         }
 
-        //BOTON PARA ACCEDER A BYA DESDE GOOGLE
+        /**
+         * BOTON PARA ACCEDER A BYA DESDE GOOGLE
+         */
         imgGoogle.setOnClickListener {
             loginToGoogle()
         }
@@ -113,48 +125,55 @@ class LoginActivity : AppCompatActivity() {
         startActivityForResult(googleClient.signInIntent, GOOGLE_SIGN_IN)
     }
 
+    /**
+     * Al querer iniciar sesión desde Google, se lanza este metodo
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+
         if(requestCode == GOOGLE_SIGN_IN){
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                if(account != null){
+                if(account != null){//Si la cuenta existe, intentamos loguearnos con Google
                     val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                     FirebaseAuth.getInstance().signInWithCredential(credential).addOnCompleteListener{
-                        if(it.isSuccessful){
 
-                            idUsuario = Auth.currentUser.uid
+                        if(it.isSuccessful){//Si ha salido bien
+
+                            idUsuario = Auth.currentUser.uid//Recogemos su id de la autenticación y lo guardamos en la sharedPreferences
                             val pref = getSharedPreferences("Preferencias", Context.MODE_PRIVATE).edit()
                             pref.putString("idUsuario",idUsuario)
                             pref.apply()
 
                             var existe = false
-
+                            //Comprobamos si el usuario esta en la bbdd de firestore
                             db.collection("usuarios")
                                 .get()
                                 .addOnSuccessListener { result ->
                                     for(usuario in result){
 
                                         if(usuario.get("idUsuario").toString().equals(idUsuario))  {
-                                            existe = true
+                                            existe = true//El usuario existe
                                         }
 
                                     }
 
-                                    if(!existe){
+                                    if(!existe){//Si no existe
+                                        //Añadimos el usuario a la bbdd de B&A
                                         val u = Usuario (idUsuario,account.displayName.toString(),account.email.toString(),"",account.photoUrl.toString())
                                         db.collection("usuarios").document(idUsuario).set(u)
                                     }
 
+
                                     google = true//PARA QUE NO PUEDA EDITAR SU PERFIL
-                                    entrarMain()
+                                    entrarMain()//Entramos al main
                                 }
 
 
 
                         }else{
-
+                            Toast.makeText(this, "Algo no ha ido bien", Toast.LENGTH_LONG).show()
                         }
                     }
                 }
@@ -169,30 +188,28 @@ class LoginActivity : AppCompatActivity() {
      */
     private fun entrarMain(){
         var tipo = ""
-        //var nombre = ""
-
+        //Consultamos el tipo de usuario (admin, normal)
         val pillarTipo = db.collection("usuarios").document(idUsuario)
 
         pillarTipo.get().addOnSuccessListener {
-            tipo = it.get("tipo").toString()
-            //nombre = it.get("nombre").toString()
-
-            Log.e("TIPO ", "TIPO: " + tipo)
-            //Log.e("TIPO ", "NOMBRE: " + nombre)
-            main(tipo)
+            tipo = it.get("tipo").toString()//Recogemos el tipo
+            main(tipo)//Entramos al main
         }
 
 
 
     }
 
+    /**
+     * Metodo que nos lleva al main
+     */
     private fun main(tipo : String){
 
-        if(tipo.equals("1")){
+        if(tipo.equals("1")){//Si el tipo es 1, nos lleva al main de los usuario normales
             val main = Intent(this, MainActivity::class.java)
-            main.putExtra("Google", google)
+            main.putExtra("Google", google)//Le indicamos si viene de google o no
             startActivity(main)
-        }else{
+        }else{//Si no, nos lleva al main del administrador
             val main = Intent(this, AdministradorActivity::class.java)
             startActivity(main)
         }
@@ -235,7 +252,7 @@ class LoginActivity : AppCompatActivity() {
                 ) {
                     token.continuePermissionRequest()
                 }
-            }).withErrorListener { Toast.makeText(applicationContext, "Existe errores! ", Toast.LENGTH_SHORT).show() }
+            }).withErrorListener { Toast.makeText(applicationContext, "Existen errores! ", Toast.LENGTH_SHORT).show() }
             .onSameThread()
             .check()
     }

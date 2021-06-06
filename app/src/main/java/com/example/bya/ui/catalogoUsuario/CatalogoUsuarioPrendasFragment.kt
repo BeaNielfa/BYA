@@ -22,47 +22,52 @@ import java.util.*
 class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
 
 
-
+    /**
+     * VARIABLES
+     */
     private lateinit var recy : RecyclerView
-
-    private var listaPrendas = mutableListOf<Prenda>() //Lista de ubicaciones
-    private var listaPrendas2 = mutableListOf<Prenda>() //Lista de ubicaciones
-    private lateinit var prendasAdapter: CatalogoUsuarioListAdapter //Adaptador de ubicaciones
-
+    private var listaPrendas = mutableListOf<Prenda>() //Lista de prendas
+    private var listaPrendas2 = mutableListOf<Prenda>() //Lista de prendas
+    private lateinit var prendasAdapter: CatalogoUsuarioListAdapter //Adaptador de prendas
     private var idUsuario = ""
-
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_catalogo_usuario_prendas, container, false)
 
+        //Enlazamos los elementos con el diseño
         val searchField : SearchView = root.findViewById(R.id.searchField)
         val spiFiltro : Spinner = root.findViewById(R.id.spiFiltro)
 
+        //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
-        Log.e("PERFIL ",idUsuario)
 
-        //detecta cuando pulsamos en un item
+
+        //Inicializamos el adaptador
         prendasAdapter = CatalogoUsuarioListAdapter(listaPrendas, idUsuario) {
             eventoClicFila(it)
         }
 
+        //Enlazamos el recycler con el del layout
         recy = root.findViewById(R.id.catalogoUsuarioRecycler)
-
         recy.layoutManager = GridLayoutManager(context, 2)
 
+        //Rellenamos la lista de prendas
         rellenarArrayPrendas()
 
+        /**
+         * Cuando escribimos en la barra de búsqueda
+         */
         searchField.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 return false
             }
 
+            //Cuando cambia el texto crea una nueva lista con las prendas que coincidan con ese filtro
             override fun onQueryTextChange(newText: String?): Boolean {
                 newText?.let {
                     if(newText.equals("")){
@@ -79,6 +84,9 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
             }
         })
 
+        /**
+         * Cuando selecionamos una opción del spinner del filtro, ordena la lista de prendas por precio mayor o menor
+         */
         spiFiltro.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parentView: AdapterView<*>?, selectedItemView: View, position: Int, id: Long) {
                 var item = spiFiltro.selectedItem.toString()
@@ -101,20 +109,20 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
     }
 
     /**
-     * Rellenamos y devolvemos un array de ubicaciones con todas las ubicaciones que queremos
-     * cargar en el recycler
+     * Rellenamos y devolvemos un array con las prendas que queremos cargar en el recycler
      */
     private fun rellenarArrayPrendas(){
 
+        //Limpiamos las listas
         listaPrendas.clear()
         listaPrendas2.clear()
 
-        db.collection("prendas")
+        db.collection("prendas")//Consultamos todas las prendas de un determinado tipo
             .whereEqualTo("idTipo", tipo)
             .get()
             .addOnSuccessListener { result ->
                 for (prenda in result) {
-                    Log.e("LISTAAA1", "ME METO")
+                    //Recogemos los datos de la prenda
                     val idPrenda = prenda.get("idPrenda").toString()
                     val nombre = prenda.get("nombre").toString()
                     val precio = prenda.get("precio").toString()
@@ -123,14 +131,14 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
                     val stock = prenda.get("stock").toString()
                     val foto = prenda.get("foto").toString()
 
+                    //Añadimos la prenda a las listas
                     val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, stock.toInt())
-
                     listaPrendas.add(p)
                     listaPrendas2.add(p)
                 }
 
 
-
+                //Le indicamos el adaptador
                 recy.adapter = prendasAdapter
 
             }
@@ -146,12 +154,15 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
         abrirPrenda(prenda)
     }
 
+    /**
+     * Abrimos el detalle de la prenda, pasandole la prenda y el fragment de donde venimos
+     */
     private fun abrirPrenda(prenda: Prenda) {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.add(R.id.catalogoUsuarioListaLayout,
-            CatalogoUsuarioDetalleFragment(prenda, 0, tipo)
+            CatalogoUsuarioDetalleFragment(prenda, 0)
 
         )
         transaction.addToBackStack("catalogo")

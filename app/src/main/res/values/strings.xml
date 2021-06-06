@@ -64,6 +64,7 @@
     <string name="historial">Historial</string>
     <string name="pedidos">Pedidos</string>
     <string name="enviarPedido">Enviar pedido</string>
+    <string name="contactoAsistente">Contactar con un asistente</string>
 
 
     <string-array name="spiFiltro">

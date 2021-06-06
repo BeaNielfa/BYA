@@ -34,4 +34,10 @@
             android:label="@string/historial"
             tools:layout="@layout/fragment_historial"/>
 
+    <fragment
+            android:id="@+id/nav_contactoUsuario"
+            android:name="com.example.bya.ui.contactoUsuario.ContactoUsuarioFragment"
+            android:label="@string/contactoAsistente"
+            tools:layout="@layout/fragment_contacto_usuario"/>
+
 </navigation>

@@ -17,6 +17,9 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
 
 ) : RecyclerView.Adapter<HistorialListAdapter.HistorialViewHolder>() {
 
+    /**
+     * Creamos una instancia de la bbdd de firestore
+     */
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HistorialViewHolder {
@@ -26,20 +29,23 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
         )
     }
 
-    //Rescatamos los datos de una ubicacion y los ponemos en sus componentes
+    /**
+     * Rescatamos los datos del historial y los ponemos en sus componentes
+     */
     override fun onBindViewHolder(holder: HistorialViewHolder, position: Int) {
 
-
+        //Consultamos la prenda del pedido
         db.collection("prendas")
             .whereEqualTo("idPrenda",  listaHistorial[position].idPrenda)
             .get()
             .addOnSuccessListener { result ->
                 for (prenda in result) {
-                    Log.e("METIU", "METIU")
+                    //Recogemos la información de la prenda
                     val foto = prenda.get("foto").toString()
                     val precio = prenda.get("precio").toString()
                     val nombre = prenda.get("nombre").toString()
 
+                    //Asignamos la información en el item
                     holder.tvItemHistorialNombre.text = nombre
                     holder.tvItemHistorialPrecio.text = precio
                     Picasso.get().load(Uri.parse(foto)).into(holder.imgItemHistorial)
@@ -47,7 +53,9 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
 
             }
 
+        //Asignamos la fecha al item
         holder.tvItemHistorialFecha.text = listaHistorial[position].fechaCompra
+        //Al pulsar en la imagen del codigo qr, nos aparecerá el codigo qr
         holder.imgItemHistorialQr.setOnClickListener {
             accionQr(listaHistorial[position])
         }
@@ -55,28 +63,17 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
 
     }
 
-
-    //Eliminamos un item de la lista
-    fun removeItem(position: Int) {
-        listaHistorial.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaHistorial.size)
-    }
-
-
-    //Recuperamos un item de la lista
-    fun restoreItem(item: Pedido, position: Int) {
-        listaHistorial.add(position, item)
-        notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaHistorial.size)
-    }
-
-    //Devolvemos el numero de elementos que tiene la lista
+    /**
+     * Devolvemos el numero de elementos que tiene la lista
+     */
     override fun getItemCount(): Int {
         return listaHistorial.size
     }
 
-    //Rescatamos los tv
+
+    /**
+     * Rescatamos los componentes del pedido
+     */
     class HistorialViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var tvItemHistorialNombre = itemView.tvItemHistorialNombre
@@ -85,7 +82,7 @@ class HistorialListAdapter(private val listaHistorial: MutableList<Pedido>,
         var imgItemHistorial = itemView.imgItemHistorial
         var imgItemHistorialQr = itemView.imgItemHistorialQr
 
-        var itemHistorial = itemView.itemHitorial
+
         var context = itemView.context
     }
 

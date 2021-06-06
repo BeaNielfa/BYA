@@ -16,43 +16,49 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class PedidosFragment : Fragment() {
 
+    /**
+     * VARIABLES
+     */
     private lateinit var recy : RecyclerView
     private var listaPedidos = mutableListOf<Pedido>() //Lista de favoritos
     private lateinit var pedidosAdapter: PedidosListAdapter
-
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        //Enlazamos los elementos con el diseño
         val root = inflater.inflate(R.layout.fragment_pedidos, container, false)
 
-        val transaction1 = requireActivity().supportFragmentManager.beginTransaction()
-        //detecta cuando pulsamos en un item
+        //Inicializamos el adaptador
         pedidosAdapter = PedidosListAdapter(requireContext(), listaPedidos) {
             eventoClicFila(it)
         }
 
+        //Enlazamos el recycler con el del layout
         recy = root.findViewById(R.id.pedidoRecycler)
-
         recy.layoutManager = LinearLayoutManager(context)
 
+        //Rellenamos la lista de pedidos
         rellenarArrayPedidos()
 
         return root
     }
 
+    /**
+     * Metodo que rellena la lista de pedidos
+     */
     private fun rellenarArrayPedidos() {
 
+        //Consultamos todos los pedidos
+        db.collection("pedidos")
+             .addSnapshotListener{ snapshot, e->
+                listaPedidos.clear()//Limpiamos la lista
 
-       /* db.collection("pedidos")
-            .get()
-            .addOnSuccessListener { result ->
-                listaPedidos.clear()
-                for (historial in result) {
+                for (historial in snapshot!!) {
 
+                    //Recogemos la información del pedido
                     val idPedido = historial.get("idPedido").toString()
                     val idPrenda = historial.get("idPrenda").toString()
                     val idUsuario = historial.get("idUsuario").toString()
@@ -60,68 +66,35 @@ class PedidosFragment : Fragment() {
                     val latitud = historial.get("latitud").toString()
                     val longitud = historial.get("longitud").toString()
                     val talla = historial.get("talla").toString()
-                    Log.e("NO SE", historial.get("talla").toString())
-                    Log.e("NO SE", historial.get("estado").toString())
                     val estado = historial.get("estado").toString().toInt()
 
-                    val p = Pedido(
-                        idPedido,
-                        idPrenda,
-                        idUsuario,
-                        fechaCompra,
-                        latitud,
-                        longitud,
-                        talla,
-                        estado
-                    )
-
+                    //Añadimos el pedido a la lista
+                    val p = Pedido(idPedido, idPrenda, idUsuario, fechaCompra, latitud, longitud, talla, estado)
                     listaPedidos.add(p)
                 }
 
-                recy.adapter = pedidosAdapter
-            }*/
-
-        db.collection("pedidos")
-        .addSnapshotListener{ snapshot, e->
-        listaPedidos.clear()
-
-        for (historial in snapshot!!) {
-
-        val idPedido = historial.get("idPedido").toString()
-        val idPrenda = historial.get("idPrenda").toString()
-        val idUsuario = historial.get("idUsuario").toString()
-        val fechaCompra = historial.get("fechaCompra").toString()
-        val latitud = historial.get("latitud").toString()
-        val longitud = historial.get("longitud").toString()
-        val talla = historial.get("talla").toString()
-        Log.e("NO SE", historial.get("talla").toString())
-        Log.e("NO SE", historial.get("estado").toString())
-        val estado = historial.get("estado").toString().toInt()
-
-        val p = Pedido(idPedido, idPrenda, idUsuario, fechaCompra, latitud, longitud, talla, estado)
-
-        listaPedidos.add(p)
-        }
-
-        recy.adapter = pedidosAdapter
+            recy.adapter = pedidosAdapter
 
         }
 
     }
 
+    /**
+     * Al pulsar en un pedido , nos lleva al fragment de su detalle
+     */
     private fun eventoClicFila(pedido: Pedido) {
         abrirPedido(pedido)
     }
 
+    /**
+     * Metodo que nos lleva al fragment del detalle del pedido
+     */
     private fun abrirPedido(pedido: Pedido) {
-
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.add(R.id.fragmentPedidos, PedidosDetalleFragment(pedido))
         transaction.addToBackStack("pedidos")
         transaction.commit()
-
-
     }
 
 

@@ -17,7 +17,7 @@ class FavoritosListAdapter (private val listaFavoritos: MutableList<Prenda>,
 
 ) : RecyclerView.Adapter<FavoritosListAdapter.FavoritoViewHolder>() {
 
-    private val db = FirebaseFirestore.getInstance()
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavoritoViewHolder {
         return FavoritoViewHolder(
@@ -26,11 +26,16 @@ class FavoritosListAdapter (private val listaFavoritos: MutableList<Prenda>,
         )
     }
 
-    //Rescatamos los datos de una ubicacion y los ponemos en sus componentes
+
+    /**
+     * Rescatamos los datos de la prenda y los ponemos en sus componentes
+     */
     override fun onBindViewHolder(holder: FavoritoViewHolder, position: Int) {
 
+        //Mostramos la imagen de la prenda
         Picasso.get().load(Uri.parse(listaFavoritos[position].foto)).into(holder.imgItemFavoritoFoto)
 
+        //Al pulsar en el item, se abrirá el detalle de la prenda
         holder.itemFavorito.setOnClickListener(){
             accionPrincipal(listaFavoritos[position])
         }
@@ -38,31 +43,20 @@ class FavoritosListAdapter (private val listaFavoritos: MutableList<Prenda>,
     }
 
 
-    //Eliminamos un item de la lista
-    fun removeItem(position: Int) {
-        listaFavoritos.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaFavoritos.size)
-    }
-
-
-    //Recuperamos un item de la lista
-    fun restoreItem(item: Prenda, position: Int) {
-        listaFavoritos.add(position, item)
-        notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaFavoritos.size)
-    }
-
-    //Devolvemos el numero de elementos que tiene la lista
+    /**
+     * Devolvemos el numero de elementos que tiene la lista
+     */
     override fun getItemCount(): Int {
         return listaFavoritos.size
     }
 
-    //Rescatamos los tv
+
+    /**
+     * Rescatamos los componentes de la prenda
+     */
     class FavoritoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imgItemFavoritoFoto = itemView.imgItemFavoritoFoto
-
         var itemFavorito = itemView.itemFavorito
         var context = itemView.context
     }
