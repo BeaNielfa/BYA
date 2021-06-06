@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.bya.CirculoTransformacion
@@ -47,6 +48,7 @@ class ChatFragment(private var u: Usuario) : Fragment() {
         var imgChatEnviar: ImageView = root.findViewById(R.id.imaChatEnviar)
         var tvChatNombre: TextView = root.findViewById(R.id.tvChatNombre)
         var etChatMensaje : EditText = root.findViewById(R.id.etChatMandar)
+        var imgChatAtras : ImageView = root.findViewById(R.id.imgChatAtras)
         recy = root.findViewById(R.id.chatRecycler)
 
         //Recogemos el idUsuario del usuario activo con las SharedPreferences
@@ -68,6 +70,13 @@ class ChatFragment(private var u: Usuario) : Fragment() {
         //Recogemos y ponemos la foto y el nombre del usuario que recibimos (con el que vamos a hablar)
         Picasso.get().load(Uri.parse(u.foto)).transform(CirculoTransformacion()).into(imgChatFoto)
         tvChatNombre.text = u.nombre
+
+        /**
+         * Al pulsar en el botón de la flecha nos vamos al fragment anterior
+         */
+        imgChatAtras.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack("chat", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        }
 
         /**
          * Al pulsar en el botón enviar
