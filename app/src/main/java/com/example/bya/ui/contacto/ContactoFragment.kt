@@ -16,12 +16,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class ContactoFragment : Fragment() {
 
+    /**
+     * VARIABLES
+     */
     private lateinit var recy : RecyclerView
-    private var listaContactos = mutableListOf<Usuario>() //Lista de favoritos
+    private var listaContactos = mutableListOf<Usuario>() //Lista de contactos
     private lateinit var contactoAdapter: ContactoListAdapter
-
     private val db = FirebaseFirestore.getInstance()
-
     private var idUsuario = ""
 
     override fun onCreateView(
@@ -32,49 +33,62 @@ class ContactoFragment : Fragment() {
 
         val root = inflater.inflate(R.layout.fragment_contacto, container, false)
 
+        //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
 
-        //detecta cuando pulsamos en un item
+        //Inicializamos el adaptador
         contactoAdapter = ContactoListAdapter(idUsuario, listaContactos) {
             eventoClicFila(it)
         }
 
+        //Enlazamos el recycler con el del layout
         recy = root.findViewById(R.id.contactoRecycler)
-
         recy.layoutManager = LinearLayoutManager(context)
 
+        //Rellenamos la lista de contactos
         rellenarArrayContacto()
 
         return root
     }
 
+    /**
+     * Rellenamos la lista de contactos
+     */
     private fun rellenarArrayContacto() {
 
+        //Consultamos todos los usuarios que  tengan el tipo 1 (Usuarios normales)
+        //y que chat sea 1 (Los que hayan hablado alguna vez con nosotros)
         db.collection("usuarios")
             .whereEqualTo("tipo", 1)
             .whereEqualTo("chat",1)
             .addSnapshotListener{ snapshot, e->
-                listaContactos.clear()
+                listaContactos.clear()//Limpiamos la lista
 
+                //Recogemos los usuarios
                 for (contacto in snapshot!!) {
 
+                    //Recogemos los datos del usuario
                     val idUsuario = contacto.get("idUsuario").toString()
                     val nombre = contacto.get("nombre").toString()
                     val email = contacto.get("email").toString()
                     val foto = contacto.get("foto").toString()
                     val pass = contacto.get("pass").toString()
 
+                    //Lo añadimos a la lista de contactos
                     val u = Usuario (idUsuario,nombre,email, pass,foto)
-
                     listaContactos.add(u)
                 }
 
+                //Lo asignamos al adaptador
                 recy.adapter = contactoAdapter
 
             }
     }
 
+    /**
+     * Cuando pulsamos en un item, abrimos el chat
+     */
     private fun eventoClicFila(usuario: Usuario) {
         abrirUsuario(usuario)
     }

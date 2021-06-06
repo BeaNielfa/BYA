@@ -36,7 +36,6 @@ class CatalogoFragment : Fragment() {
     private lateinit var prendasAdapter: CatalogoListAdapter //Adaptador de prendas
     private var paintSweep = Paint()
     private val db = FirebaseFirestore.getInstance()
-
     private var idUsuario = ""
 
 
@@ -47,19 +46,21 @@ class CatalogoFragment : Fragment() {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_catalogo, container, false)
 
+        //Recogemos el idUsuario del usuario activo con las SharedPreferences
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
 
+        //Enlazamos el recycler con el del layout
         recy = root.findViewById(R.id.catalogoRecycler)
-
         recy.layoutManager = LinearLayoutManager(context)
-
         anadirPrenda  = root.findViewById(R.id.fabCatalogoAnadir)
-        var dialog = Dialog(requireActivity())
 
+        var dialog = Dialog(requireActivity())//Instanciamos un dialogo
+
+        //Al pulsar en añadir prenda, se abrirá un dialogo
         anadirPrenda.setOnClickListener {
 
-            //Abrimos un dialog con las 2 opciones (camara o galeria)
+            //Abrimos un dialog con las 2 opciones (prenda existente, prenda nueva)
             dialog.setContentView(R.layout.anadir_prenda_existente_layout)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -106,7 +107,7 @@ class CatalogoFragment : Fragment() {
         }
 
 
-
+        //Iniciamos el SwipeHorizontal y rellenamos la lista  de prendas
         iniciarSwipeHorizontal()
         rellenarArrayPrendas()
 
@@ -115,7 +116,9 @@ class CatalogoFragment : Fragment() {
     }
 
 
-
+    /**
+     * Metodo que elimina una prenda del recycler y de la bbdd
+     */
     private fun borrarPrenda(position: Int) {
         //Cuando hemos deslizado, quitamos el elemento del swipe y lo ponemos
         //instantaneamente para que desaparezca el color del fondo
@@ -124,7 +127,7 @@ class CatalogoFragment : Fragment() {
         prendasAdapter.restoreItem(deleteModel, position)
 
 
-        //Alert dialog para confirmar si desea eliminar la ubicación deslizada
+        //Alert dialog para confirmar si desea eliminar la prenda deslizada
         Log.i("Elimar", "Eliminando...")
         AlertDialog.Builder(requireContext())
             .setIcon(R.mipmap.ic_launcher_bya_round)
@@ -137,25 +140,19 @@ class CatalogoFragment : Fragment() {
     }
 
     /**
-     * Si en el alert dialog hemos confirmado que sí queremos eliminar la ubicación
-     * lo borramos de la base de datos
+     * Si en el alert dialog hemos confirmado que sí queremos eliminar la prenda
+     * la borramos de la base de datos
      */
     private fun eliminarPrendaConfirmada(position: Int) {
 
-        //SitiosController.delete(SITIOS[position])
         borrarFavoritosPrendaCesta(listaPrendas[position])
-        val snackbar = Snackbar.make(
-            requireView(),
-            "Prenda eliminada con éxito",
-            Snackbar.LENGTH_LONG
-        )
+        val snackbar = Snackbar.make(requireView(), "Prenda eliminada con éxito", Snackbar.LENGTH_LONG)
         prendasAdapter.removeItem(position)
         snackbar.show()
     }
 
     /**
-     * Swipe horizontal que nos servirá para eliminar ya que borramos deslizando
-     * a ambos lados
+     * Swipe horizontal que nos servirá para eliminar o editar
      */
     private fun iniciarSwipeHorizontal() {
         val simpleItemTouchCallback: ItemTouchHelper.SimpleCallback = object : ItemTouchHelper.SimpleCallback(
@@ -176,7 +173,7 @@ class CatalogoFragment : Fragment() {
                 val position = viewHolder.adapterPosition
 
                 //izquierda -> borramos
-                //derecha -> borramos
+                //derecha -> editamos
                 when (direction) {
                     ItemTouchHelper.LEFT -> {
                         borrarPrenda(position)
@@ -207,24 +204,14 @@ class CatalogoFragment : Fragment() {
                     val height = itemView.bottom.toFloat() - itemView.top.toFloat()
                     val width = height / 3
 
-                    //En ambos casos borramos el la ubicación elegida
-                    if (dX > 0) {
 
+                    if (dX > 0) {//Creamos el boton de borrar
                         botonIzquierdo(canvas, dX, itemView, width)
-                    } else {
-
+                    } else {//Creamos el boton de editar
                         botonDerecho(canvas, dX, itemView, width)
                     }
                 }
-                super.onChildDraw(
-                    canvas,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
+                super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             }
         }
 
@@ -234,16 +221,18 @@ class CatalogoFragment : Fragment() {
 
 
     /**
-     * Metodo que al deslizar hacia la izquierda nos abrira un layout
+     * Metodo que al deslizar hacia la izquierda nos dibuja el botón
      */
     private fun botonIzquierdo(canvas: Canvas, dX: Float, itemView: View, width: Float) {
 
+        //Le damos un color y un fondo
         paintSweep.setColor(resources.getColor(R.color.dark))
         val background = RectF(
             itemView.left.toFloat(), itemView.top.toFloat(), dX,
             itemView.bottom.toFloat()
         )
         canvas.drawRect(background, paintSweep)
+        //Le damos un icono para que lo muestre
         val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.edit)
         val iconDest = RectF(
             itemView.left.toFloat() + width, itemView.top.toFloat() + width, itemView.left
@@ -253,16 +242,17 @@ class CatalogoFragment : Fragment() {
     }
 
     /**
-     * Cuando deslizamos hacia la izquierda aparece un fondo rojo con el botón de eliminar
+     * Cuando deslizamos hacia la derecha nos dibuja el botón de editar
      */
     private fun botonDerecho(canvas: Canvas, dX: Float, itemView: View, width: Float) {
-        // Pintamos de rojo y ponemos el icono
+        //Le damos un color y un fondo
         paintSweep.color = resources.getColor(R.color.dark)
         val background = RectF(
             itemView.right.toFloat() + dX,
             itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat()
         )
         canvas.drawRect(background, paintSweep)
+        //Le damos un icono para que lo muestre
         val icon: Bitmap = BitmapFactory.decodeResource(resources, R.drawable.delete)
         val iconDest = RectF(
             itemView.right.toFloat() - 2 * width, itemView.top.toFloat() + width, itemView.right
@@ -273,10 +263,11 @@ class CatalogoFragment : Fragment() {
 
 
     /**
-     * Metodo que borra una prenda de la bbdd
+     * Metodo que borra un favorito de la bbdd
      */
     private fun borrarFavoritosPrendaCesta(p: Prenda){
 
+        //Hacemos una consulta para borrar todos los favoritos que tengan ese idPrenda
         db.collection("favoritos")
             .whereEqualTo("idPrenda", p.idPrenda)
             .get()
@@ -290,6 +281,7 @@ class CatalogoFragment : Fragment() {
                 }
             }
 
+        //Hacemos una consulta para borrar todos las prendas de la cesta que tengan ese idPrenda
         db.collection("cesta")
             .whereEqualTo("idPrenda", p.idPrenda)
             .get()
@@ -303,11 +295,14 @@ class CatalogoFragment : Fragment() {
                 }
             }
 
-
+        //Borramos la prenda
         db.collection("prendas").document(p.idPrenda).delete()
     }
 
 
+    /**
+     * Metodo para editar una prenda
+     */
     private fun editarPrenda(position: Int) {
 
         //Ocultamos el floating button
@@ -320,30 +315,36 @@ class CatalogoFragment : Fragment() {
         prendasAdapter.restoreItem(editedModel, position)
 
         //llamamos al fragment editar
+        editar(position)
+
+
+    }
+
+    /**
+     * Metodo que abre el fragment de editar, pasandole la prenda a editar
+     */
+    private fun editar(position: Int){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.fragmentCatalogo, EditarPrendaFragment(listaPrendas[position]))
         transaction.addToBackStack(null)
         transaction.commit()
-
-
     }
 
 
 
     /**
-     * Rellenamos y devolvemos un array de ubicaciones con todas las ubicaciones que queremos
-     * cargar en el recycler
+     * Rellenamos y devolvemos un array con las prendas que queremos cargar en el recycler
      */
     private fun rellenarArrayPrendas(){
 
-        listaPrendas.clear()
+        listaPrendas.clear()//Limpiamos la lista
 
-        db.collection("prendas")
+        db.collection("prendas")//Consultamos todas las prendas
             .get()
             .addOnSuccessListener { result ->
                 for (prenda in result) {
-                    Log.e("LISTAAA1", "ME METO")
+                    //Recogemos los datos de la prenda
                     val idPrenda = prenda.get("idPrenda").toString()
                     val nombre = prenda.get("nombre").toString()
                     val precio = prenda.get("precio").toString()
@@ -352,16 +353,15 @@ class CatalogoFragment : Fragment() {
                     val stock = prenda.get("stock").toString()
                     val foto = prenda.get("foto").toString()
 
+                    //Añadimos la prenda a la lista
                     val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, stock.toInt())
-
                     listaPrendas.add(p)
                 }
 
-                //detecta cuando pulsamos en un item
-                prendasAdapter = CatalogoListAdapter(listaPrendas) {
-                    eventoClicFila(it)
-                }
+                //Le damos valor a prendasAdapter
+                prendasAdapter = CatalogoListAdapter(listaPrendas)
 
+                //Le indicamos el adaptador
                 recy.adapter = prendasAdapter
 
             }
@@ -371,15 +371,10 @@ class CatalogoFragment : Fragment() {
     }
 
     /**
-     * Se llama cuando hacemos clic en un item
+     * Metodo que entra en el fragment de añadir una prenda nueva
      */
-    private fun eventoClicFila(prenda: Prenda) {
-        //abrirPrenda(prenda)
-    }
-
-
     private fun entrarAnadirPrenda(){
-        anadirPrenda.hide()
+        anadirPrenda.hide()//ocultamos el boton floating
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.fragmentCatalogo, AnadirPrendaFragment())
@@ -387,8 +382,11 @@ class CatalogoFragment : Fragment() {
         transaction.commit()
     }
 
+    /**
+     *  Metodo que entra en el fragment de añadir una prenda ya existente
+     */
     private fun entrarAnadirPrendaExistente(){
-        anadirPrenda.hide()
+        anadirPrenda.hide()//ocultamos el boton floating
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
         transaction.replace(R.id.fragmentCatalogo, AnadirPrendaExistenteFragment())

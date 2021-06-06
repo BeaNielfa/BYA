@@ -22,19 +22,20 @@ import com.squareup.picasso.Picasso
 import java.util.*
 
 
-class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: Int, private val tipoPrenda: String) : Fragment() {
+class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: Int) : Fragment() {
 
+    /**
+     * VARIABLES
+     */
     private lateinit var tvNombre: TextView
     private lateinit var tvPrecio: TextView
     private lateinit var tvStock: TextView
     private lateinit var imgCamiseta: ImageView
     private lateinit var btnCesta : Button
     private lateinit var imgFav : LottieAnimationView
-
     private var idUsuario = ""
     private var idRadio = -1
     private var talla = ""
-
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(
@@ -44,6 +45,7 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_catalogo_usuario_detalle, container, false)
 
+        //Enlazamos los elementos con el diseño
         val imgX : ImageView = root.findViewById(R.id.imgDetalleCerrar)
         btnCesta = root.findViewById(R.id.btnDetalleAnadirCesta)
         imgCamiseta = root.findViewById(R.id.imgDetalleFoto)
@@ -52,42 +54,40 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
         tvStock = root.findViewById(R.id.tvDetalleStock)
         val radioS : RadioButton = root.findViewById(R.id.radioDetalleS)
         val radioM : RadioButton = root.findViewById(R.id.radioDetalleM)
-        val radioL : RadioButton = root.findViewById(R.id.radioDetalleL)
         val radioGroup : RadioGroup = root.findViewById(R.id.radioGroup)
         imgFav = root.findViewById(R.id.imgDetalleFav)
 
+        //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
-        Log.e("PERFIL ",idUsuario)
 
+
+        /**
+         * Al pulsar en la X
+         */
         imgX.setOnClickListener {
-            Log.e("CLICK", "CLICK")
 
-
-
-            if(tipo == 0){
-                Log.e("CERRAR", tipo.toString() +" TIPOO")
+            if(tipo == 0){//Si es 0 volvemos al catalogo
                 requireActivity().supportFragmentManager.popBackStack("catalogo", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                //catalogo()
-                //getFragmentManager().popBackStack()
 
-            }else{
-                Log.e("CERRAR", tipo.toString() +" TIPOO")
+            }else{//si no, volvemos a los favoritos
                 requireActivity().supportFragmentManager.popBackStack("favoritos", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                //favoritos()
             }
 
         }
 
+        /**
+         * Al pulsar en el boton de añadir a la cesta
+         */
         btnCesta.setOnClickListener {
 
-            idRadio = radioGroup.checkedRadioButtonId
-            if (idRadio == -1){
+            idRadio = radioGroup.checkedRadioButtonId//recogemos  el id del radioGroup
+
+            if (idRadio == -1){//Si es -1, no ha seleccionado nada
                 Toast.makeText(requireContext(), "¡Introduzca la talla!", Toast.LENGTH_SHORT).show()
             } else {
 
-
-
+                //recogemos el valor de la talla seleccionada
                 if (radioS.isChecked){
                     talla = "S"
                 } else if(radioM.isChecked){
@@ -96,10 +96,9 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
                     talla = "L"
                 }
 
+                //Añadimos la cesta en la bbdd
                 val idCesta = UUID.randomUUID().toString()
-
                 val c = Cesta (idCesta, idUsuario, p.idPrenda, talla)
-
                 db.collection("cesta").document(idCesta).set(c)
                 Toast.makeText(requireContext(), "Se ha añadido a la cesta", Toast.LENGTH_SHORT).show()
 
@@ -107,80 +106,64 @@ class CatalogoUsuarioDetalleFragment (private val p: Prenda, private val tipo: I
 
         }
 
+        /**
+         * Al pulsar en el corazon de favoritos
+         */
         imgFav.setOnClickListener {
 
+            //Recogemos el tag de la imagen (corazon) de favoritos
             var idFoto = imgFav.tag
-            var idFavorito = idUsuario + p.idPrenda
+            var idFavorito = idUsuario + p.idPrenda//Creamos un id al favorito
 
-            if(idFoto == R.drawable.twitter_like_rojo){
-                //imgFav.setAnimation(R.raw.black_joy)
-                //imgFav.playAnimation()
-                imgFav.setImageResource(R.drawable.twitter_like)
-                imgFav.setTag(R.drawable.twitter_like)
-                db.collection("favoritos").document(idFavorito).delete()
+
+            if(idFoto == R.drawable.twitter_like_rojo){//si idFoto esta en rojo
+                imgFav.setImageResource(R.drawable.twitter_like)//cambiamos el icono
+                imgFav.setTag(R.drawable.twitter_like)//cambiamos el tag
+                db.collection("favoritos").document(idFavorito).delete()//Eliminamos de la bbdd el favorito
 
             } else {
-                imgFav.setAnimation(R.raw.black_joy)
-                imgFav.playAnimation()
-                imgFav.setTag(R.drawable.twitter_like_rojo)
+                imgFav.setAnimation(R.raw.black_joy)//Asignamos la animacion
+                imgFav.playAnimation()//La reproducimos
+                imgFav.setTag(R.drawable.twitter_like_rojo)//Cambiamos el tag
 
+                //Añadimos el favorito a la bbdd
                 val f = Favorito (idFavorito,idUsuario,p.idPrenda)
                 db.collection("favoritos").document(idFavorito).set(f)
 
             }
         }
 
+        //Rellenamos los campos
         rellenarCampos()
 
 
         return root
     }
 
-    private fun likeAnimation(imageView: LottieAnimationView, animation : Int, like : Boolean){
-        if (like){
-
-        } else {
-
-        }
-    }
-
-    private fun favoritos (){
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.replace(R.id.detallePrenda, FavoritosFragment())
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
-    private fun catalogo (){
-        val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.replace(R.id.detallePrenda, CatalogoUsuarioPrendasFragment(tipoPrenda))
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
-
+    /**
+     * Metodo que rellena los campos de una prenda
+     */
     private fun rellenarCampos() {
 
+        //Consultamos los favoritos del usuario activo, para marcar los corazones
         db.collection("favoritos")
             .whereEqualTo("idUsuario",  idUsuario)
             .whereEqualTo("idPrenda", p.idPrenda )
             .get()
             .addOnSuccessListener { result ->
                 for (fav in result) {
-
-                    //imgFav.setAnimation(R.raw.apple_event)
-                    //imgFav.playAnimation()
                     imgFav.setImageResource(R.drawable.twitter_like_rojo)
                     imgFav.setTag(R.drawable.twitter_like_rojo)
 
                 }
             }
 
+        //Rellenamos los campos de la prenda
         Picasso.get().load(Uri.parse(p.foto)).into(imgCamiseta)
         tvNombre.setText(p.nombre)
         tvPrecio.setText(p.precio + " EUR")
 
+        //Comprobamos si hay stock para indicarlo en el detalle
         if(p.stock > 0){
             tvStock.setTextColor(resources.getColor(R.color.verde))
             tvStock.setText("(" + p.stock + ") en stock.")

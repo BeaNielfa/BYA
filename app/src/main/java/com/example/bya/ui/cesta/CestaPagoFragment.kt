@@ -30,16 +30,16 @@ class CestaPagoFragment(
     var longitud: Double
 ) : Fragment() {
 
+    /**
+     * VARIABLES
+     */
     private var visa = false
     private var mastercard = false
-
     private lateinit var etTarjeta: EditText
     private lateinit var etCsv : EditText
     private lateinit var imgVisa : ImageView
     private lateinit var imgMastercard : ImageView
-
     private var idUsuario = ""
-
     private val db = FirebaseFirestore.getInstance()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -47,9 +47,10 @@ class CestaPagoFragment(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         val root = inflater.inflate(R.layout.fragment_cesta_pago, container, false)
 
+        //Enlazamos los elementos con el diseño
         val imgX : ImageView = root.findViewById(R.id.imgCestaPagoCerrar)
         imgVisa= root.findViewById(R.id.imgCestaPagoVisa)
         imgMastercard = root.findViewById(R.id.imgCestaPagoMastercard)
@@ -59,31 +60,45 @@ class CestaPagoFragment(
         etCsv = root.findViewById(R.id.etCestaPagoCsv)
         val tvFecha : TextView = root.findViewById(R.id.etCestaPagoFechaElegir)
 
+        //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
-
         tvTotal.text = precioMostrar.toString() + " EUR"
 
+        /**
+         * Al pulsar en la imagen de Visa, cambiamos a la imagen seleccionada
+         */
         imgVisa.setOnClickListener {
             comprobarMetodo()
             imgVisa.setImageResource(R.drawable.visa_seleccionado)
             visa = true
         }
 
+        /**
+         * Al pulsar en la imagen de Mastercard, cambiamos a la imagen seleccionada
+         */
         imgMastercard.setOnClickListener {
             comprobarMetodo()
             imgMastercard.setImageResource(R.drawable.mastercard_seleccionado)
             mastercard = true
         }
 
+        /**
+         * Al pulsar en la X volvemos al fragment de ubicacion
+         */
         imgX.setOnClickListener {
+            //Ocultamos el botón de pagar
             btnPagar.visibility = View.INVISIBLE
             btnPagar.isClickable = false
             ubicacion()
         }
 
+        //Recogemos la fecha actual y le damos un formato
         val date = LocalDateTime.now()
         tvFecha.text = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(date)
+        /**
+         * Al pulsar en la fecha, se nos abre un dialogo para seleccionar la fecha
+         */
         tvFecha.setOnClickListener(){
             val date = LocalDateTime.now()
             val datePickerDialog = DatePickerDialog(
@@ -97,6 +112,9 @@ class CestaPagoFragment(
         }
 
 
+        /**
+         * Le damos un formato al editText del numero de la tarjeta
+         */
         var count = 0
         etTarjeta.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -124,6 +142,9 @@ class CestaPagoFragment(
         })
 
 
+        /**
+         * Al pulsar en el botón de pagar, comprobamos el pago
+         */
         btnPagar.setOnClickListener {
             comprobarPago()
         }
@@ -131,6 +152,9 @@ class CestaPagoFragment(
         return root
     }
 
+    /**
+     * Metodo que nos lleva al fragment de ubicacion
+     */
     private fun ubicacion (){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
@@ -139,6 +163,9 @@ class CestaPagoFragment(
         transaction.commit()
     }
 
+    /**
+     * Metodo que pone las imagenes por defecto y las pone a false
+     */
     private fun comprobarMetodo(){
 
         imgMastercard.setImageResource(R.drawable.mastercard)
@@ -147,11 +174,15 @@ class CestaPagoFragment(
         visa = false
     }
 
+    /**
+     * Metodo que comprueba el pago
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun comprobarPago() {
 
         var pedido = true
-        Log.e("TARJETA", etTarjeta.text.toString().length.toString() +" TARJETITA "+ etTarjeta.text.toString())
+
+        //Comprobamos que hayamos introducido valores correctos
         if (etTarjeta.text.isEmpty() || etTarjeta.text.toString().length < 19) {
             pedido = false
             if(etTarjeta.text.isEmpty()) {
@@ -178,60 +209,63 @@ class CestaPagoFragment(
             etCsv.setError(null)
         }
 
+        //Comprobamos que hemos marcado un metodo de pago
         if (!visa && !mastercard){
             Toast.makeText(requireActivity(), "Por favor seleccione un método de pago", Toast.LENGTH_SHORT).show()
             pedido = false
         }
 
+        //Si hemos rellenado toda la informacion correctamente
         if(pedido){
+            //Quitamos los erroers
             etTarjeta.setError(null)
             etCsv.setError(null)
 
-            Toast.makeText(requireActivity(), "¡Compra realizada con éxito!", Toast.LENGTH_SHORT).show()
-
+            //Recogemos la fecha actual y le damos un formato
             val fechaCompra = LocalDateTime.now()
             var fechaBBDD = DateTimeFormatter.ofPattern("dd/MM/yyyy").format(fechaCompra)
 
+            //Recorremos la cesta y por cada prenda de la cesta, hacemos un pedido
             for (i in 0..listaCesta.size -1){
-                val idPedido = UUID.randomUUID().toString()
+                val idPedido = UUID.randomUUID().toString()//Le damos un id al pedido
 
+                //Insertamos el pedido en la bbdd
                 val p = Pedido(idPedido, listaCesta[i].idPrenda, idUsuario, fechaBBDD.toString(), latitud.toString(),
                     longitud.toString(), listaCesta[i].talla,0)
                 db.collection("pedidos").document(idPedido).set(p)
             }
 
-            borrarCesta()
-            agradecimientos()
+            Toast.makeText(requireActivity(), "¡Compra realizada con éxito!", Toast.LENGTH_SHORT).show()
+
+            borrarCesta()//Borramos las prendas de la cesta
+            agradecimientos()//Nos vamos al fragment de agradecimientos
 
         }else{
             Toast.makeText(requireActivity(), "¡Datos Incorrectos!", Toast.LENGTH_SHORT).show()
         }
     }
 
+    /**
+     * Metodo que borra la cesta
+     */
     private fun borrarCesta(){
-        Log.e("STOCK", listaCesta.size.toString()+"jejeje" )
 
-
+        //Consultamos las prendas
         db.collection("prendas")
             .get()
             .addOnSuccessListener { result ->
-
-
+                //Recorremos todas las prendas de la bbdd
                 for (prenda in result) {
 
                     for(i in 0..listaCesta.size - 1) {
-
-                        Log.e("STOCK", listaCesta[i].idCesta + " EHHH" + listaCesta[i].idPrenda)
-
+                        //Si la prenda esta en la cesta del usuario
                         if (prenda.get("idPrenda").toString().equals(listaCesta[i].idPrenda)) {
-
-
+                            //Actualizamos el stock -1 de la prenda
                             var stock = prenda.get("stock").toString().toInt()
-
                             db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - 1)
 
                         }
-
+                        //Borramos la cesta en la bbdd
                         db.collection("cesta").document(listaCesta[i].idCesta).delete()
                     }
 
@@ -245,6 +279,9 @@ class CestaPagoFragment(
             }
     }
 
+    /**
+     * Metodo que nos lleva al fragment de agradecimientos
+     */
     private fun agradecimientos(){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

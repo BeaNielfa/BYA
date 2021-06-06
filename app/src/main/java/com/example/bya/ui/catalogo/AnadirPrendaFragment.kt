@@ -26,22 +26,22 @@ import java.util.*
 
 class AnadirPrendaFragment : Fragment() {
 
-    //VARIABLES
+    //VARIABLES de galeria y fotos
     private val GALERIA = 1
     private val CAMARA = 2
     private var fotoUri: Uri? = null
-    //private val imgPrenda
 
+    //Variables layout
     private var nombre = ""
     private var precio= ""
     private var referencia = ""
     private var idPrenda = ""
     private var idTipo = ""
     private var foto = ""
-    private var stock = 0
-
-    private lateinit var Storage: FirebaseStorage
     private lateinit var imgPrenda: ImageView
+
+    //Variables de firestore y storage
+    private lateinit var Storage: FirebaseStorage
     private val db = FirebaseFirestore.getInstance()
 
 
@@ -53,6 +53,7 @@ class AnadirPrendaFragment : Fragment() {
     ): View? {
         val root =  inflater.inflate(R.layout.fragment_anadir_prenda, container, false);
 
+        //Enlazamos los elementos con el diseño
         val imgX : ImageView = root.findViewById(R.id.imgAnadirCerrar)
         imgPrenda = root.findViewById(R.id.imgAnadirPrendaFoto)
         val btnGuardar : Button = root.findViewById(R.id.btnAnadirPrendaGuardarCambios)
@@ -61,28 +62,27 @@ class AnadirPrendaFragment : Fragment() {
         val etReferencia: EditText = root.findViewById(R.id.etAnadirPrendaReferencia)
         val spiTipo : Spinner = root.findViewById(R.id.spiAnadirPrendaTipo)
 
+        //Creamos una instancia del storage
         Storage = FirebaseStorage.getInstance()
 
 
+        //Al pulsar la X, volvemos al catalogo
         imgX.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            transaction.replace(R.id.anadirPrenda, CatalogoFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
+            volverCatalogo()
         }
 
+        //Al pulsar en la imagen, se nos abrira un dialogo para elegir la imagen
         imgPrenda.setOnClickListener {
             mostrarDialogo()
         }
 
+        //Al pulsar en el botón guardar
         btnGuardar.setOnClickListener {
-            //TODO COMPROBAR QUE NO INTRODUZCA LA PRENDA VACÍA
 
-            var bandera: Boolean = false
+            //DAMOS UN ID A LA PRENDA
+            idPrenda = UUID.randomUUID().toString()
 
-            idPrenda = UUID.randomUUID().toString()//DAMOS UN ID A LA PRENDA
-
+            //En función de la prenda seleccionada, le damos el idTipo de la bbdd
             when (spiTipo.selectedItem.toString()) {
 
                 "Camiseta M" -> idTipo = "0"
@@ -100,36 +100,38 @@ class AnadirPrendaFragment : Fragment() {
 
             }
 
-            var insertar: Boolean = false
+            var existe: Boolean = false
 
+            //recogemos el valor intrucido en el layout
             nombre = etNombre.text.toString()
             precio = etPrecio.text.toString()
             referencia = etReferencia.text.toString()
 
 
-            //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO ESTÁN RELLENADOS
+            //COMPROBAMOS QUE LOS CAMPOS DEL REGISTRO DE LA PRENDA ESTÁN RELLENADOS
             if (nombre.isEmpty() || precio.isEmpty() || referencia.isEmpty() || fotoUri == null) {
                 if (nombre.isEmpty()) {
-                    tilAnadirPrendaNombre.setError("El email es obligatorio")
+                    tilAnadirPrendaNombre.setError("El nombre es obligatorio")
                 }
 
                 if (precio.isEmpty()) {
-                    tilAnadirPrendaPrecio.setError("La contraseña es obligatoria")
+                    tilAnadirPrendaPrecio.setError("El precio es obligatorio")
                 }
 
                 if (referencia.isEmpty()) {
-                    tilAnadirPrendaReferencia.setError("El nombre es obligatorio")
+                    tilAnadirPrendaReferencia.setError("La referencia es obligatoria")
                 }
 
                 if(fotoUri == null){
                     Toast.makeText(requireContext(), "La foto es obligatoria", Toast.LENGTH_SHORT).show()
                 }
-            } else {
+            } else {//Si estan rellenados los campos
+                //Marcamos los errores a null
                 tilAnadirPrendaNombre.setError(null)
                 tilAnadirPrendaPrecio.setError(null)
                 tilAnadirPrendaReferencia.setError(null)
 
-
+                //Hacemos una consulta para comprobar que no se introduzca una referencia existente
                 db.collection("prendas")
                     .get()
                     .addOnSuccessListener { result ->
@@ -139,22 +141,22 @@ class AnadirPrendaFragment : Fragment() {
 
                                 tilAnadirPrendaReferencia.setError("La referencia ya existe")
 
-                                insertar = true
+                                existe = true//Indicamos que la referencia existe
                             }
 
                         }
 
-                        if (!insertar) {
-                            tilAnadirPrendaReferencia.setError(null)
-                            Log.e("PROBLEMAS", "SE METE")
+                        if (!existe) {//Si la referencia no existe, insertamos la prenda
 
+                            tilAnadirPrendaReferencia.setError(null)
                             val img = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
-                            val ref = Storage.getReference("/fotosPrendas/$img")
+                            val ref = Storage.getReference("/fotosPrendas/$img")//Le damos una ruta a la imagen
 
                             ref.putFile(fotoUri!!).addOnSuccessListener { //Subimos la foto
                                 ref.downloadUrl.addOnSuccessListener { //descargamos su url
                                     foto = it.toString()  //lo asignamos a la variable
 
+                                    //Finalmente subimos la prenda
                                     val p = Prenda(idPrenda, idTipo, nombre, precio, foto, referencia, 1)
                                     db.collection("prendas").document(idPrenda).set(p)
 
@@ -163,6 +165,8 @@ class AnadirPrendaFragment : Fragment() {
 
 
                             Toast.makeText(requireContext(), "Prenda insertada correctamente",Toast.LENGTH_SHORT).show()
+
+                            //TODO REVISAAAAAAAAAAAAAAAR
 
                             etNombre.setText("")
                             etPrecio.setText("")
@@ -189,6 +193,16 @@ class AnadirPrendaFragment : Fragment() {
         return root
     }
 
+    /**
+     * Metodo que vuelve al catalogo
+     */
+    private fun volverCatalogo(){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.replace(R.id.anadirPrenda, CatalogoFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
 
     /**
      * Metodo que abre un dialogo para elegir camara o galeria
@@ -257,7 +271,6 @@ class AnadirPrendaFragment : Fragment() {
                 fotoUri = data.data
 
 
-                //imgPrenda.setImageResource(android.R.color.transparent)
                 try {
                     Picasso.get().load(fotoUri).into(imgPrenda)
                 } catch (e: IOException) {
@@ -268,7 +281,6 @@ class AnadirPrendaFragment : Fragment() {
 
         } else if (requestCode == CAMARA) {
 
-            //imgPrenda.setImageResource(android.R.color.transparent)
             Picasso.get().
             load(fotoUri).
             into(imgPrenda)

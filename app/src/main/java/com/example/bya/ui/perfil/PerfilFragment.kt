@@ -33,8 +33,10 @@ import java.util.*
 
 class PerfilFragment : Fragment() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
 
+    /**
+     * VARIABLES
+     */
     private var idUsuario = ""
     private var name: String? = ""
     private var email: String? = ""
@@ -44,12 +46,13 @@ class PerfilFragment : Fragment() {
     private val CAMARA = 2
     private var fotoUri: Uri? = null
     private lateinit var Auth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
     private lateinit var etNombre: EditText
     private lateinit var etEmail: EditText
     private lateinit var etPass: EditText
     private lateinit var imgPerfil: ImageView
 
-    private val db = FirebaseFirestore.getInstance()
+
 
 
     override fun onCreateView(
@@ -58,40 +61,55 @@ class PerfilFragment : Fragment() {
     ): View? {
         val root = inflater.inflate(R.layout.fragment_perfil, container, false)
 
+        //Enlazamos los elementos con el diseño
         etNombre = root.findViewById(R.id.etPerfilNombre)
         etEmail =  root.findViewById(R.id.etPerfilEmail)
         etPass =   root.findViewById(R.id.etPerfilPass)
         imgPerfil = root.findViewById(R.id.imgPerfil)
+        val btnPerfil: Button = root.findViewById(R.id.btnPerfilCambios)
+        val img: ImageView = root.findViewById(R.id.imgPerfil)
 
+        //Instanciamos la autenticacion
         Auth = Firebase.auth
 
+        //Recogemos el idUsuario del usuario activo con las SharedPreferences
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
         idUsuario = pref?.getString("idUsuario", "null").toString()
-        Log.e("PERFIL ",idUsuario)
 
+        //Cargamos los datos del perfil
         cargarDatos()
 
-        val btnPerfil: Button = root.findViewById(R.id.btnPerfilCambios)
+        /**
+         * Al pulsar en el botón del perfil, nos lleva al fragment donde podemos editar el perfil
+         */
         btnPerfil.setOnClickListener {
             editarDatos()
         }
 
-        val img: ImageView = root.findViewById(R.id.imgPerfil)
+        /**
+         * Al pulsar en la imagen, nos aparecerá un dialog para poder cmbiarla
+         */
         img.setOnClickListener {
             mostrarDialogo()
         }
 
-        // Inflate the layout for this fragment
         return  root
     }
+
+    /**
+     * Metodo que carga los datos del usuario activo
+     */
     private fun cargarDatos() {
 
+        //Consultamos los datod del usuario
         db.collection("usuarios").document(idUsuario).get().addOnSuccessListener {
+            //Rescatamos los datos del usuario
             name = it.get("nombre").toString()
             email =  it.get("email").toString()
             photoUrl =  it.get("foto").toString()
             pass =  it.get("pass").toString()
 
+            //Asignamos la información en el layout
             etNombre.setText(name)
             etEmail.setText(email)
             etPass.setText(pass)
@@ -102,6 +120,7 @@ class PerfilFragment : Fragment() {
                 .resize(178, 178)
                 .into(imgPerfil)
 
+            //Deshabilitamos el email, ya que no se va a poder cambiar
             etEmail.isEnabled = false
             etEmail.setBackgroundColor(resources.getColor(R.color.dark))
 
@@ -112,15 +131,17 @@ class PerfilFragment : Fragment() {
     }
 
 
+    /**
+     * Metodo en el que editamos el perfil del usuario
+     */
     private fun editarDatos() {
 
-        Toast.makeText(requireContext(), "VA A EDITAR DATOS",Toast.LENGTH_SHORT)
+        //VARIABLES
         val user = Auth.currentUser
-
         val nombre = etNombre.text.toString()
         val pass = etPass.text.toString()
-        val email = etEmail.text.toString()
 
+        //Comprobamos que los datos son correctos
         if(nombre.isEmpty() || pass.isEmpty()){
             if(nombre.isEmpty()) {
                 tilPerfilNombre.setError("El nombre es obligatorio")
@@ -138,27 +159,24 @@ class PerfilFragment : Fragment() {
 
             if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO
 
+                //actualizamos solo los campos nombre y pass
                 db.collection("usuarios").document(idUsuario).update("nombre", nombre)
                 db.collection("usuarios").document(idUsuario).update("pass", pass)
 
                 Toast.makeText(requireContext(), "Usuario actualizado",Toast.LENGTH_SHORT).show()
 
+            } else {//Si ha elegido foto
+                val filename = UUID.randomUUID().toString()//Le creamos un id
+                val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")//Creamos una url
+                ref.putFile(fotoUri!!).addOnSuccessListener {//Metemos la imagen en el storage
+                    ref.downloadUrl.addOnSuccessListener {//Descargamos la url de la imagen
 
-            } else {
-                val filename = UUID.randomUUID().toString()
-                val ref = FirebaseStorage.getInstance().getReference("/fotosUsuarios/$filename")
-                ref.putFile(fotoUri!!).addOnSuccessListener {
-                    ref.downloadUrl.addOnSuccessListener {
+                        photoUrl = it.toString()//Rescatamos la url de la imagen
 
-                        photoUrl = it.toString()
-
+                        //Actualizamos todos los campos, incluida la foto
                         db.collection("usuarios").document(idUsuario).update("nombre", nombre)
                         db.collection("usuarios").document(idUsuario).update("pass", pass)
                         db.collection("usuarios").document(idUsuario).update("foto", photoUrl)
-
-                        Log.e("Perfil", "USUARIO actualizado")
-
-
 
                     }
                 }

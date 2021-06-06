@@ -1,7 +1,6 @@
 package com.example.bya.ui.contacto
 
 import android.net.Uri
-import android.os.Build
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -16,10 +15,6 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item_contacto.view.*
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAccessor
-import java.util.*
 import kotlin.collections.ArrayList
 
 class ContactoListAdapter(private val idUsuario: String,
@@ -28,8 +23,10 @@ class ContactoListAdapter(private val idUsuario: String,
 
 ) : RecyclerView.Adapter<ContactoListAdapter.ContactoViewHolder>() {
 
+    /**
+     * Variables firebase
+     */
     private val db = FirebaseFirestore.getInstance()
-
     var firebaseUser: FirebaseUser? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContactoViewHolder {
@@ -39,51 +36,56 @@ class ContactoListAdapter(private val idUsuario: String,
         )
     }
 
-    //Rescatamos los datos de una ubicacion y los ponemos en sus componentes
+    /**
+     *  Rescatamos los datos de un usuario y los ponemos en sus componentes
+     */
     override fun onBindViewHolder(holder: ContactoViewHolder, position: Int) {
+
 
         Picasso.get().load(Uri.parse(listaContactos[position].foto)).transform(CirculoTransformacion()).into(holder.imgItemContactoFoto)
         var chatList = ArrayList<Chat>()
         firebaseUser = FirebaseAuth.getInstance().currentUser
 
 
+        //Consultamos el chat ordenado por fecha
         db.collection("chat")
             .orderBy("fecha")
             .addSnapshotListener{ snapshot, e->
 
                 for (chat in snapshot!!) {
-
-                    Log.e("DATOS", "CHAT")
-                    Log.e("DATOS", "CHAT: " + idUsuario)
-                    Log.e("DATOS", "CHAT: " + listaContactos[position].idUsuario)
+                    //Rescatamos los mensajes si hemos mantenido una conversación
                     if (chat.get("idEmisor").toString().equals(idUsuario) && chat.get("idReceptor").toString().equals(listaContactos[position].idUsuario) ||
                         chat.get("idEmisor").toString().equals(listaContactos[position].idUsuario) && chat.get("idReceptor").toString().equals(idUsuario)) {
 
-                        Log.e("DATOS", "ENTRO AL IF")
+                       //Rescatamos la informacion del chat
                         val idEmisor = chat.get("idEmisor").toString()
                         val idReceptor = chat.get("idReceptor").toString()
                         val mensaje = chat.get("mensaje").toString()
                         val fecha = chat.get("fecha")
 
                         val c = Chat(idEmisor, idReceptor, mensaje, fecha.toString())
-                        //AÃ±adimos ese objeto a la lista de chat
+                        //Anadimos ese objeto a la lista de chat
                         chatList.add(c)
 
                     }
                 }
+                //Mostramos el ultimo mensaje
                 holder.tvItemContactoMensaje.text = chatList[chatList.size -1].mensaje
-
+                //La fecha de ese mensaje
                 val ano = chatList[chatList.size -1].fecha.substring(0, 4)
                 val mes = chatList[chatList.size -1].fecha.substring(5, 7)
                 val dia = chatList[chatList.size -1].fecha.substring(8, 10)
 
                 val fechaMostrar = dia + "/" + mes + "/" + ano
-
                 holder.tvItemContactoFecha.text = fechaMostrar
             }
 
+        //Mostramos el nombre del contacto del usuario
         holder.tvItemContactoNombre.text = listaContactos[position].nombre
 
+        /**
+         * Al pulsar en un chat de un contacto
+         */
         holder.itemContacto.setOnClickListener {
             accionPrincipal(listaContactos[position])
         }
@@ -91,27 +93,17 @@ class ContactoListAdapter(private val idUsuario: String,
     }
 
 
-    //Eliminamos un item de la lista
-    fun removeItem(position: Int) {
-        listaContactos.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, listaContactos.size)
-    }
 
-
-    //Recuperamos un item de la lista
-    fun restoreItem(item: Usuario, position: Int) {
-        listaContactos.add(position, item)
-        notifyItemInserted(position)
-        notifyItemRangeChanged(position, listaContactos.size)
-    }
-
-    //Devolvemos el numero de elementos que tiene la lista
+    /**
+     * Devolvemos el numero de elementos que tiene la lista
+     */
     override fun getItemCount(): Int {
         return listaContactos.size
     }
 
-    //Rescatamos los tv
+    /**
+     * Rescatamos los componentes del item
+     */
     class ContactoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         var imgItemContactoFoto = itemView.imgItemContactoFoto

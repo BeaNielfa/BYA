@@ -21,6 +21,7 @@ class CatalogoHombreFragment : Fragment() {
         // Inflate the layout for this fragment
         val root =  inflater.inflate(R.layout.fragment_catalogo_hombre, container, false)
 
+        //Enlazamos los elementos con el diseño
         val imgCamiseta : ImageView = root.findViewById(R.id.imgCatalogoHombreCamiseta)
         val tvCamiseta : TextView = root.findViewById(R.id.tvCatalogoHombreCamiseta)
         val imgCamisa : ImageView = root.findViewById(R.id.imgCatalogoHombreCamisa)
@@ -30,34 +31,58 @@ class CatalogoHombreFragment : Fragment() {
         val imgJeans : ImageView = root.findViewById(R.id.imgCatalogoHombreJeans)
         val tvJeans : TextView = root.findViewById(R.id.tvCatalogoHombreJeans)
 
+        /**
+         * Al pulsar en la imagen de la camiseta, entraremos en la lista de camisetas
+         */
         imgCamiseta.setOnClickListener {
             entrarListaPrendas("6")
         }
 
+        /**
+         * Al pulsar en la imagen de la camiseta, entraremos en la lista de camisetas
+         */
         tvCamiseta.setOnClickListener {
             entrarListaPrendas("6")
         }
 
+        /**
+         * Al pulsar en la imagen de la camisa, entraremos en la lista de camisa
+         */
         imgCamisa.setOnClickListener {
             entrarListaPrendas("7")
         }
 
+        /**
+         * Al pulsar en la imagen de la camisa, entraremos en la lista de camisa
+         */
         tvCamisa.setOnClickListener {
             entrarListaPrendas("7")
         }
 
+        /**
+         * Al pulsar en la imagen del accesorio, entraremos en la lista de accesorios
+         */
         imgAccesorio.setOnClickListener {
             entrarListaPrendas("8")
         }
 
+        /**
+         * Al pulsar en la imagen del accesorio, entraremos en la lista de accesorios
+         */
         tvAccesorio.setOnClickListener {
             entrarListaPrendas("8")
         }
 
+        /**
+         * Al pulsar en la imagen de los jeans, entraremos en la lista de jeans
+         */
         imgJeans.setOnClickListener {
             entrarListaPrendas("9")
         }
 
+        /**
+         * Al pulsar en la imagen de los jeans, entraremos en la lista de jeans
+         */
         tvJeans.setOnClickListener {
             entrarListaPrendas("9")
         }
@@ -66,6 +91,9 @@ class CatalogoHombreFragment : Fragment() {
     }
 
 
+    /**
+     * Metodo que nos lleva a una lista de prendas, en función  del tipo que le llegue
+     */
     private fun entrarListaPrendas(tipo : String){
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()

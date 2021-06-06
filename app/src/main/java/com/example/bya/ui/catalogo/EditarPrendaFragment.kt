@@ -28,20 +28,18 @@ import java.util.*
 
 class EditarPrendaFragment( private val p: Prenda) : Fragment() {
 
-
-    private lateinit var imgPrenda: ImageView
-
-    private val db = FirebaseFirestore.getInstance()
-
-    //VARIABLES
+    //VARIABLES de galeria y camara
     private val GALERIA = 1
     private val CAMARA = 2
     private var fotoUri: Uri? = null
 
+    //Instanciamos la bbdd
+    private val db = FirebaseFirestore.getInstance()
+
     private var nombre = ""
     private var precio = ""
     private var photoUrl = ""
-
+    private lateinit var imgPrenda: ImageView
     private lateinit var etNombre: EditText
     private lateinit var etPrecio: EditText
     private lateinit var etReferencia: EditText
@@ -54,6 +52,7 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
         // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_editar_prenda, container, false)
 
+        //Enlazamos los elementos con el diseño
         val imgX: ImageView = root.findViewById(R.id.imgEditarCerrar)
         imgPrenda = root.findViewById(R.id.imgEditarPrendaFoto)
         val btnGuardar: Button = root.findViewById(R.id.btnEditarPrendaGuardarCambios)
@@ -62,25 +61,32 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
         etReferencia = root.findViewById(R.id.etEditarPrendaReferencia)
         etTipo = root.findViewById(R.id.etEditarPrendaTipo)
 
-        cargarDatos()
+        cargarDatos()//Cargamos los datos de la prenda a editar
 
+        /**
+         * Al pulsar el botón X volvemos al catalogo
+         */
         imgX.setOnClickListener {
-            val transaction = requireActivity().supportFragmentManager.beginTransaction()
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-            transaction.replace(R.id.editarPrenda, CatalogoFragment())
-            transaction.addToBackStack(null)
-            transaction.commit()
+            volverCatalogo()
         }
 
+        /**
+         * Al pulsar en la imagen, se nos abrirá un dialogo
+         */
         imgPrenda.setOnClickListener {
             mostrarDialogo()
         }
 
+        /**
+         * Al pulsar en el botón guardar, actualizaremos la prenda
+         */
         btnGuardar.setOnClickListener {
 
+            //Rescatamos los valores
             nombre = etNombre.text.toString()
             precio = etPrecio.text.toString()
 
+            //Comprobamos que no intruce vacíos
             if(nombre.isEmpty() || precio.isEmpty()){
 
                 if(nombre.isEmpty()) {
@@ -90,27 +96,30 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
                     tilEditarPrendaPrecio.setError("El precio es obligatorio")
                 }
 
-            }else {
+            }else {//Si estan rellenos
 
+                //Quitamos los errores
                 tilEditarPrendaPrecio.setError(null)
                 tilEditarPrendaNombre.setError(null)
 
-                if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO
+                if (fotoUri == null) {//SI EL USUARIO NO HA ELEGIDO FOTO DE LA PRENDA
 
+                    //Se actualizan todos los campos menos la imagen
                     db.collection("prendas").document(p.idPrenda).update("nombre", nombre)
                     db.collection("prendas").document(p.idPrenda).update("precio", precio)
 
                     Toast.makeText(requireContext(), "Prenda actualizada",Toast.LENGTH_SHORT).show()
 
-                } else {
+                } else {//SI HA CAMBIADO LA FOO DE LA PRENDA
 
-                    val filename = UUID.randomUUID().toString()
-                    val ref = FirebaseStorage.getInstance().getReference("/fotosPrendas/$filename")
-                    ref.putFile(fotoUri!!).addOnSuccessListener {
-                        ref.downloadUrl.addOnSuccessListener {
+                    val filename = UUID.randomUUID().toString()//Le damos un id a la imagen
+                    val ref = FirebaseStorage.getInstance().getReference("/fotosPrendas/$filename")//Le damos una rura
+                    ref.putFile(fotoUri!!).addOnSuccessListener {//Metemos la imagen en el storage
+                        ref.downloadUrl.addOnSuccessListener {//Descargamos la imagen
 
-                            photoUrl = it.toString()
+                            photoUrl = it.toString()//Recogemos la url, para introducirla en el campo foto
 
+                            //Actualizamos todos los campos de la prenda, incluida la foto
                             db.collection("prendas").document(p.idPrenda).update("nombre", nombre)
                             db.collection("prendas").document(p.idPrenda).update("precio", precio)
                             db.collection("prendas").document(p.idPrenda).update("foto", photoUrl)
@@ -132,8 +141,23 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
         return root
     }
 
+    /**
+     * Metodo que nos lleva al fragment de catalogo
+     */
+    private fun volverCatalogo(){
+        val transaction = requireActivity().supportFragmentManager.beginTransaction()
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+        transaction.replace(R.id.editarPrenda, CatalogoFragment())
+        transaction.addToBackStack(null)
+        transaction.commit()
+    }
+
+    /**
+     * Metodo que carga la información de la prenda
+     */
     private fun cargarDatos() {
 
+        //Consultamos el tipo que tiene la prenda
         db.collection("tipo").document(p.idTipo).get().addOnSuccessListener {
 
             etNombre.setText(p.nombre)
@@ -143,9 +167,11 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
 
             Picasso.get().load(Uri.parse(p.foto)).into(imgPrenda)
 
+            //La referencia no se puede editar
             etReferencia.isEnabled = false
             etReferencia.setBackgroundColor(resources.getColor(R.color.dark))
 
+            //El tipo no se puede editar
             etTipo.isEnabled = false
             etTipo.setBackgroundColor(resources.getColor(R.color.dark))
 
@@ -222,8 +248,6 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
                 // Obtenemos su URI con su dirección temporal
                 fotoUri = data.data
 
-
-                //imgPrenda.setImageResource(android.R.color.transparent)
                 try {
                     Picasso.get().load(fotoUri).into(imgPrenda)
                 } catch (e: IOException) {
@@ -233,10 +257,7 @@ class EditarPrendaFragment( private val p: Prenda) : Fragment() {
             }
 
         } else if (requestCode == CAMARA) {
-
-            //imgPrenda.setImageResource(android.R.color.transparent)
             Picasso.get().load(fotoUri).into(imgPrenda)
-
         }
 
 

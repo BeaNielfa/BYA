@@ -21,19 +21,18 @@ import com.example.bya.clases.Usuario
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
 import java.time.LocalDateTime
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 class ChatFragment(private var u: Usuario) : Fragment() {
 
+    /**
+     * VARIABLES
+     */
     var chatList = ArrayList<Chat>()
-
     var idUsuarioReceptor = ""
     var idUsuarioEmisor = ""
-
     private lateinit var recy : RecyclerView
-
     private val db = FirebaseFirestore.getInstance()
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -41,7 +40,6 @@ class ChatFragment(private var u: Usuario) : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         val root = inflater.inflate(R.layout.fragment_chat, container, false)
 
         //Recogemos los componentes del layout en las variables
@@ -49,9 +47,9 @@ class ChatFragment(private var u: Usuario) : Fragment() {
         var imgChatEnviar: ImageView = root.findViewById(R.id.imaChatEnviar)
         var tvChatNombre: TextView = root.findViewById(R.id.tvChatNombre)
         var etChatMensaje : EditText = root.findViewById(R.id.etChatMandar)
-
         recy = root.findViewById(R.id.chatRecycler)
 
+        //Recogemos el idUsuario del usuario activo con las SharedPreferences
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
 
         recy.layoutManager = LinearLayoutManager(context)
@@ -69,64 +67,63 @@ class ChatFragment(private var u: Usuario) : Fragment() {
 
         //Recogemos y ponemos la foto y el nombre del usuario que recibimos (con el que vamos a hablar)
         Picasso.get().load(Uri.parse(u.foto)).transform(CirculoTransformacion()).into(imgChatFoto)
-
         tvChatNombre.text = u.nombre
 
-        //Si pulsamos el boton enviar
+        /**
+         * Al pulsar en el botón enviar
+         */
         imgChatEnviar.setOnClickListener{
             var mensaje = etChatMensaje.text.toString()
 
             //Si el mensaje está vacio
             if (mensaje.isEmpty()){
                 etChatMensaje.setText("")
-                //En caso de que el mensaje no este vacio, llamamos al metodo enviarMensaje(...)
             } else {
+                //En caso de que el mensaje no este vacio, enviamos el mensaje
                 enviarMensaje(idUsuarioEmisor, idUsuarioReceptor, mensaje)
                 etChatMensaje.setText("")
             }
         }
 
-        leerMensaje(idUsuarioEmisor, idUsuarioReceptor)
+        leerMensaje(idUsuarioEmisor, idUsuarioReceptor)//Leemos el mensaje
 
         return root
     }
 
-    /*
-  Metodo que recibe, el idEmisor, idReceptor y el mensaje para poder guardarlo en la bbdd
-   */
+
+    /**
+     * Metodo que recibe, el idEmisor, idReceptor y el mensaje para poder guardarlo en la bbdd
+     */
     @RequiresApi(Build.VERSION_CODES.O)
     private fun enviarMensaje(idEmisor: String, idReceptor: String, mensaje: String){
-        //Instanciamos la base de datos
-
+        //Creamos un hasMap con los valores del mensaje
         var hasMap : HashMap<String, String> = HashMap()
         hasMap.put("idEmisor", idEmisor)
         hasMap.put("idReceptor", idReceptor)
         hasMap.put("mensaje", mensaje)
         hasMap.put("fecha", LocalDateTime.now().toString())
 
-        //val docData: MutableMap<String, Any> = HashMap()
-
-        //docData["listExample"] = Arrays.asList(1, 2, 3)
-
-        //val idC = UUID.randomUUID().toString()//DAMOS UN NOMBRE A LA IMAGEN
-        //val c = Chat(idEmisor, idReceptor, mensaje)//AÑADIMOS EL USUARIO A LA TABLA
+        //Añadimos el chat(mensaje,idEmisor,idReceptor,fecha) a la bbdd
         db.collection("chat").add(hasMap)
 
     }
 
-    /*
-    Metodo que recibe el idUsuarioEmisor e idUsuarioReceptor para poder hacer una consulta
-    en la base de datos y asi poder rescatar el mensaje
+
+    /**
+     *  Metodo que recibe el idUsuarioEmisor e idUsuarioReceptor para poder hacer una consulta
+     *  en la base de datos y asi poder rescatar los mensajes
      */
     private fun leerMensaje(idEmisor: String, idReceptor: String){
 
+        //Consultamos el chat y ordenamos por fecha
         db.collection("chat")
             .orderBy("fecha")
             .addSnapshotListener{ snapshot, e->
-                chatList.clear()
+                chatList.clear()//Limpiamos la lista
 
                 for (chat in snapshot!!) {
 
+                    //Rescatamos los mensajes si hemos mantenido una conversación
                     if(chat.get("idEmisor").toString().equals(idEmisor) && chat.get("idReceptor").toString().equals(
                             idReceptor
                         ) ||
@@ -134,19 +131,20 @@ class ChatFragment(private var u: Usuario) : Fragment() {
                             idEmisor
                         )){
 
-                        val idEmisor = chat.get("idEmisor").toString()
-                        val idReceptor = chat.get("idReceptor").toString()
-                        val mensaje = chat.get("mensaje").toString()
-                        val fecha = chat.get("fecha").toString()
+                            //Recogemos los datos del chat
+                            val idEmisor = chat.get("idEmisor").toString()
+                            val idReceptor = chat.get("idReceptor").toString()
+                            val mensaje = chat.get("mensaje").toString()
+                            val fecha = chat.get("fecha").toString()
 
-                        val c = Chat(idEmisor, idReceptor, mensaje, fecha)
-                        //Añadimos ese objeto a la lista de chat
-                        chatList.add(c)
+                            val c = Chat(idEmisor, idReceptor, mensaje, fecha)
+                            //Añadimos ese objeto a la lista de chat
+                            chatList.add(c)
                     }
                 }
 
                 val chatAdapter = ChatListAdapter(requireContext(), chatList)
-
+                //Le asignamos el adaptador
                 recy.adapter = chatAdapter
             }
 
