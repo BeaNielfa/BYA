@@ -98,8 +98,8 @@ class CatalogoHombreFragment : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.replace(R.id.hombreLayout, CatalogoUsuarioPrendasFragment(tipo))
-        transaction.addToBackStack(null)
+        transaction.replace(R.id.hombreLayout, CatalogoUsuarioPrendasFragment(tipo,1))
+        transaction.addToBackStack("hombre")
         transaction.commit()
 
     }
