@@ -1,15 +1,17 @@
 package com.example.bya.ui.cesta
 
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.example.bya.R
 import com.example.bya.clases.Cesta
@@ -20,10 +22,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 
-class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf<Cesta>(), var precioMostrar : Double) : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener  {
+
+class CestaUbicacionFragment(
+    var listaCesta: MutableList<Cesta> = mutableListOf<Cesta>(),
+    var precioMostrar: Double
+) : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener{
 
     //Variables Mapa
     private lateinit var mMap: GoogleMap
@@ -31,6 +35,8 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
     private var marcadorTouch: Marker? = null
     private var localizacion: Location? = null
     private var posicion: LatLng? = null
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
 
 
@@ -43,6 +49,9 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
         //Enlazamos los elementos con el diseño
         val imgX : ImageView = root.findViewById(R.id.imgCestaUbicacionCerrar)
         val btnContinuar : Button = root.findViewById(R.id.btnCestaUbicacionContinuar)
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
 
         /**
          * Al pulsar en la X volvemos a la cesta
@@ -69,6 +78,36 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
 
         return root
     }
+
+
+    /**
+     * Obtiene la posición actual para pasarsela al mapa y que se cargue en nuestra posición
+     */
+    private fun mirarPosi() {
+
+        val task =  fusedLocationProviderClient.lastLocation
+
+        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+            PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(requireContext(),
+                android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 101)
+            return
+        }
+
+        task.addOnSuccessListener {
+            if(it != null){
+                posicion = LatLng(
+                    it.latitude,
+                    it.longitude
+                )
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion));
+            }else{
+                Toast.makeText(requireContext(),"Error al obtener su ubicación, Refresce",Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
 
     /**
      * Leemos la posición actual del GPS
@@ -140,49 +179,15 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
     private fun cargarMapa() {
         mMap.isMyLocationEnabled = true
         activarEventosMarcadores()
-        obtenerPosicion()
+        //obtenerPosicion()
+        mirarPosi()
     }
 
 
 
-    /**
-     * Obtiene la posición actual para pasarsela al mapa y que se cargue en nuestra posición
-     */
-    private fun obtenerPosicion() {
-        try {
-            //Si tenemos permiso cogemos la localización
-            val local: Task<Location> = mPosicion!!.lastLocation
-            local.addOnCompleteListener(
-                requireActivity()
-            ) { task ->
-                if (task.isSuccessful) {
-                    localizacion = task.result
-                    posicion = LatLng(
-                        localizacion!!.latitude,
-                        localizacion!!.longitude
-                    )
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(posicion));
-                } else {
-                    Log.i("GPS", "No se encuetra la última posición.")
-                }
-            }
 
-        } catch (e: SecurityException) {
-            Snackbar.make(
-                requireView(),
-                "No se ha encontrado su posoción actual o el GPS está desactivado",
-                Snackbar.LENGTH_LONG
-            ).show();
-            Log.e("Exception: %s", e.message.toString())
-        }catch (ex: Exception){
-            Snackbar.make(
-                requireView(),
-                "No se ha encontrado su posoción actual o el GPS está desactivado",
-                Snackbar.LENGTH_LONG
-            ).show();
-            Log.e("Exception: %s", ex.message.toString())
-        }
-    }
+
+
 
     /**
      * Metodo que se lanza cuando pulsamos en un marcador
@@ -208,7 +213,14 @@ class CestaUbicacionFragment( var listaCesta: MutableList<Cesta> = mutableListOf
     private fun pago (){
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.replace(R.id.cestaUbicacionLayout, CestaPagoFragment(listaCesta, precioMostrar, posicion!!.latitude, posicion!!.longitude))
+        transaction.replace(
+            R.id.cestaUbicacionLayout, CestaPagoFragment(
+                listaCesta,
+                precioMostrar,
+                posicion!!.latitude,
+                posicion!!.longitude
+            )
+        )
         transaction.addToBackStack(null)
         transaction.commit()
     }

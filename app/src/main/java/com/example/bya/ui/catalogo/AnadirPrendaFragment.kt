@@ -166,18 +166,15 @@ class AnadirPrendaFragment : Fragment() {
 
                             Toast.makeText(requireContext(), "Prenda insertada correctamente",Toast.LENGTH_SHORT).show()
 
-                            //TODO REVISAAAAAAAAAAAAAAAR
 
+                            //Se borran los datos, para poder introducir una nueva prenda
                             etNombre.setText("")
                             etPrecio.setText("")
                             etReferencia.setText("")
                             fotoUri = null
 
-
-                            Picasso.get().
-                            load(R.drawable.ic_menu_camera).
-                            into(imgPrenda)
-
+                            //Ponemos la imagen por defecto de la camara
+                            imgPrenda.setImageResource(R.drawable.ic_menu_camera)
 
 
                         }

@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Spinner
+import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,7 +21,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import java.util.*
 
 
-class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
+class CatalogoUsuarioPrendasFragment(private val tipo: String,private val catalogo: Int) : Fragment() {
 
 
     /**
@@ -41,6 +43,7 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
         //Enlazamos los elementos con el diseño
         val searchField : SearchView = root.findViewById(R.id.searchField)
         val spiFiltro : Spinner = root.findViewById(R.id.spiFiltro)
+        val imgAtras : ImageView = root.findViewById(R.id.imgCatalogoUsuarioAtras)
 
         //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
@@ -58,6 +61,19 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String) : Fragment() {
 
         //Rellenamos la lista de prendas
         rellenarArrayPrendas()
+
+        /**
+         * Al pulsar en este botón volvemos al fragment anterior
+         */
+        imgAtras.setOnClickListener {
+            if(catalogo == 0){//Si es 0 volvemos al catalogo de mujeres
+                requireActivity().supportFragmentManager.popBackStack("mujer", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+
+            }else{//si no, volvemos al catálogo de hombres
+                requireActivity().supportFragmentManager.popBackStack("hombre", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+            }
+
+        }
 
         /**
          * Cuando escribimos en la barra de búsqueda
