@@ -6,7 +6,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -245,6 +244,7 @@ class CestaPagoFragment(
         }
     }
 
+
     /**
      * Metodo que borra la cesta
      */
@@ -260,21 +260,34 @@ class CestaPagoFragment(
                     for(i in 0..listaCesta.size - 1) {
                         //Si la prenda esta en la cesta del usuario
                         if (prenda.get("idPrenda").toString().equals(listaCesta[i].idPrenda)) {
-                            //Actualizamos el stock -1 de la prenda
+
+                            //Cantidad de stock que tenemos que eliminar
+                            var cantidad = 0
+                            var prendaActual = listaCesta[i].idPrenda
+
+                            //Recorremos la lista para ver cuantas prendas iguales hay
+                            for(j in 0..listaCesta.size - 1 ){
+                                if(listaCesta[j].idPrenda.equals(prendaActual)){
+                                    cantidad++
+                                }
+                            }
+
                             var stock = prenda.get("stock").toString().toInt()
-                            db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - 1)
+
+                            db.collection("prendas").document(listaCesta[i].idPrenda).update("stock", stock - cantidad )
 
                         }
-                        //Borramos la cesta en la bbdd
-                        db.collection("cesta").document(listaCesta[i].idCesta).delete()
+
                     }
 
+                    for(i in 0..listaCesta.size - 1) {
 
+                        //Borramos la cesta en la bbdd
+                        db.collection("cesta").document(listaCesta[i].idCesta).delete()
+
+                    }
 
                 }
-
-
-
 
             }
     }

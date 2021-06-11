@@ -49,7 +49,7 @@
     <string name="favorito">Favoritos</string>
     <string name="miCesta">Mi cesta</string>
     <string name="continuar">Continuar</string>
-    <string name="cestaInfo">Cesta</string>
+    <string name="cestaInfo">Ir a la cesta</string>
     <string name="google_maps_key">AIzaSyCzGvQZXcJxUKXr67Ta16LyRiFYByl7JPI</string>
     <string name="seleccionaUbi">Seleccione su ubicación</string>
     <string name="seleccionaPago">Seleccione un método de pago</string>
@@ -65,7 +65,7 @@
     <string name="pedidos">Pedidos</string>
     <string name="enviarPedido">Enviar pedido</string>
     <string name="contactoAsistente">Contactar con un asistente</string>
-
+    <string name="mensaje">Escribe aquí tu mensaje</string>
 
     <string-array name="spiFiltro">
         <item>Precio: Mayor</item>

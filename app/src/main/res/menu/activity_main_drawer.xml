@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:showIn="navigation_view"
->
+      tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
 
@@ -10,20 +9,11 @@
                 android:id="@+id/nav_catalogoUsuario"
                 android:icon="@drawable/ic_contorno_de_camisa_con_percha"
                 android:title="@string/menu_catalogo"/>
-        <item
-                android:id="@+id/nav_perfil"
-                android:icon="@drawable/ic_user__1_"
-                android:title="@string/menu_perfil"/>
 
         <item
                 android:id="@+id/nav_favorito"
                 android:icon="@drawable/ic_heart"
                 android:title="@string/favorito"/>
-
-        <item
-                android:id="@+id/nav_cesta"
-                android:icon="@drawable/ic_cesta"
-                android:title="@string/cestaInfo"/>
 
         <item
                 android:id="@+id/nav_historial"
@@ -34,11 +24,23 @@
                 android:id="@+id/nav_contactoUsuario"
                 android:icon="@drawable/ic_mensajero"
                 android:title="@string/contactoAsistente"/>
+
+        <item
+                android:id="@+id/nav_perfil"
+                android:icon="@drawable/ic_user__1_"
+                android:title="@string/menu_perfil"/>
+
     </group>
 
+    <group
+            android:id="@+id/menu_cesta"
+            android:checkableBehavior="none">
 
-
-
+        <item
+                android:id="@+id/nav_cesta"
+                android:icon="@drawable/ic_cesta"
+                android:title="@string/cestaInfo"/>
+    </group>
 
 
 </menu>

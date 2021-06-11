@@ -48,6 +48,8 @@ class RegistroActivity : AppCompatActivity() {
         Storage = FirebaseStorage.getInstance()
 
 
+        //Traemos la imagen de la cámara al frente
+        imgFoto.bringToFront();
 
         /**
          *BOTON QUE NOS PERMITE REGISTRARNOS EN BYA
@@ -68,7 +70,7 @@ class RegistroActivity : AppCompatActivity() {
         /**
          * BOTON QUE NOS ABRE UN DIALOGO PARA ELEGIR SI QUEREMOS UNA FOTO DE LA GALERIA O LA CAMARA
          */
-        imgRegistro.setOnClickListener {
+        imgFoto.setOnClickListener {
             mostrarDialogo()
         }
     }

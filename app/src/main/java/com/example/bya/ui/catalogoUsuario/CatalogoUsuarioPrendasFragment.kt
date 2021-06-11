@@ -2,16 +2,13 @@ package com.example.bya.ui.catalogoUsuario
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.ImageView
 import android.widget.SearchView
 import android.widget.Spinner
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -43,7 +40,6 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String,private val catalo
         //Enlazamos los elementos con el diseño
         val searchField : SearchView = root.findViewById(R.id.searchField)
         val spiFiltro : Spinner = root.findViewById(R.id.spiFiltro)
-        val imgAtras : ImageView = root.findViewById(R.id.imgCatalogoUsuarioAtras)
 
         //Recogemos el idUsuario del usuario activo
         val pref = activity?.getSharedPreferences("Preferencias", Context.MODE_PRIVATE)
@@ -61,19 +57,6 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String,private val catalo
 
         //Rellenamos la lista de prendas
         rellenarArrayPrendas()
-
-        /**
-         * Al pulsar en este botón volvemos al fragment anterior
-         */
-        imgAtras.setOnClickListener {
-            if(catalogo == 0){//Si es 0 volvemos al catalogo de mujeres
-                requireActivity().supportFragmentManager.popBackStack("mujer", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-
-            }else{//si no, volvemos al catálogo de hombres
-                requireActivity().supportFragmentManager.popBackStack("hombre", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            }
-
-        }
 
         /**
          * Cuando escribimos en la barra de búsqueda
@@ -135,6 +118,7 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String,private val catalo
 
         db.collection("prendas")//Consultamos todas las prendas de un determinado tipo
             .whereEqualTo("idTipo", tipo)
+            // .orderBy("precio")
             .get()
             .addOnSuccessListener { result ->
                 for (prenda in result) {
@@ -152,6 +136,9 @@ class CatalogoUsuarioPrendasFragment(private val tipo: String,private val catalo
                     listaPrendas.add(p)
                     listaPrendas2.add(p)
                 }
+
+                listaPrendas.sortByDescending{ it.precio.toFloat() }
+                listaPrendas2.sortByDescending{ it.precio.toFloat() }
 
 
                 //Le indicamos el adaptador
