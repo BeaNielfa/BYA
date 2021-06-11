@@ -7,27 +7,40 @@
         android:layout_height="match_parent"
         android:background="@drawable/fondo_margaritas"
         android:id="@+id/perfil"
-        >
+>
 
+
+    <ImageView
+            android:id="@+id/imgPerfil"
+            android:layout_width="178dp"
+            android:layout_height="178dp"
+            android:src="@drawable/ic_profile_user"
+            android:layout_gravity="center"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp" />
+
+    <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:srcCompat="@drawable/ic_camara_foto"
+            android:id="@+id/imgFotoPerfil"
+            app:layout_constraintTop_toTopOf="@+id/imgPerfil"
+            android:layout_marginTop="120dp"
+            app:layout_constraintStart_toStartOf="@+id/imgPerfil"
+            android:layout_marginStart="110dp" />
 
     <LinearLayout
             android:id="@+id/linearPerfil"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="47dp"
-            tools:layout_editor_absoluteY="44dp">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="220dp">
 
-
-        <ImageView
-                android:id="@+id/imgPerfil"
-                android:layout_width="178dp"
-                android:layout_height="178dp"
-                android:src="@drawable/ic_profile_user"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_gravity="center"
-        />
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilPerfilNombre"
@@ -119,11 +132,7 @@
                 android:layout_marginTop="50dp"
                 android:text="@string/cambios"
                 android:backgroundTint="@color/black"
-                android:textSize="25dp"
-        />
-
-
-
+                android:textSize="25dp" />
 
 
     </LinearLayout>

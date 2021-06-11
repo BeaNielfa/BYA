@@ -8,25 +8,36 @@
         android:background="@drawable/fondo_margaritas"
         tools:context=".RegistroActivity">
 
+    <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:srcCompat="@drawable/ic_camara_foto"
+            android:id="@+id/imgFoto"
+            app:layout_constraintTop_toTopOf="@+id/imgRegistro"
+            android:layout_marginTop="120dp"
+            app:layout_constraintStart_toStartOf="@+id/imgRegistro"
+            android:layout_marginStart="110dp" />
+
+    <ImageView
+            android:id="@+id/imgRegistro"
+            android:layout_width="178dp"
+            android:layout_height="178dp"
+            android:src="@drawable/ic_profile_user"
+            android:layout_gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="24dp" />
 
     <LinearLayout
             android:id="@+id/linearRegistro"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            tools:layout_editor_absoluteX="47dp"
-            tools:layout_editor_absoluteY="44dp">
-
-
-        <ImageView
-                   android:id="@+id/imgRegistro"
-                   android:layout_width="178dp"
-                   android:layout_height="178dp"
-                   android:src="@drawable/ic_profile_user"
-                   android:layout_marginTop="20dp"
-                   android:layout_marginBottom="20dp"
-                   android:layout_gravity="center"
-                   />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="220dp">
 
         <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilRegistroNombre"
@@ -121,8 +132,7 @@
                 android:layout_marginTop="50dp"
                 android:text="@string/registrarse"
                 android:backgroundTint="@color/black"
-                android:textSize="25dp"
-        />
+                android:textSize="25dp" />
 
         <Button
                 android:id="@+id/btnRegistroCancelar"
@@ -135,10 +145,7 @@
                 android:layout_marginTop="20dp"
                 android:text="@string/cancelar"
                 android:backgroundTint="@color/black"
-                android:textSize="25dp"
-        />
-
-
+                android:textSize="25dp" />
 
 
     </LinearLayout>

@@ -8,7 +8,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +16,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.navigation.ui.AppBarConfiguration
 import com.example.bya.CirculoTransformacion
 import com.example.bya.R
 import com.google.firebase.auth.FirebaseAuth
@@ -67,7 +65,10 @@ class PerfilFragment : Fragment() {
         etPass =   root.findViewById(R.id.etPerfilPass)
         imgPerfil = root.findViewById(R.id.imgPerfil)
         val btnPerfil: Button = root.findViewById(R.id.btnPerfilCambios)
-        val img: ImageView = root.findViewById(R.id.imgPerfil)
+        val imgFoto : ImageView = root.findViewById(R.id.imgFotoPerfil)
+
+        //Traemos la imagen de la cámara al frente
+        imgFoto.bringToFront();
 
         //Instanciamos la autenticacion
         Auth = Firebase.auth
@@ -89,7 +90,7 @@ class PerfilFragment : Fragment() {
         /**
          * Al pulsar en la imagen, nos aparecerá un dialog para poder cmbiarla
          */
-        img.setOnClickListener {
+        imgFoto.setOnClickListener {
             mostrarDialogo()
         }
 
