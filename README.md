@@ -1,5 +1,5 @@
 <h1 align="center"> B&A</h1>
-<p align="center"><img src="https://github.com/BeaNielfa/BYA/blob/feature/ImagenesWiki/Imagenes/logoReadme.png"/></p> 
+<p align="center"><img src="https://github.com/BeaNielfa/BYA/blob/feature/DocumentacionFinal/Imagenes/logoReadme.png"/></p> 
 
 ## Tabla de contenidos:
 ---
