@@ -25,7 +25,7 @@ import java.time.LocalDateTime
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
-class ChatFragment(private var u: Usuario) : Fragment() {
+class ChatFragment(private var u: Usuario, var con: Context) : Fragment() {
 
     /**
      * VARIABLES
@@ -141,18 +141,18 @@ class ChatFragment(private var u: Usuario) : Fragment() {
                         )){
 
                             //Recogemos los datos del chat
-                            val idEmisor = chat.get("idEmisor").toString()
-                            val idReceptor = chat.get("idReceptor").toString()
+                            val idEmisora = chat.get("idEmisor").toString()
+                            val idReceptora = chat.get("idReceptor").toString()
                             val mensaje = chat.get("mensaje").toString()
                             val fecha = chat.get("fecha").toString()
 
-                            val c = Chat(idEmisor, idReceptor, mensaje, fecha)
+                            val c = Chat(idEmisora, idReceptora, mensaje, fecha)
                             //Añadimos ese objeto a la lista de chat
                             chatList.add(c)
                     }
                 }
 
-                val chatAdapter = ChatListAdapter(requireContext(), chatList)
+                val chatAdapter = ChatListAdapter(con, chatList)
                 //Le asignamos el adaptador
                 recy.adapter = chatAdapter
             }
