@@ -101,7 +101,7 @@ class ContactoFragment : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-        transaction.add(R.id.contactoLayout, ChatFragment(usuario))
+        transaction.add(R.id.contactoLayout, ChatFragment(usuario, requireContext()))
         transaction.addToBackStack("chat")
         transaction.commit()
 
