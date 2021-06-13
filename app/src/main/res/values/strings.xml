@@ -7,7 +7,83 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Home</string>
-    <string name="menu_gallery">Gallery</string>
-    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_catalogo">Catálogo</string>
+    <string name="menu_contacto">Conversaciones</string>
+    <string name="menu_devolver">Devolver prenda</string>
+    <string name="menu_perfil">Perfil</string>
+    <string name="menu_pedidos">Gestionar pedidos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="bya">BYA</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="nuevoBya">¿Eres nuevo en BYA?</string>
+    <string name="registrate">Registrate</string>
+    <string name="nombre">Nombre</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="cambios">Guardar cambios</string>
+    <string name="sesion">Cerrar sesión</string>
+    <string name="Precio">Precio</string>
+    <string name="referencia">Referencia</string>
+    <string name="tipoPrenda">Elegir el tipo de prenda</string>
+    <string name="numeroReferencia">Elegir referencia</string>
+    <string name="prendaExistente">Añadir prenda existente</string>
+    <string name="prendaNueva">Añadir prenda nueva</string>
+    <string name="prendas">Prendas</string>
+    <string name="hombre">Hombre</string>
+    <string name="mujer">Mujer</string>
+    <string name="camiseta">Camisetas</string>
+    <string name="blusa">Blusas</string>
+    <string name="vestido">Vestidos</string>
+    <string name="jeans">Jeans</string>
+    <string name="accesorio">Accesorios</string>
+    <string name="falda">Faldas</string>
+    <string name="camisa">Camisas</string>
+    <string name="talla">Elige tu talla</string>
+    <string name="s">S</string>
+    <string name="m">M</string>
+    <string name="l">L</string>
+    <string name="cesta">Añadir a la cesta</string>
+    <string name="favorito">Favoritos</string>
+    <string name="miCesta">Mi cesta</string>
+    <string name="continuar">Continuar</string>
+    <string name="cestaInfo">Ir a la cesta</string>
+    <string name="google_maps_key">AIzaSyCzGvQZXcJxUKXr67Ta16LyRiFYByl7JPI</string>
+    <string name="seleccionaUbi">Seleccione su ubicación</string>
+    <string name="seleccionaPago">Seleccione un método de pago</string>
+    <string name="nTarjeta">NÚMERO DE TARJETA</string>
+    <string name="fechaCaducidad">FECHA DE CADUCIDAD</string>
+    <string name="csv2">CSV2</string>
+    <string name="pagar">Pagar</string>
+    <string name="gracias">!Gracias por su compra!</string>
+    <string name="agradecimientos">Si tienes alguna pregunta, no dudes en contactar con nosotros.</string>
+    <string name="volver">Volver</string>
+    <string name="miCompra">Mis compras</string>
+    <string name="historial">Historial</string>
+    <string name="pedidos">Pedidos</string>
+    <string name="enviarPedido">Enviar pedido</string>
+    <string name="contactoAsistente">Contactar con un asistente</string>
+    <string name="mensaje">Escribe aquí tu mensaje</string>
+
+    <string-array name="spiFiltro">
+        <item>Precio: Mayor</item>
+        <item>Precio: Menor</item>
+    </string-array>
+
+    <string-array name="spiPrendas">
+        <item>Camiseta M</item>
+        <item>Blusa M</item>
+        <item>Vestido M</item>
+        <item>Jeans M</item>
+        <item>Accesorio M</item>
+        <item>Falda M</item>
+        <item>Camiseta H</item>
+        <item>Camisa H</item>
+        <item>Accesorio H</item>
+        <item>Jeans H</item>
+    </string-array>
+
+
 </resources>

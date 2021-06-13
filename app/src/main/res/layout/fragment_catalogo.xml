@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent" xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   tools:context=".ui.catalogo.CatalogoFragment"
+                                                   android:id="@+id/fragmentCatalogo"
+                                                   android:background="@color/white">
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabCatalogoAnadir"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:srcCompat="@drawable/ic_mas_positivo_suma_simbolo_matematico"
+
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent"/>
+
+    <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="@string/prendas"
+            android:textSize="30dp"
+            android:textColor="@color/black"
+            android:id="@+id/tvCatalogoTitulo"
+            android:layout_marginStart="32dp"
+            android:textStyle="bold" android:layout_marginTop="24dp">
+
+    </TextView>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/catalogoRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+
+            tools:listitem="@layout/item_prenda_administrador"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/tvCatalogoTitulo"
+            android:layout_marginTop="90dp"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

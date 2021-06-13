@@ -3,23 +3,41 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/mobile_navigation"
-            app:startDestination="@+id/nav_home">
+            app:startDestination="@+id/nav_catalogoUsuario">
+
 
     <fragment
-            android:id="@+id/nav_home"
-            android:name="com.example.bya.ui.home.HomeFragment"
-            android:label="@string/menu_home"
-            tools:layout="@layout/fragment_home"/>
+            android:id="@+id/nav_catalogoUsuario"
+            android:name="com.example.bya.ui.catalogoUsuario.CatalogoUsuarioFragment"
+            android:label="@string/menu_catalogo"
+            tools:layout="@layout/fragment_catalogo_usuario"/>
+    <fragment
+            android:id="@+id/nav_perfil"
+            android:name="com.example.bya.ui.perfil.PerfilFragment"
+            android:label="@string/menu_perfil"
+            tools:layout="@layout/fragment_perfil"/>
+    <fragment
+            android:id="@+id/nav_favorito"
+            android:name="com.example.bya.ui.favoritos.FavoritosFragment"
+            android:label="@string/favorito"
+            tools:layout="@layout/fragment_favorito"/>
 
     <fragment
-            android:id="@+id/nav_gallery"
-            android:name="com.example.bya.ui.gallery.GalleryFragment"
-            android:label="@string/menu_gallery"
-            tools:layout="@layout/fragment_gallery"/>
+            android:id="@+id/nav_cesta"
+            android:name="com.example.bya.ui.cesta.CestaFragment"
+            android:label="@string/cestaInfo"
+            tools:layout="@layout/fragment_cesta"/>
 
     <fragment
-            android:id="@+id/nav_slideshow"
-            android:name="com.example.bya.ui.slideshow.SlideshowFragment"
-            android:label="@string/menu_slideshow"
-            tools:layout="@layout/fragment_slideshow"/>
+            android:id="@+id/nav_historial"
+            android:name="com.example.bya.ui.historial.HistorialFragment"
+            android:label="@string/historial"
+            tools:layout="@layout/fragment_historial"/>
+
+    <fragment
+            android:id="@+id/nav_contactoUsuario"
+            android:name="com.example.bya.ui.contactoUsuario.ContactoUsuarioFragment"
+            android:label="@string/contactoAsistente"
+            tools:layout="@layout/fragment_contacto_usuario"/>
+
 </navigation>

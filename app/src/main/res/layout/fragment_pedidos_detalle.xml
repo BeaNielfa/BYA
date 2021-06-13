@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".ui.pedidos.PedidosDetalleFragment"
+                                                   android:id="@+id/detallePedido"
+                                                   android:background="@color/white">
+
+    <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                    android:id="@+id/imgDetallePedidoFoto"
+                    android:layout_width="130dp"
+                    android:layout_height="200dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="50dp"
+                    tools:srcCompat="@tools:sample/avatars"
+                    android:layout_marginStart="32dp" />
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="200dp"
+                    android:maxLines="2"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDetallePedidoIdCliente"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    app:layout_constraintStart_toEndOf="@+id/imgDetallePedidoFoto"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="50dp"
+                    android:layout_marginStart="16dp"/>
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDetallePedidoNombre"
+                    android:textColor="@color/black"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetallePedidoIdCliente"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgDetallePedidoFoto" />
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDetallePedidoTalla"
+                    android:layout_marginTop="8dp"
+                    android:textColor="@color/black"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetallePedidoNombre"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgDetallePedidoFoto" />
+
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/tvDetallePedidoReferencia"
+                    android:textColor="@color/black"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgDetallePedidoFoto"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/tvDetallePedidoTalla" />
+
+            <fragment
+                    android:id="@+id/mapaDetallePedidoMapa"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    tools:context="com.example.bya.ui.pedidos.PedidosDetalleFragment"
+                    app:layout_constraintTop_toBottomOf="@+id/imgDetallePedidoFoto"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp" />
+
+            <Button
+                    android:id="@+id/btnDetallePedidoEnviar"
+                    android:layout_width="350dp"
+                    android:layout_height="65dp"
+                    style="@style/Animation.Design.BottomSheetDialog"
+                    android:text="@string/enviarPedido"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@color/black"
+                    android:textSize="25dp"
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/mapaDetallePedidoMapa"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+
+    <ImageView
+            android:id="@+id/imgDetallePedidoCerrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_cerrar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
